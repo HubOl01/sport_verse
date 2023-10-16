@@ -5,8 +5,11 @@ SportSphere:
 
 Создание мобильного приложения, аналогичного Strava, которое позволяет спортсменам делиться своими достижениями и тренировочными планами, может быть увлекательным и полезным проектом. Вот основные шаги и функции, которые могут включаться в ваше приложение:
 
-
+**drive**
 https://drive.google.com/file/d/1E0zhtFdVOPsVzADN26oS5CFFNp3s0uri/view?usp=sharing
+
+**draw.io**
+https://app.diagrams.net/#G1E0zhtFdVOPsVzADN26oS5CFFNp3s0uri
 
 ### Основные функции:
 
