@@ -2,8 +2,6 @@
 
 [План на **draw.io**](https://app.diagrams.net/#G1E0zhtFdVOPsVzADN26oS5CFFNp3s0uri)
 
-![Sport_App_Development](https://github.com/HubOl01/sport_sphere/assets/56484404/2be2e04e-fb61-442e-a81c-4d9c6595504e)
-
 ## План
 1. Вход/регистрация по oauth
    - Вход
@@ -43,4 +41,5 @@
    - ФИ спортсмена/тренера
    - статус
    - вид спорта
-   - 
+   - результаты пройденные за все время
+   - настройки
