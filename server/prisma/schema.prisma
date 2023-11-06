@@ -12,18 +12,45 @@ datasource db {
 
 model User {
   idUser Int @id @default(autoincrement())
-  // idVK String? @unique
-  // idGoogle String? @unique
+
   email String? @unique
+  
+  profile Profile?
+  createdAt DateTime @default(now())
 }
 
 model Profile{
   idProfile Int @id @default(autoincrement())
-  username String
+  username String @unique
   idUsername String? @default(dbgenerated("'user_' || floor(random() * 1000000000000)::text")) @unique
   url_avatar String? @default("https://sun6-20.userapi.com/impg/Pu7YGIlBWPmDkiuzAEDCvKRx4KWScdw7Bquizg/KQjrBVk8hL8.jpg?size=1024x1024&quality=96&sign=7efd05f6ab573527e8a2fbdbc47ddf93&type=album")
   status String?
   sport_type String?
   about String?
+  dateOfBirth DateTime?
+
+  userId Int @unique
+  user User @relation(fields: [userId], references: [idUser])
+  posts Post[]
+}
+
+model Post{
+  idPost Int @id @default(autoincrement())
+
+  profileId Int
+  profile Profile @relation(fields: [profileId], references: [idProfile])
+
+  title String?
+  description String?
+  photos Photo_for_post[]
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Photo_for_post {
+  idPhoto Int @id @default(autoincrement())
+  url_image String
+
+  postId Int
+  post Post @relation(fields: [postId], references: [idPost])
 }
