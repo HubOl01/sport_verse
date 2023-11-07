@@ -12,33 +12,51 @@ datasource db {
 
 model User {
   idUser Int @id @default(autoincrement())
-
   email String? @unique
-  
+  username String
+  idUsername String? @default(dbgenerated("'user_' || floor(random())::text")) @unique
+  url_avatar String? @default("https://sun6-20.userapi.com/impg/Pu7YGIlBWPmDkiuzAEDCvKRx4KWScdw7Bquizg/KQjrBVk8hL8.jpg?size=1024x1024&quality=96&sign=7efd05f6ab573527e8a2fbdbc47ddf93&type=album")
   profile Profile?
+  posts Post[]
+  communities UserCommunity[]
   createdAt DateTime @default(now())
 }
 
 model Profile{
   idProfile Int @id @default(autoincrement())
-  username String @unique
-  idUsername String? @default(dbgenerated("'user_' || floor(random() * 1000000000000)::text")) @unique
-  url_avatar String? @default("https://sun6-20.userapi.com/impg/Pu7YGIlBWPmDkiuzAEDCvKRx4KWScdw7Bquizg/KQjrBVk8hL8.jpg?size=1024x1024&quality=96&sign=7efd05f6ab573527e8a2fbdbc47ddf93&type=album")
   status String?
   sport_type String?
   about String?
   dateOfBirth DateTime?
-
   userId Int @unique
   user User @relation(fields: [userId], references: [idUser])
+}
+
+model Community{
+  idCommunity Int @id @default(autoincrement())
+  name String @unique
+  createdAt DateTime @default(now())
+
+
+  subscribers UserCommunity[]
   posts Post[]
+}
+
+model UserCommunity{
+  idUserComunity Int @id @default(autoincrement())
+  userId Int
+  communityId Int
+  user User @relation(fields: [userId], references: [idUser]) 
+  community Community @relation(fields: [communityId], references: [idCommunity])
 }
 
 model Post{
   idPost Int @id @default(autoincrement())
 
-  profileId Int
-  profile Profile @relation(fields: [profileId], references: [idProfile])
+  userId Int
+  user User? @relation(fields: [userId], references: [idUser])
+  communityId Int
+  community Community? @relation(fields: [communityId], references: [idCommunity])
 
   title String?
   description String?
@@ -50,7 +68,6 @@ model Post{
 model Photo_for_post {
   idPhoto Int @id @default(autoincrement())
   url_image String
-
   postId Int
-  post Post @relation(fields: [postId], references: [idPost])
+  post Post? @relation(fields: [postId], references: [idPost])
 }
