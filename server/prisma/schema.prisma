@@ -10,18 +10,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+// Модель для пользователя
 model User {
   idUser Int @id @default(autoincrement())
   email String? @unique
   username String
   idUsername String? @default(dbgenerated("'user_' || floor(random())::text")) @unique
   url_avatar String? @default("https://sun6-20.userapi.com/impg/Pu7YGIlBWPmDkiuzAEDCvKRx4KWScdw7Bquizg/KQjrBVk8hL8.jpg?size=1024x1024&quality=96&sign=7efd05f6ab573527e8a2fbdbc47ddf93&type=album")
+  isCoach Boolean @default(false)
+
   profile Profile?
   posts Post[]
+  comments Comment[]
+  likes Like_for_post[]
+  views View_for_post[]
   communities UserCommunity[]
+  trainingPlans TrainingPlan[]
+  trainingResults TrainingResult[]
   createdAt DateTime @default(now())
+  // Связь с тренировочными группами (спортсмены)
+  athletesIn TrainingGroup[] @relation("Athletes")
+  // Связь с тренировочными группами (тренер)
+  trainersIn TrainingGroup[] @relation("Trainers")
+
 }
 
+// Модель для профиля пользователя
 model Profile{
   idProfile Int @id @default(autoincrement())
   status String?
@@ -32,6 +47,7 @@ model Profile{
   user User @relation(fields: [userId], references: [idUser])
 }
 
+// Модель для сообществ
 model Community{
   idCommunity Int @id @default(autoincrement())
   name String @unique
@@ -42,6 +58,7 @@ model Community{
   posts Post[]
 }
 
+// Модель для 
 model UserCommunity{
   idUserComunity Int @id @default(autoincrement())
   userId Int
@@ -50,6 +67,8 @@ model UserCommunity{
   community Community @relation(fields: [communityId], references: [idCommunity])
 }
 
+
+// Модель для поста
 model Post{
   idPost Int @id @default(autoincrement())
 
@@ -61,13 +80,113 @@ model Post{
   title String?
   description String?
   photos Photo_for_post[]
+  comments Comment[]
+  likes Like_for_post[]
+  views View_for_post[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+
+// Модель для изображении в посте
 model Photo_for_post {
   idPhoto Int @id @default(autoincrement())
   url_image String
   postId Int
   post Post? @relation(fields: [postId], references: [idPost])
+}
+
+
+// Модель для комментов снизу поста
+model Comment{
+  idComment Int @id @default(autoincrement())
+  userId Int
+  user User @relation(fields: [userId], references: [idUser])
+  postId Int
+  post Post? @relation(fields: [postId], references: [idPost])
+  CommentText String
+  CommentDate DateTime @default(now())
+}
+
+
+// Модель для лайков поста
+model Like_for_post {
+  idLike Int @id @default(autoincrement())
+  userId Int
+  user User @relation(fields: [userId], references: [idUser])
+  postId Int
+  post Post @relation(fields: [postId], references: [idPost])
+}
+
+model View_for_post {
+  idView Int @id @default(autoincrement())
+  userId Int
+  user User @relation(fields: [userId], references: [idUser])
+  postId Int
+  post Post @relation(fields: [postId], references: [idPost])
+}
+
+
+// Модель для тренировочных планов
+model TrainingPlan {
+  idTrainingPlan  Int @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String
+  startDate   DateTime?
+  endDate     DateTime?
+  isDraft Boolean? @default(true) // Черновик
+  isPublic Boolean? @default(false) // Сделать доступным для всех
+  createdAt DateTime @default(now())
+  PlanProgress Float?
+  exercises Exercise[]
+  trainingResults TrainingResult[]
+
+  user User @relation(fields: [userId], references: [idUser])
+}
+
+// Модель для упражнений в тренировочном плане
+model Exercise {
+  idExercise Int @id @default(autoincrement())
+  trainingPlanId Int
+  name String
+  description String
+  exerciseResults ExerciseResult[]
+  trainingPlan TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
+}
+
+model TrainingResult {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  trainingPlanId Int
+  exerciseId Int
+  date        DateTime
+  duration    BigInt?
+  user User @relation(fields: [userId], references: [idUser])
+  trainingPlan TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
+}
+
+model ExerciseResult {
+  idExerciseResult Int      @id @default(autoincrement())
+  exerciseId Int
+
+  date        DateTime
+  duration    BigInt?
+  distance    Float?
+  difficulty Int? @default(5) // сложность тренировки от 0-10
+  
+  doneExercise Boolean?
+  resultsNumber Float?
+
+  exercise Exercise @relation(fields: [exerciseId], references: [idExercise])
+}
+
+model TrainingGroup {
+  idTrainingGroup Int @id @default(autoincrement())
+  trainerId Int
+  athleteId Int
+  // Связь с тренером
+  trainer User @relation("Trainers", fields: [trainerId], references: [idUser])
+  // Связь со спортсменом
+  athlete User @relation("Athletes", fields: [athleteId], references: [idUser])
 }

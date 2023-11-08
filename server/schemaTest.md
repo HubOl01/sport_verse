@@ -1,4 +1,5 @@
 ```prisma
+// schema.prisma
 
 // Модель для пользователя
 model User {
@@ -6,6 +7,8 @@ model User {
   email     String     @unique
   password  String
   name      String
+  avatar    String?
+  isCoach   Boolean    @default(false) // Поле, определяющее, является ли пользователь тренером
   // Связь с профилем пользователя
   profile   Profile?
   // Связь с достижениями пользователя
@@ -16,6 +19,10 @@ model User {
   posts      Post[]
   // Связь с сообществами пользователя
   communities UserCommunity[]
+  // Связь с тренировочными группами (спортсмены)
+  traineeIn   TrainingGroup[] @relation("Trainees")
+  // Связь с тренировочными группами (тренер)
+  trainerIn   TrainingGroup[] @relation("Trainers")
 }
 
 // Модель для профиля пользователя
@@ -95,6 +102,17 @@ model Post {
   user User @relation(fields: [userId], references: [id])
   // Связь с сообществом (если пост в сообществе)
   community Community? @relation(fields: [communityId], references: [id])
+}
+
+// Модель для тренировочных групп
+model TrainingGroup {
+  id           Int          @id @default(autoincrement())
+  trainerId    Int
+  traineeId    Int
+  // Связь с тренером
+  trainer      User @relation("Trainers", fields: [trainerId], references: [id])
+  // Связь со спортсменом
+  trainee      User @relation("Trainees", fields: [traineeId], references: [id])
 }
 
 ```
