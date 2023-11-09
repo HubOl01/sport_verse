@@ -19,7 +19,7 @@ model User {
   idUsername String? @default(dbgenerated("'user_' || floor(random())::text")) @unique
   url_avatar String? @default("https://sun6-20.userapi.com/impg/Pu7YGIlBWPmDkiuzAEDCvKRx4KWScdw7Bquizg/KQjrBVk8hL8.jpg?size=1024x1024&quality=96&sign=7efd05f6ab573527e8a2fbdbc47ddf93&type=album")
   isCoach Boolean @default(false)
-
+  isBan Boolean @default(false)
   profile Profile?
   posts Post[]
   comments Comment[]
@@ -33,6 +33,10 @@ model User {
   athletesIn TrainingGroup[] @relation("Athletes")
   // Связь с тренировочными группами (тренер)
   trainersIn TrainingGroup[] @relation("Trainers")
+
+  
+  kindUsers Complaint[] @relation("KindUsers")
+  userBans Complaint[] @relation("UserBans")
 
 }
 
@@ -155,6 +159,7 @@ model Exercise {
   trainingPlan TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
 }
 
+// Модель для результатов тренировки
 model TrainingResult {
   id          Int      @id @default(autoincrement())
   userId      Int
@@ -162,25 +167,26 @@ model TrainingResult {
   exerciseId Int
   date        DateTime
   duration    BigInt?
+  difficulty Int? @default(5) // сложность тренировки от 0-10
   user User @relation(fields: [userId], references: [idUser])
   trainingPlan TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
 }
 
+// Модель для результатов упражнений
 model ExerciseResult {
-  idExerciseResult Int      @id @default(autoincrement())
+  idExerciseResult Int @id @default(autoincrement())
   exerciseId Int
+  date DateTime
+  duration BigInt?
+  distance Float?
 
-  date        DateTime
-  duration    BigInt?
-  distance    Float?
-  difficulty Int? @default(5) // сложность тренировки от 0-10
-  
   doneExercise Boolean?
   resultsNumber Float?
 
   exercise Exercise @relation(fields: [exerciseId], references: [idExercise])
 }
 
+// Модель для группы с тренером и спортсменами
 model TrainingGroup {
   idTrainingGroup Int @id @default(autoincrement())
   trainerId Int
@@ -189,4 +195,14 @@ model TrainingGroup {
   trainer User @relation("Trainers", fields: [trainerId], references: [idUser])
   // Связь со спортсменом
   athlete User @relation("Athletes", fields: [athleteId], references: [idUser])
+}
+
+model Complaint {
+  idComplaint Int @id @default(autoincrement())
+  name String
+  description String
+  kindUserId Int
+  kindUser User @relation("KindUsers", fields: [kindUserId], references: [idUser])
+  userBanId Int
+  userBan User @relation("UserBans", fields: [userBanId], references: [idUser])
 }
