@@ -36,8 +36,9 @@ model User {
 
   
   kindUsers Complaint[] @relation("KindUsers")
-  userBans Complaint[] @relation("UserBans")
-
+  badUsers Complaint[] @relation("BadUsers")
+  usersBan Ban[] @relation("UsersBan")
+  adminsBan Ban[] @relation("AdminsBan")
 }
 
 // Модель для профиля пользователя
@@ -201,8 +202,23 @@ model Complaint {
   idComplaint Int @id @default(autoincrement())
   name String
   description String
+  resolved Boolean @default(false) // Показывает, решена ли жалоба
   kindUserId Int
   kindUser User @relation("KindUsers", fields: [kindUserId], references: [idUser])
   userBanId Int
-  userBan User @relation("UserBans", fields: [userBanId], references: [idUser])
+  badUser User @relation("BadUsers", fields: [userBanId], references: [idUser])
+  createdAt DateTime @default(now())
+}
+
+model Ban {
+  idBan Int @id @default(autoincrement())
+  userId Int
+  adminId Int // ID администратора, который вынес бан
+  reason String // Причина бана
+  period Int // Время бана в минутах
+  expiresAt DateTime // Время истечения срока бана
+  // Связь с пользователем
+  user User @relation("UsersBan", fields: [userId], references: [idUser])
+  // Связь с администратором
+  admin User @relation("AdminsBan", fields: [adminId], references: [idUser])
 }
