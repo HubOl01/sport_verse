@@ -85,6 +85,8 @@ model Post{
   title String?
   description String?
   photos Photo_for_post[]
+  videos Video_for_post[]
+  files File_for_post[]
   comments Comment[]
   likes Like_for_post[]
   views View_for_post[]
@@ -97,6 +99,20 @@ model Post{
 model Photo_for_post {
   idPhoto Int @id @default(autoincrement())
   url_image String
+  postId Int
+  post Post? @relation(fields: [postId], references: [idPost])
+}
+// Модель для видео в посте
+model Video_for_post {
+  idVideo Int @id @default(autoincrement())
+  url_video String
+  postId Int
+  post Post? @relation(fields: [postId], references: [idPost])
+}
+// Модель для файлов в посте
+model File_for_post {
+  idFile Int @id @default(autoincrement())
+  url_File String
   postId Int
   post Post? @relation(fields: [postId], references: [idPost])
 }
@@ -122,7 +138,7 @@ model Like_for_post {
   postId Int
   post Post @relation(fields: [postId], references: [idPost])
 }
-
+// Модель для кол-ва просмотров посетителей
 model View_for_post {
   idView Int @id @default(autoincrement())
   userId Int
