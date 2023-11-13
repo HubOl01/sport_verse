@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "prisma": "^5.5.2",
     "prisma-json-schema-generator": "^4.0.0"
   }
 }

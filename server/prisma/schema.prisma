@@ -34,11 +34,16 @@ model User {
   // Связь с тренировочными группами (тренер)
   trainersIn TrainingGroup[] @relation("Trainers")
 
-  
   kindUsers Complaint[] @relation("KindUsers")
   badUsers Complaint[] @relation("BadUsers")
   usersBan Ban[] @relation("UsersBan")
   adminsBan Ban[] @relation("AdminsBan")
+  
+  bookmarksPost BookmarkedPost[]
+  bookmarksPhotoPost BookmarkedPhoto[]
+  bookmarksVideoPost BookmarkedVideo[]
+  bookmarksFilePost BookmarkedFile[]
+  bookmarksTrainingPlan BookmarkedTrainingPlan[]
 }
 
 // Модель для профиля пользователя
@@ -49,7 +54,7 @@ model Profile{
   about String?
   dateOfBirth DateTime?
   userId Int @unique
-  user User @relation(fields: [userId], references: [idUser])
+  user User @relation(fields: [userId], references: [idUser]) 
 }
 
 // Модель для сообществ
@@ -69,7 +74,7 @@ model UserCommunity{
   userId Int
   communityId Int
   user User @relation(fields: [userId], references: [idUser]) 
-  community Community @relation(fields: [communityId], references: [idCommunity])
+  community Community @relation(fields: [communityId], references: [idCommunity]) 
 }
 
 
@@ -80,7 +85,7 @@ model Post{
   userId Int
   user User? @relation(fields: [userId], references: [idUser])
   communityId Int
-  community Community? @relation(fields: [communityId], references: [idCommunity])
+  community Community? @relation(fields: [communityId], references: [idCommunity]) 
 
   title String?
   description String?
@@ -90,6 +95,7 @@ model Post{
   comments Comment[]
   likes Like_for_post[]
   views View_for_post[]
+  bookmarksPost BookmarkedPost[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -100,21 +106,24 @@ model Photo_for_post {
   idPhoto Int @id @default(autoincrement())
   url_image String
   postId Int
-  post Post? @relation(fields: [postId], references: [idPost])
+  post Post? @relation(fields: [postId], references: [idPost]) 
+  bookmarksPhoto BookmarkedPhoto[]
 }
 // Модель для видео в посте
 model Video_for_post {
   idVideo Int @id @default(autoincrement())
   url_video String
   postId Int
-  post Post? @relation(fields: [postId], references: [idPost])
+  post Post? @relation(fields: [postId], references: [idPost]) 
+  bookmarksVideo BookmarkedVideo[]
 }
 // Модель для файлов в посте
 model File_for_post {
   idFile Int @id @default(autoincrement())
   url_File String
   postId Int
-  post Post? @relation(fields: [postId], references: [idPost])
+  post Post? @relation(fields: [postId], references: [idPost]) 
+  bookmarksFile BookmarkedFile[]
 }
 
 
@@ -124,7 +133,7 @@ model Comment{
   userId Int
   user User @relation(fields: [userId], references: [idUser])
   postId Int
-  post Post? @relation(fields: [postId], references: [idPost])
+  post Post? @relation(fields: [postId], references: [idPost]) 
   CommentText String
   CommentDate DateTime @default(now())
 }
@@ -136,7 +145,7 @@ model Like_for_post {
   userId Int
   user User @relation(fields: [userId], references: [idUser])
   postId Int
-  post Post @relation(fields: [postId], references: [idPost])
+  post Post @relation(fields: [postId], references: [idPost]) 
 }
 // Модель для кол-ва просмотров посетителей
 model View_for_post {
@@ -144,7 +153,7 @@ model View_for_post {
   userId Int
   user User @relation(fields: [userId], references: [idUser])
   postId Int
-  post Post @relation(fields: [postId], references: [idPost])
+  post Post @relation(fields: [postId], references: [idPost]) 
 }
 
 
@@ -162,7 +171,7 @@ model TrainingPlan {
   PlanProgress Float?
   exercises Exercise[]
   trainingResults TrainingResult[]
-
+  bookmarksTrainingPlan BookmarkedTrainingPlan[]
   user User @relation(fields: [userId], references: [idUser])
 }
 
@@ -173,7 +182,7 @@ model Exercise {
   name String
   description String
   exerciseResults ExerciseResult[]
-  trainingPlan TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
+  trainingPlan TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan]) 
 }
 
 // Модель для результатов тренировки
@@ -186,7 +195,7 @@ model TrainingResult {
   duration    BigInt?
   difficulty Int? @default(5) // сложность тренировки от 0-10
   user User @relation(fields: [userId], references: [idUser])
-  trainingPlan TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
+  trainingPlan TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan]) 
 }
 
 // Модель для результатов упражнений
@@ -200,7 +209,7 @@ model ExerciseResult {
   doneExercise Boolean?
   resultsNumber Float?
 
-  exercise Exercise @relation(fields: [exerciseId], references: [idExercise])
+  exercise Exercise @relation(fields: [exerciseId], references: [idExercise]) 
 }
 
 // Модель для группы с тренером и спортсменами
@@ -209,11 +218,12 @@ model TrainingGroup {
   trainerId Int
   athleteId Int
   // Связь с тренером
-  trainer User @relation("Trainers", fields: [trainerId], references: [idUser])
+  trainer User @relation("Trainers", fields: [trainerId], references: [idUser]) 
   // Связь со спортсменом
-  athlete User @relation("Athletes", fields: [athleteId], references: [idUser])
+  athlete User @relation("Athletes", fields: [athleteId], references: [idUser]) 
 }
 
+// жалобы пользователя
 model Complaint {
   idComplaint Int @id @default(autoincrement())
   name String
@@ -222,10 +232,11 @@ model Complaint {
   kindUserId Int
   kindUser User @relation("KindUsers", fields: [kindUserId], references: [idUser])
   userBanId Int
-  badUser User @relation("BadUsers", fields: [userBanId], references: [idUser])
+  badUser User @relation("BadUsers", fields: [userBanId], references: [idUser]) 
   createdAt DateTime @default(now())
 }
 
+// бан пользователя
 model Ban {
   idBan Int @id @default(autoincrement())
   userId Int
@@ -234,7 +245,60 @@ model Ban {
   period Int // Время бана в минутах
   expiresAt DateTime // Время истечения срока бана
   // Связь с пользователем
-  user User @relation("UsersBan", fields: [userId], references: [idUser])
+  user User @relation("UsersBan", fields: [userId], references: [idUser]) 
   // Связь с администратором
-  admin User @relation("AdminsBan", fields: [adminId], references: [idUser])
+  admin User @relation("AdminsBan", fields: [adminId], references: [idUser]) 
+}
+
+// Модель для постов, добавляемых в закладки пользователя
+model BookmarkedPost {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  postId      Int
+  // Связь с пользователем
+  user        User     @relation(fields: [userId], references: [idUser])
+  // Связь с постом
+  post        Post     @relation(fields: [postId], references: [idPost])
+}
+
+// Модель для видео, добавленных в закладки пользователя
+model BookmarkedVideo {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  videoId     Int
+  // Связь с пользователем
+  user        User     @relation(fields: [userId], references: [idUser])
+  // Связь с видео
+  video       Video_for_post    @relation(fields: [videoId], references: [idVideo])
+}
+
+// Модель для фото, добавленных в закладки пользователя
+model BookmarkedPhoto {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  photoId     Int
+  // Связь с пользователем
+  user        User     @relation(fields: [userId], references: [idUser])
+  // Связь с фото
+  photo       Photo_for_post    @relation(fields: [photoId], references: [idPhoto])
+}
+
+model BookmarkedFile {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  fileId      Int
+  // Связь с пользователем
+  user        User     @relation(fields: [userId], references: [idUser])
+  // Связь с файлом
+  file       File_for_post    @relation(fields: [fileId], references: [idFile])
+}
+// Модель для тренировочных планов, добавленных в закладки пользователя
+model BookmarkedTrainingPlan {
+  id              Int             @id @default(autoincrement())
+  userId          Int
+  trainingPlanId  Int
+  // Связь с пользователем
+  user            User            @relation(fields: [userId], references: [idUser])
+  // Связь с тренировочным планом
+  trainingPlan    TrainingPlan    @relation(fields: [trainingPlanId], references: [idTrainingPlan])
 }
