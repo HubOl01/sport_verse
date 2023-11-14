@@ -40,8 +40,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.sportsphere.ui.theme.SportSphereTheme
 
 class MainActivity : ComponentActivity() {
@@ -119,21 +121,35 @@ fun Post() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
+            .background(color = Color.Gray)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(color = Color.Blue)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(CircleShape)
+                            .background(color = Color.Blue)
+                    )
+                    Box(modifier = Modifier.width(10.dp))
+                    Column {
+                        Text(text = "User1", style = TextStyle(fontSize = 16.sp))
+                        Text(text = "Speed skating", style = TextStyle(fontSize = 14.sp))
+                    }
+                }
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_more_horiz_24),
+                    contentDescription = "menu"
                 )
-                Box(modifier = Modifier.width(10.dp))
-                Text(text = "User1")
             }
             Box(
                 modifier = Modifier
@@ -146,7 +162,7 @@ fun Post() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 8.dp),
+                    .padding(start = 10.dp, end = 10.dp, top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row() {
@@ -154,16 +170,25 @@ fun Post() {
                         painter = painterResource(id = R.drawable.baseline_favorite_border_24),
                         contentDescription = "like"
                     )
+                    Box(modifier = Modifier.width(10.dp))
                     Icon(
-                        painter = painterResource(id = R.drawable.baseline_favorite_border_24),
-                        contentDescription = "like"
+                        painter = painterResource(id = R.drawable.baseline_comment_24),
+                        contentDescription = "comment"
                     )
                 }
                 Icon(
-                    painter = painterResource(id = R.drawable.baseline_favorite_border_24),
-                    contentDescription = "like"
+                    painter = painterResource(id = R.drawable.baseline_bookmark_border_24),
+                    contentDescription = "bookmark"
                 )
             }
+            Text(
+                text = """Сегодня на чемпионате мира по футболу состоится долгожданный матч между командами Франции и Аргентины. Обе команды являются одними из фаворитов турнира, и их встреча обещает быть захватывающей.
+
+Игроки Франции, ведомые Килианом Мбаппе, находятся в отличной форме и имеют в своем активе несколько ярких побед на этом чемпионате. Аргентина, в свою очередь, также демонстрирует уверенную игру и высокий уровень мастерства.
+
+Ожидается, что этот матч станет одним из самых ярких событий турнира и определит лидера в группе. Болеем за наших и желаем удачи""".prependIndent(),
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp)
+            )
         }
     }
 }
