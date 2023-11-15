@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,12 +26,22 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
@@ -40,11 +51,16 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,9 +70,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.sportsphere.screens.profile.ProfilePage
+import com.example.sportsphere.screens.trainingPlans.TrainingPlansPage
 import com.example.sportsphere.ui.theme.GrayImage
 import com.example.sportsphere.ui.theme.GrayPost
 import com.example.sportsphere.ui.theme.SportSphereTheme
+import com.google.android.engage.social.datamodel.Profile
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,36 +100,60 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+enum class Screens {
+    TrainingPlansPage,
+    ProfilePage
+}
+
+data class NavItem(
+    val label: String,
+    val icon: ImageVector,
+    val route: String
+)
+
+val listOfNavItem = listOf(
+    NavItem("TrainingPlans", Icons.Default.Home, Screens.TrainingPlansPage.name),
+    NavItem("Profile", Icons.Default.Settings, Screens.ProfilePage.name)
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
 @Composable
 fun MainPage() {
+    val navController = rememberNavController()
     Scaffold(
-//        topBar = {
-//            TopAppBar(
-//                colors = TopAppBarDefaults.mediumTopAppBarColors(
-//                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-//                    titleContentColor = MaterialTheme.colorScheme.primary,
-//                ),
-//                title = {
-//                    Text("Top app bar")
-//                }
-//            )
-//        }
-    ) { it ->
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .padding(it)
-        ) {
-//            Stories(it = it)
-//            ProfilePage()
-            TrainingPlanPage()
+        bottomBar = {
+            NavigationBar {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+                listOfNavItem.forEach { screen ->
+                    NavigationBarItem(
+                        icon = { Icon(imageVector = screen.icon, contentDescription = null) },
+                        label = { Text(screen.label) },
+                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                        onClick = {
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
+            }
         }
-
-
+    ) { innerPadding ->
+        NavHost(
+            navController,
+            startDestination = Screens.TrainingPlansPage.name,
+            Modifier.padding(innerPadding)
+        ) {
+            composable(Screens.TrainingPlansPage.name) { TrainingPlansPage() }
+            composable(Screens.ProfilePage.name) { ProfilePage() }
+        }
     }
-
 }
 
 @Composable
@@ -162,7 +211,7 @@ fun Post() {
                         Text(text = "Football", style = TextStyle(fontSize = 14.sp))
                     }
                 }
-                IconButton(onClick = { }, modifier= Modifier.padding(0.dp)) {
+                IconButton(onClick = { }, modifier = Modifier.padding(0.dp)) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_more_horiz_24),
                         contentDescription = "menu"
@@ -176,7 +225,12 @@ fun Post() {
                         .aspectRatio(4f / 4f)
                         .background(color = GrayImage)
                 ) {
-                    Image(painter = painterResource(id = R.drawable.image_for_post), contentDescription = "Матч", contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                    Image(
+                        painter = painterResource(id = R.drawable.image_for_post),
+                        contentDescription = "Матч",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
                     Text(
                         text = """Сегодня на чемпионате мира по футболу состоится долгожданный матч между командами Франции и Аргентины. Обе команды являются одними из фаворитов турнира, и их встреча обещает быть захватывающей.
  
@@ -186,7 +240,7 @@ fun Post() {
                         modifier = Modifier
                             .padding(horizontal = 8.dp, vertical = 10.dp)
                             .align(Alignment.BottomStart),
-                        style= TextStyle(fontSize = 20.sp, color = Color.White),
+                        style = TextStyle(fontSize = 20.sp, color = Color.White),
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -200,10 +254,10 @@ fun Post() {
             ) {
                 Row() {
                     IconButton(onClick = { }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_favorite_border_24),
-                        contentDescription = "like"
-                    )
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_favorite_border_24),
+                            contentDescription = "like"
+                        )
 
                     }
                     Box(modifier = Modifier.width(10.dp))
@@ -222,98 +276,5 @@ fun Post() {
                 }
             }
         }
-    }
-}
-
-//@Preview(showBackground = true)
-@Composable
-fun ProfilePage(){
-Column(modifier = Modifier
-    .fillMaxWidth()) {
-    Column (modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 10.dp)){
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape)
-                    .background(color = Color.Blue)
-            )
-            Box(modifier = Modifier.width(10.dp))
-            Column {
-                Text(text = "User1", style = TextStyle(fontSize = 24.sp))
-                Text(text = "Football", style = TextStyle(fontSize = 16.sp))
-            }
-        }
-    Box(modifier = Modifier.height(10.dp))
-    Text(text = "Мои публикации", style = TextStyle(fontSize = 20.sp))
-    Box(modifier = Modifier.height(10.dp))
-    }
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(4.dp)
-    ) {
-        items(60) { index ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(4.dp)
-                    .aspectRatio(1f / 1f)
-                    .clip(RoundedCornerShape(10))
-                    .background(color = GrayImage),
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.image_for_post),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-
-            }
-        }
-    }
-}
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-//@Preview(showBackground = true)
-@Composable
-fun TrainingPlanPage(){
-    Scaffold(
-        topBar = {
-            TopAppBar(title = { Text(text = "План тренировок") })
-        }
-    ) {
-        it ->
-        Column(modifier = Modifier.padding(it)) {
-
-        }
-    }
-}
-
-@Preview
-@Composable
-fun CardPlan(){
-    Card(modifier = Modifier.padding(10.dp)) {
-        Column(modifier = Modifier.fillMaxWidth().padding(10.dp)){
-            Text("Тренировка на 23.11.2023", style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold))
-            Row(modifier = Modifier
-                .fillMaxWidth()) {
-               ClipText(text = "Тяжелая атлетика", color = Color.Red)
-                ClipText(text = "Силовая", color = Color.Green)
-            }
-        }
-    }
-}
-
-@Composable
-fun ClipText(text: String, color: Color){
-    Box(modifier = Modifier
-        .clip(
-            RoundedCornerShape(30)
-        )){
-        Text(text, style= TextStyle(color=Color.White), modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp))
     }
 }
