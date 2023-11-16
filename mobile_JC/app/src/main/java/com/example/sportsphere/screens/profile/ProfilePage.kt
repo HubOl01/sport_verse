@@ -2,6 +2,7 @@ package com.example.sportsphere.screens.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -98,30 +100,14 @@ fun ProfilePage() {
         columns = GridCells.Fixed(3),
         modifier = Modifier
             .fillMaxSize()
-            .padding(4.dp)
+            .padding(horizontal = 4.dp)
     ) {
         item(span = {GridItemSpan(3)}) {
             ProfileHeader()
         }
 
-        items(60) { image ->
-            Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(4.dp)
-                        .aspectRatio(1f / 1f)
-                        .clip(RoundedCornerShape(10))
-                        .background(color = GrayImage),
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.image_for_post),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-
-                }
+        items(60) {
+            Posts()
         }
     }
 }
@@ -147,21 +133,52 @@ fun ProfileHeader() {
             )
             Spacer(modifier = Modifier.width(10.dp))
             Column {
-                Text(text = "User1", style = TextStyle(fontSize = 24.sp))
+                Text(text = "User1", style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold))
                 Text(text = "Football", style = TextStyle(fontSize = 16.sp))
             }
         }
+        ProfileCounts()
+        Spacer(modifier = Modifier.height(10.dp))
         Text(text = "Мои публикации", style = TextStyle(fontSize = 20.sp))
     }
 }
 
-//@Composable
-//fun CommentItem(comment: Comment) {
-//    // Ваш код для отображения комментария
-//}
+@Composable
+fun Posts(){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(4.dp)
+            .aspectRatio(1f / 1f)
+            .clip(RoundedCornerShape(10))
+            .background(color = GrayImage),
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.image_for_post),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
+    }
+}
 
-//@Composable
-//fun ImageItem(image: Image) {
-//    // Ваш код для отображения изображения
-//}
+@Preview
+@Composable
+fun ProfileCounts(){
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        ColumnCounter(100, "подписки")
+        ColumnCounter(66, "подписчики")
+        ColumnCounter(100, "лайки")
+
+    }
+}
+
+@Composable
+fun ColumnCounter(count: Int, title: String){
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = count.toString(), style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold))
+        Text(text = title)
+    }
+}

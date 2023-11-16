@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,13 +35,15 @@ fun TrainingPlansPage() {
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(text = "План тренировок") }, actions = {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {  }) {
                 Icon(painter = painterResource(id = R.drawable.baseline_add_24), contentDescription = null)
             }})
         }
     ) { it ->
-        Column(modifier = Modifier.padding(it)) {
-            CardPlan()
+        LazyColumn(modifier = Modifier.padding(it)) {
+            items(11) {
+                CardPlan()
+            }
         }
     }
 }
@@ -51,8 +54,7 @@ fun CardPlan() {
     Card(modifier = Modifier.padding(10.dp)) {
         Column(modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
-            .background(color = GrayPost)) {
+            .padding(10.dp)) {
             Text(
                 "Тренировка на 23.11.2023",
                 style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold)
