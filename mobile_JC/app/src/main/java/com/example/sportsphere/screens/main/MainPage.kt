@@ -19,6 +19,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -45,11 +47,11 @@ fun PostsPage(
 ) {
     LazyColumn(
 
-    ){
-        item(){
+    ) {
+        item() {
             Stories()
         }
-        items(10){
+        items(10) {
             Post()
             Spacer(modifier = Modifier.height(10.dp))
         }
@@ -79,7 +81,7 @@ fun Stories() {
     }
 }
 
-//@Preview(showBackground = true)
+@Preview()
 @Composable
 fun Post() {
     Box(
@@ -104,10 +106,16 @@ fun Post() {
                             .clip(CircleShape)
                             .background(color = Color.Blue)
                     )
-                    Box(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
                     Column {
-                        androidx.compose.material3.Text(text = "User1", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold))
-                        androidx.compose.material3.Text(text = "Football", style = TextStyle(fontSize = 14.sp))
+                        androidx.compose.material3.Text(
+                            text = "User1",
+                            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        )
+                        androidx.compose.material3.Text(
+                            text = "Football",
+                            style = TextStyle(fontSize = 14.sp)
+                        )
                     }
                 }
                 IconButton(onClick = { }, modifier = Modifier.padding(0.dp)) {
@@ -139,7 +147,11 @@ fun Post() {
                         modifier = Modifier
                             .padding(horizontal = 8.dp, vertical = 10.dp)
                             .align(Alignment.BottomStart),
-                        style = TextStyle(fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.Bold),
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        ),
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -147,33 +159,60 @@ fun Post() {
             }
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(10.dp, 0.dp),
 //                    .padding(start = 10.dp, end = 10.dp, top = 8.dp, bottom = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row() {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_favorite_border_24),
-                            contentDescription = "like"
-                        )
-
-                    }
-                    Box(modifier = Modifier.width(10.dp))
-                    IconButton(onClick = { }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_comment_24),
-                            contentDescription = "comment"
-                        )
-                    }
-                }
                 IconButton(onClick = { }) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_bookmark_border_24),
                         contentDescription = "bookmark"
                     )
                 }
+                Row() {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_comment_24),
+                            contentDescription = "comment"
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(5.dp))
+                    IconButton(
+                        onClick = { },
+//                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.Black),
+//                            .height(IntrinsicSize.Min)
+                        modifier = Modifier.width(80.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_favorite_border_24),
+                                contentDescription = "like"
+                            )
+//                            Spacer(modifier = Modifier.width(5.dp))
+                            Text(
+                                text = formatLikes(2500),
+                                style = TextStyle(fontWeight = FontWeight.Bold),
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                }
+
+                // Функция для форматирования количества лайков
+
+                }
             }
         }
+
+}
+fun formatLikes(likes: Int): String {
+    return when {
+        likes < 1000 -> likes.toString()
+        likes < 1000000 -> "${likes / 1000}k"
+        else -> "${likes / 1000000}M"
     }
 }
