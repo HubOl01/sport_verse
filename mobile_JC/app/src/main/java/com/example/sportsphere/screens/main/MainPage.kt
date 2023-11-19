@@ -1,5 +1,6 @@
 package com.example.sportsphere.screens.main
 
+import android.graphics.Shader.TileMode
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -43,8 +45,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.sportsphere.R
 import com.example.sportsphere.ui.theme.GrayImage
 import com.example.sportsphere.ui.theme.GrayPost
@@ -58,8 +62,8 @@ fun PostsPage(
         item() {
             Stories()
         }
-        items(10) {
-            Post()
+        items(DataPosts.size) {
+            Post(DataPosts[it])
             Spacer(modifier = Modifier.height(10.dp))
         }
     }
@@ -89,10 +93,13 @@ fun Stories() {
 }
 //var isLike = mutableStateOf(false)
 
-//@Preview()
 @Composable
-fun Post() {
+fun Post(post: PostModel) {
     val like = remember { mutableStateOf(false) }
+    val colorStops= arrayOf(
+        .0055f to Color.Transparent,
+        .6f to Color.Black
+    )
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -136,32 +143,54 @@ fun Post() {
             }
             Box {
                 Box(
-                    modifier = Modifier
+                    modifier = if(post.photos.isEmpty()) Modifier
+                        .fillMaxWidth() else Modifier
                         .fillMaxWidth()
                         .aspectRatio(4f / 4f)
                         .background(color = GrayImage)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.image_for_post),
-                        contentDescription = "Матч",
+                    if(post.photos.isNotEmpty()) AsyncImage(
+                        post.photos.first().url_image,
+                        contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
-                    androidx.compose.material3.Text(
-                        text = """Сегодня на чемпионате мира по футболу состоится долгожданный матч между командами Франции и Аргентины. Обе команды являются одними из фаворитов турнира, и их встреча обещает быть захватывающей.
- 
- Игроки Франции, ведомые Килианом Мбаппе, находятся в отличной форме и имеют в своем активе несколько ярких побед на этом чемпионате. Аргентина, в свою очередь, также демонстрирует уверенную игру и высокий уровень мастерства.
- 
- Ожидается, что этот матч станет одним из самых ярких событий турнира и определит лидера в группе. Болеем за наших и желаем удачи""".prependIndent(),
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp, vertical = 10.dp)
+                    if(post.photos.isEmpty())
+                        Column {
+                            if(post.title != null.toString() && post.title != "") Text(
+                                text = post.title,
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp, vertical = 10.dp),
+                                style = TextStyle(
+                                    fontSize = 20.sp,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold
+                                ),
+                            )
+                            Text(
+                                text = post.description,
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp, vertical = 10.dp),
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = Color.Black,
+                                ),
+                                maxLines = 10,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                        else Text(
+                        text = if(post.title != null.toString() && post.title != "") post.title else post.description,
+                        modifier = Modifier.background(
+                            Brush.verticalGradient(colorStops = colorStops))
+                            .padding(start = 8.dp, end = 8.dp, top = 30.dp, bottom = 10.dp)
                             .align(Alignment.BottomStart),
                         style = TextStyle(
                             fontSize = 20.sp,
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         ),
-                        maxLines = 3,
+                        maxLines = 5,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
@@ -204,7 +233,7 @@ fun Post() {
                                     tint = if (like.value) Color.Red else Color.Black
                                 )
                                 Text(
-                                    text = formatLikes(2500),
+                                    text = formatLikes(post.likes),
                                     style = TextStyle(fontWeight = FontWeight.Bold),
                                     maxLines = 1,
                                 )
@@ -221,7 +250,7 @@ fun Post() {
     }
 
 }
-fun formatLikes(likes: Int): String {
+fun formatLikes(likes: Long): String {
     return when {
         likes < 1000 -> likes.toString()
         likes < 1000000 -> "${likes / 1000}k"
