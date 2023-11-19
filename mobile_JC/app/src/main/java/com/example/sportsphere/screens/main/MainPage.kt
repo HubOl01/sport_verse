@@ -2,6 +2,7 @@ package com.example.sportsphere.screens.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,9 +24,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -80,6 +86,7 @@ fun Stories() {
         }
     }
 }
+var isLike = mutableStateOf(false)
 
 @Preview()
 @Composable
@@ -170,7 +177,7 @@ fun Post() {
                         contentDescription = "bookmark"
                     )
                 }
-                Row() {
+                Row(verticalAlignment = Alignment.CenterVertically,) {
                     IconButton(onClick = { }) {
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_comment_24),
@@ -178,35 +185,37 @@ fun Post() {
                         )
                     }
                     Spacer(modifier = Modifier.width(5.dp))
-                    IconButton(
-                        onClick = { },
-//                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.Black),
-//                            .height(IntrinsicSize.Min)
-                        modifier = Modifier.width(80.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                        TextButton(
+                            onClick = { isLike.value = !isLike.value },
+                            colors = ButtonDefaults.buttonColors(
+                                contentColor = Color.Black,
+                                containerColor = Color.Transparent
+                            )
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.baseline_favorite_border_24),
-                                contentDescription = "like"
-                            )
-//                            Spacer(modifier = Modifier.width(5.dp))
-                            Text(
-                                text = formatLikes(2500),
-                                style = TextStyle(fontWeight = FontWeight.Bold),
-                                maxLines = 1,
-                            )
-                        }
-                    }
-                }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = if (!isLike.value) R.drawable.baseline_favorite_border_24 else R.drawable.baseline_favorite_24),
+                                    contentDescription = "like",
+                                )
+                                Text(
+                                    text = formatLikes(2500),
+                                    style = TextStyle(fontWeight = FontWeight.Bold),
+                                    maxLines = 1,
+                                )
+                            }
 
-                // Функция для форматирования количества лайков
+                    }
+//                }
+
+                    // Функция для форматирования количества лайков
 
                 }
             }
         }
+    }
 
 }
 fun formatLikes(likes: Int): String {
