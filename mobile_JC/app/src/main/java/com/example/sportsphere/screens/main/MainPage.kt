@@ -30,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -86,11 +87,12 @@ fun Stories() {
         }
     }
 }
-var isLike = mutableStateOf(false)
+//var isLike = mutableStateOf(false)
 
-@Preview()
+//@Preview()
 @Composable
 fun Post() {
+    val like = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -186,7 +188,7 @@ fun Post() {
                     }
                     Spacer(modifier = Modifier.width(5.dp))
                         TextButton(
-                            onClick = { isLike.value = !isLike.value },
+                            onClick = { like.value = !like.value },
                             colors = ButtonDefaults.buttonColors(
                                 contentColor = Color.Black,
                                 containerColor = Color.Transparent
@@ -197,8 +199,9 @@ fun Post() {
                                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                             ) {
                                 Icon(
-                                    painter = painterResource(id = if (!isLike.value) R.drawable.baseline_favorite_border_24 else R.drawable.baseline_favorite_24),
+                                    painter = painterResource(id = if (!like.value) R.drawable.baseline_favorite_border_24 else R.drawable.baseline_favorite_24),
                                     contentDescription = "like",
+                                    tint = if (like.value) Color.Red else Color.Black
                                 )
                                 Text(
                                     text = formatLikes(2500),
