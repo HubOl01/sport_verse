@@ -91,14 +91,13 @@ fun Stories() {
         }
     }
 }
-//var isLike = mutableStateOf(false)
 
 @Composable
 fun Post(post: PostModel) {
     val like = remember { mutableStateOf(false) }
     val colorStops= arrayOf(
-        .0055f to Color.Transparent,
-        .6f to Color.Black
+        .001f to Color.Transparent,
+        .4f to Color.Black.copy(alpha = .6f)
     )
     Box(
         modifier = Modifier
@@ -183,7 +182,7 @@ fun Post(post: PostModel) {
                         text = if(post.title != null.toString() && post.title != "") post.title else post.description,
                         modifier = Modifier.background(
                             Brush.verticalGradient(colorStops = colorStops))
-                            .padding(start = 8.dp, end = 8.dp, top = 30.dp, bottom = 10.dp)
+                            .padding(start = 8.dp, end = 8.dp, top = 50.dp, bottom = 10.dp)
                             .align(Alignment.BottomStart),
                         style = TextStyle(
                             fontSize = 20.sp,

@@ -20,6 +20,7 @@ model User {
   url_avatar String? @default("https://sun6-20.userapi.com/impg/Pu7YGIlBWPmDkiuzAEDCvKRx4KWScdw7Bquizg/KQjrBVk8hL8.jpg?size=1024x1024&quality=96&sign=7efd05f6ab573527e8a2fbdbc47ddf93&type=album")
   isCoach Boolean @default(false)
   isBan Boolean @default(false)
+  isOffical Boolean @default(false)
   profile Profile?
   posts Post[]
   comments Comment[]
@@ -102,41 +103,41 @@ model Post{
 
 
 // Модель для изображении в посте
-model Photo_for_post {
-  idPhoto Int @id @default(autoincrement())
-  url_image String
-  postId Int
-  post Post? @relation(fields: [postId], references: [idPost]) 
-  bookmarksPhoto BookmarkedPhoto[]
-}
-// Модель для видео в посте
-model Video_for_post {
-  idVideo Int @id @default(autoincrement())
-  url_video String
-  postId Int
-  post Post? @relation(fields: [postId], references: [idPost]) 
-  bookmarksVideo BookmarkedVideo[]
-}
-// Модель для файлов в посте
-model File_for_post {
-  idFile Int @id @default(autoincrement())
-  url_File String
-  postId Int
-  post Post? @relation(fields: [postId], references: [idPost]) 
-  bookmarksFile BookmarkedFile[]
-}
+  model Photo_for_post {
+    idPhoto Int @id @default(autoincrement())
+    url_image String
+    postId Int
+    post Post? @relation(fields: [postId], references: [idPost]) 
+    bookmarksPhoto BookmarkedPhoto[]
+  }
+  // Модель для видео в посте
+  model Video_for_post {
+    idVideo Int @id @default(autoincrement())
+    url_video String
+    postId Int
+    post Post? @relation(fields: [postId], references: [idPost]) 
+    bookmarksVideo BookmarkedVideo[]
+  }
+  // Модель для файлов в посте
+  model File_for_post {
+    idFile Int @id @default(autoincrement())
+    url_File String
+    postId Int
+    post Post? @relation(fields: [postId], references: [idPost]) 
+    bookmarksFile BookmarkedFile[]
+  }
 
 
-// Модель для комментов снизу поста
-model Comment{
-  idComment Int @id @default(autoincrement())
-  userId Int
-  user User @relation(fields: [userId], references: [idUser])
-  postId Int
-  post Post? @relation(fields: [postId], references: [idPost]) 
-  CommentText String
-  CommentDate DateTime @default(now())
-}
+  // Модель для комментов снизу поста
+  model Comment{
+    idComment Int @id @default(autoincrement())
+    userId Int
+    user User @relation(fields: [userId], references: [idUser])
+    postId Int
+    post Post? @relation(fields: [postId], references: [idPost]) 
+    CommentText String
+    CommentDate DateTime @default(now())
+  }
 
 
 // Модель для лайков поста
