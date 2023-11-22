@@ -1,13 +1,10 @@
 package com.example.sportsphere.screens.main
 
-import android.graphics.Shader.TileMode
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -21,17 +18,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -44,17 +37,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.sportsphere.R
+import com.example.sportsphere.navigations.graphs.Graph
 import com.example.sportsphere.ui.theme.GrayImage
 import com.example.sportsphere.ui.theme.GrayPost
 
 @Composable
-fun PostsPage(
+fun FeedPage(navController: NavController
 ) {
     LazyColumn(
 
@@ -62,8 +55,8 @@ fun PostsPage(
         item() {
             Stories()
         }
-        items(DataPosts.size) {
-            Post(DataPosts[it])
+        items(dataPosts.size) {
+            Post(dataPosts[it], navController)
             Spacer(modifier = Modifier.height(10.dp))
         }
     }
@@ -93,7 +86,7 @@ fun Stories() {
 }
 
 @Composable
-fun Post(post: PostModel) {
+fun Post(post: PostModel, navController: NavController) {
     val like = remember { mutableStateOf(false) }
     val colorStops= arrayOf(
         .001f to Color.Transparent,
@@ -103,6 +96,9 @@ fun Post(post: PostModel) {
         modifier = Modifier
             .fillMaxWidth()
             .background(color = GrayPost)
+            .clickable {
+                navController.navigate(Graph.DETAILS)
+            }
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(
@@ -120,15 +116,20 @@ fun Post(post: PostModel) {
                             .size(38.dp)
                             .clip(CircleShape)
                             .background(color = Color.Blue)
-                    )
+                    ){
+                        AsyncImage(post.communityId!!.url_avatar,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize())
+                    }
                     Spacer(modifier = Modifier.width(10.dp))
                     Column {
                         androidx.compose.material3.Text(
-                            text = "User1",
+                            text = post.communityId!!.name,
                             style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         )
                         androidx.compose.material3.Text(
-                            text = "Football",
+                            text = post.communityId.communityProfile.sport_type!!,
                             style = TextStyle(fontSize = 14.sp)
                         )
                     }
@@ -142,19 +143,19 @@ fun Post(post: PostModel) {
             }
             Box {
                 Box(
-                    modifier = if(post.photos.isEmpty()) Modifier
+                    modifier = if(post.photos.isNullOrEmpty()) Modifier
                         .fillMaxWidth() else Modifier
                         .fillMaxWidth()
                         .aspectRatio(4f / 4f)
                         .background(color = GrayImage)
                 ) {
-                    if(post.photos.isNotEmpty()) AsyncImage(
+                    if(!post.photos.isNullOrEmpty()) AsyncImage(
                         post.photos.first().url_image,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
-                    if(post.photos.isEmpty())
+                    if(post.photos.isNullOrEmpty())
                         Column {
                             if(post.title != null.toString() && post.title != "") Text(
                                 text = post.title,
@@ -167,7 +168,7 @@ fun Post(post: PostModel) {
                                 ),
                             )
                             Text(
-                                text = post.description,
+                                text = post.description!!,
                                 modifier = Modifier
                                     .padding(horizontal = 8.dp, vertical = 10.dp),
                                 style = TextStyle(
@@ -179,9 +180,11 @@ fun Post(post: PostModel) {
                             )
                         }
                         else Text(
-                        text = if(post.title != null.toString() && post.title != "") post.title else post.description,
-                        modifier = Modifier.background(
-                            Brush.verticalGradient(colorStops = colorStops))
+                        text = if(post.title != null.toString() && post.title != "") post.title else post.description!!,
+                        modifier = Modifier
+                            .background(
+                                Brush.verticalGradient(colorStops = colorStops)
+                            )
                             .padding(start = 8.dp, end = 8.dp, top = 50.dp, bottom = 10.dp)
                             .align(Alignment.BottomStart),
                         style = TextStyle(
@@ -237,12 +240,7 @@ fun Post(post: PostModel) {
                                     maxLines = 1,
                                 )
                             }
-
                     }
-//                }
-
-                    // Функция для форматирования количества лайков
-
                 }
             }
         }

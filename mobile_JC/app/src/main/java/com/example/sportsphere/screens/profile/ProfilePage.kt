@@ -39,7 +39,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.sportsphere.R
+import com.example.sportsphere.screens.main.Community
+import com.example.sportsphere.screens.main.PostModel
+import com.example.sportsphere.screens.main.communities
 import com.example.sportsphere.ui.theme.GrayImage
 
 //@Composable
@@ -103,17 +107,17 @@ fun ProfilePage() {
             .padding(horizontal = 4.dp)
     ) {
         item(span = {GridItemSpan(3)}) {
-            ProfileHeader()
+            ProfileHeader(communities[0])
         }
 
-        items(60) {
-            Posts()
+        items(communities[0].posts!!.size) {
+            Posts(communities[0].posts!![it])
         }
     }
 }
 
 @Composable
-fun ProfileHeader() {
+fun ProfileHeader(user: Community) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -130,11 +134,16 @@ fun ProfileHeader() {
                     .size(60.dp)
                     .clip(CircleShape)
                     .background(color = Color.Blue)
-            )
+            ){
+                AsyncImage(user.url_avatar,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize())
+            }
             Spacer(modifier = Modifier.width(10.dp))
             Column {
-                Text(text = "User1", style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold))
-                Text(text = "Football", style = TextStyle(fontSize = 16.sp))
+                Text(text = user.name, style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold))
+                Text(text = user.communityProfile.sport_type!!, style = TextStyle(fontSize = 16.sp))
             }
         }
         ProfileCounts()
@@ -144,7 +153,7 @@ fun ProfileHeader() {
 }
 
 @Composable
-fun Posts(){
+fun Posts(posts: PostModel){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -153,13 +162,10 @@ fun Posts(){
             .clip(RoundedCornerShape(10))
             .background(color = GrayImage),
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.image_for_post),
+        AsyncImage(posts.photos!!.first().url_image,
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize())
 
     }
 }

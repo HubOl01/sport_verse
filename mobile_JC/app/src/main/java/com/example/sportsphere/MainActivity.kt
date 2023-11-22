@@ -1,65 +1,43 @@
 package com.example.sportsphere
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 //import androidx.compose.material3.MaterialTheme
 //import androidx.compose.material3.NavigationBar
 //import androidx.compose.material3.NavigationBarItem
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.sportsphere.navigations.NavItem
+import com.example.sportsphere.navigations.BottomBarScreen
 import com.example.sportsphere.navigations.Screens
-import com.example.sportsphere.screens.main.PostsPage
+import com.example.sportsphere.navigations.graphs.HomeNavGraph
+import com.example.sportsphere.navigations.graphs.RootNavigationGraph
+import com.example.sportsphere.screens.main.FeedPage
 import com.example.sportsphere.screens.profile.ProfilePage
 import com.example.sportsphere.screens.trainingPlans.TrainingPlansPage
-import com.example.sportsphere.ui.theme.GrayImage
-import com.example.sportsphere.ui.theme.GrayPost
 import com.example.sportsphere.ui.theme.SportSphereTheme
 
 class MainActivity : ComponentActivity() {
@@ -68,12 +46,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             SportSphereTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    MainPage()
-                }
+
+                    RootNavigationGraph(navController = rememberNavController())
+
             }
         }
     }
@@ -81,46 +56,75 @@ class MainActivity : ComponentActivity() {
 
 
 
+
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainPage() {
-    val navController = rememberNavController()
+fun MainPage(navController: NavHostController = rememberNavController()) {
+
     val listOfNavItem = listOf(
-        NavItem("Новости", ImageVector.vectorResource(R.drawable.baseline_newspaper_24), Screens.MainPage.name),
-        NavItem("TrainingPlans", ImageVector.vectorResource(R.drawable.baseline_sports_24), Screens.TrainingPlansPage.name),
-        NavItem("Profile", Icons.Default.Settings, Screens.ProfilePage.name)
+        BottomBarScreen.Home,
+        BottomBarScreen.TrainingPlans,
+        BottomBarScreen.Profile,
     )
     Scaffold(
-        bottomBar = {
-            BottomNavigation() {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                listOfNavItem.forEach { screen ->
-                    BottomNavigationItem(
-                        icon = { Icon(imageVector = screen.icon, contentDescription = null) },
-                        label = { Text(screen.label) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    )
-                }
+        bottomBar = { BottomBar(navController) }
+    ) {
+        HomeNavGraph(navController = navController)
+//        RootNavigationGraph(navController)
+    }
+}
+
+
+@Composable
+fun BottomBar(navController: NavHostController) {
+    val screens = listOf(
+        BottomBarScreen.Home,
+        BottomBarScreen.TrainingPlans,
+        BottomBarScreen.Profile,
+    )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    val bottomBarDestination = screens.any { it.route == currentDestination?.route }
+    if (bottomBarDestination) {
+        BottomNavigation {
+            screens.forEach { screen ->
+                AddItem(
+                    screen = screen,
+                    currentDestination = currentDestination,
+                    navController = navController
+                )
             }
         }
-    ) { innerPadding ->
-        NavHost(
-            navController,
-            startDestination = Screens.MainPage.name,
-            Modifier.padding(innerPadding)
-        ) {
-            composable(Screens.MainPage.name) { PostsPage() }
-            composable(Screens.TrainingPlansPage.name) { TrainingPlansPage() }
-            composable(Screens.ProfilePage.name) { ProfilePage() }
-        }
     }
+}
+
+@Composable
+fun RowScope.AddItem(
+    screen: BottomBarScreen,
+    currentDestination: NavDestination?,
+    navController: NavHostController
+) {
+    BottomNavigationItem(
+        label = {
+            Text(text = screen.title)
+        },
+        icon = {
+            Icon(
+                imageVector = screen.icon,
+                contentDescription = "Navigation Icon"
+            )
+        },
+        selected = currentDestination?.hierarchy?.any {
+            it.route == screen.route
+        } == true,
+        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+        onClick = {
+            navController.navigate(screen.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        }
+    )
 }
