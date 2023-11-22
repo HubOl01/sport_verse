@@ -39,23 +39,25 @@ fun HomeNavGraph(navController: NavHostController) {
 fun NavGraphBuilder.detailsNavGraph(navController: NavHostController) {
     navigation(
         route = Graph.DETAILS,
-        startDestination = DetailsScreen.Information.route
+        startDestination = DetailsScreen.Info.route
     ) {
-        composable(route = DetailsScreen.Information.route + "/{name}",
+        composable(route = DetailsScreen.Info.route,
             arguments = listOf(
-                navArgument("post"){
+                navArgument(KEY_AGG_DETAILS){
                     type= NavType.IntType
-                    defaultValue = 0
-                    nullable = true
                 }
             )
             ) {
-            DetailPost(it.arguments.getInt("name"))
+            DetailPost(it.arguments!!.getInt(KEY_AGG_DETAILS))
         }
     }
 }
 
-val KEY_AGG_DETAILS: String = "name"
+const val KEY_AGG_DETAILS = "postId"
 sealed class DetailsScreen(val route: String) {
-    object Information : DetailsScreen(route = "INFORMATION")
+    object Info : DetailsScreen(route = "detail_post/${KEY_AGG_DETAILS}"){
+        fun postId(id: Int): String{
+            return "detail_post/${id}"
+        }
+    }
 }

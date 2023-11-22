@@ -25,5 +25,5 @@ object Graph {
     const val ROOT = "root_graph"
 //    const val AUTHENTICATION = "auth_graph"
     const val HOME = "feed_graph"
-    const val DETAILS = "details_post"
+    const val DETAILS = "detail_post"
 }

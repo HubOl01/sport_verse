@@ -44,10 +44,10 @@ import com.example.sportsphere.ui.theme.GrayPost
 
 @Composable
 fun DetailPost(
-post: PostModel
+id: Int
 ) {
     Column {
-        DetalPostContent(post)
+        DetalPostContent(dataPosts[id])
     }
 }
 
