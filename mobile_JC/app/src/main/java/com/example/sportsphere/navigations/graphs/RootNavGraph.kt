@@ -22,8 +22,21 @@ fun RootNavigationGraph(navController: NavHostController) {
 }
 
 object Graph {
-    const val ROOT = "root_graph"
+    const val ROOT = "root"
 //    const val AUTHENTICATION = "auth_graph"
-    const val HOME = "feed_graph"
-    const val DETAILS = "detail_post"
+    const val HOME = "home"
+    const val DETAIL = "detail"
+}
+
+sealed class Screen(val route: String) {
+    object Home : Screen(route = "home_screen")
+    object Detail : Screen(route = "detail_screen?${KEY_AGG_DETAILS}={${KEY_AGG_DETAILS}}") {
+        fun passId(
+            id: Int,
+        ): String {
+            return "detail_screen?$KEY_AGG_DETAILS=$id"
+        }
+    }
+    object Login: Screen(route = "login_screen")
+    object SignUp: Screen(route = "sign_up_screen")
 }

@@ -43,6 +43,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.sportsphere.R
 import com.example.sportsphere.navigations.graphs.Graph
+import com.example.sportsphere.navigations.graphs.Screen
 import com.example.sportsphere.ui.theme.GrayImage
 import com.example.sportsphere.ui.theme.GrayPost
 
@@ -56,7 +57,7 @@ fun FeedPage(navController: NavController
             Stories()
         }
         items(dataPosts.size) {
-            Post(dataPosts[it], navController)
+            Post(dataPosts[it], navController, it)
             Spacer(modifier = Modifier.height(10.dp))
         }
     }
@@ -86,7 +87,7 @@ fun Stories() {
 }
 
 @Composable
-fun Post(post: PostModel, navController: NavController) {
+fun Post(post: PostModel, navController: NavController, index:Int) {
     val like = remember { mutableStateOf(false) }
     val colorStops= arrayOf(
         .001f to Color.Transparent,
@@ -97,7 +98,7 @@ fun Post(post: PostModel, navController: NavController) {
             .fillMaxWidth()
             .background(color = GrayPost)
             .clickable {
-                navController.navigate(Graph.DETAILS +"/"+ post.idPost)
+                navController.navigate(Screen.Detail.passId(post.idPost))
             }
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {

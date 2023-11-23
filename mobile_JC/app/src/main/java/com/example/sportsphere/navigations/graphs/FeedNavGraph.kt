@@ -1,5 +1,6 @@
 package com.example.sportsphere.navigations.graphs
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -38,26 +39,28 @@ fun HomeNavGraph(navController: NavHostController) {
 
 fun NavGraphBuilder.detailsNavGraph(navController: NavHostController) {
     navigation(
-        route = Graph.DETAILS,
-        startDestination = DetailsScreen.Info.route
+        route = Graph.DETAIL,
+        startDestination = Screen.Detail.route
     ) {
-        composable(route = DetailsScreen.Info.route,
+        composable(route = Screen.Detail.route,
             arguments = listOf(
                 navArgument(KEY_AGG_DETAILS){
                     type= NavType.IntType
+//                    defaultValue = 0
                 }
             )
             ) {
-            DetailPost(it.arguments!!.getInt(KEY_AGG_DETAILS))
+            DetailPost(it.arguments?.getInt(KEY_AGG_DETAILS)!!.toInt())
+//            Log.d("argAF", it.arguments?.getInt(KEY_AGG_DETAILS).toString())
         }
     }
 }
 
 const val KEY_AGG_DETAILS = "postId"
-sealed class DetailsScreen(val route: String) {
-    object Info : DetailsScreen(route = "detail_post/${KEY_AGG_DETAILS}"){
-        fun postId(id: Int): String{
-            return "detail_post/${id}"
-        }
-    }
-}
+//sealed class DetailsScreen(val route: String) {
+//    object Info : DetailsScreen(route = "detail_post/${KEY_AGG_DETAILS}"){
+//        fun postId(id: Int): String{
+//            return "detail_post/${id}"
+//        }
+//    }
+//}
