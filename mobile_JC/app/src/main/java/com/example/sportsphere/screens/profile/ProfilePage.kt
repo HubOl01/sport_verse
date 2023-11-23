@@ -1,7 +1,9 @@
 package com.example.sportsphere.screens.profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +28,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,79 +50,48 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.sportsphere.R
+import com.example.sportsphere.navigations.graphs.Screen
 import com.example.sportsphere.screens.main.Community
 import com.example.sportsphere.screens.main.PostModel
 import com.example.sportsphere.screens.main.communities
 import com.example.sportsphere.ui.theme.GrayImage
-
-//@Composable
-//fun ProfilePage() {
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//    ) {
-//        Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 10.dp)) {
-//            Row(verticalAlignment = Alignment.CenterVertically) {
-//                Box(
-//                    modifier = Modifier
-//                        .size(60.dp)
-//                        .clip(CircleShape)
-//                        .background(color = Color.Blue)
-//                )
-//                Box(modifier = Modifier.width(10.dp))
-//                Column {
-//                    Text(text = "User1", style = TextStyle(fontSize = 24.sp))
-//                    Text(text = "Football", style = TextStyle(fontSize = 16.sp))
-//                }
-//            }
-//            Box(modifier = Modifier.height(10.dp))
-//            Text(text = "Мои публикации", style = TextStyle(fontSize = 20.sp))
-//            Box(modifier = Modifier.height(10.dp))
-//        }
-//        LazyVerticalGrid(
-//            columns = GridCells.Fixed(3),
-//            modifier = Modifier
-//                .fillMaxSize()
-//        ) {
-//            items(60) { index ->
-//                Box(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(4.dp)
-//                        .aspectRatio(1f / 1f)
-//                        .clip(RoundedCornerShape(10))
-//                        .background(color = GrayImage),
-//                ) {
-//                    Image(
-//                        painter = painterResource(id = R.drawable.image_for_post),
-//                        contentDescription = null,
-//                        modifier = Modifier
-//                            .fillMaxSize(),
-//                        contentScale = ContentScale.Crop
-//                    )
-//
-//                }
-//            }
-//        }
-//    }
-//}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfilePage() {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 4.dp)
-    ) {
-        item(span = {GridItemSpan(3)}) {
-            ProfileHeader(communities[0])
+fun ProfilePage(navController: NavController) {
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text(text = "Профиль") },
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                          Icons.Filled.Menu,
+                            "Меню",
+//                            tint = Color.White
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                ))
         }
+    ) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            item(span = { GridItemSpan(3) }) {
+                ProfileHeader(communities[0])
+            }
 
-        items(communities[0].posts!!.size) {
-            Posts(communities[0].posts!![it])
+            items(communities[0].posts!!.size) {
+                Posts(communities[0].posts!![it], navController)
+            }
         }
     }
 }
@@ -153,14 +133,17 @@ fun ProfileHeader(user: Community) {
 }
 
 @Composable
-fun Posts(posts: PostModel){
+fun Posts(posts: PostModel, navController: NavController){
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(4.dp)
             .aspectRatio(1f / 1f)
             .clip(RoundedCornerShape(10))
-            .background(color = GrayImage),
+            .background(color = GrayImage)
+            .clickable {
+                navController.navigate(Screen.Detail.passId(posts.idPost))
+            },
     ) {
         AsyncImage(posts.photos!!.first().url_image,
             contentDescription = null,

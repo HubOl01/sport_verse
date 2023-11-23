@@ -31,7 +31,7 @@ fun HomeNavGraph(navController: NavHostController) {
             TrainingPlansPage()
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfilePage()
+            ProfilePage(navController = navController)
         }
         detailsNavGraph(navController = navController)
     }
@@ -50,17 +50,10 @@ fun NavGraphBuilder.detailsNavGraph(navController: NavHostController) {
                 }
             )
             ) {
-            DetailPost(it.arguments?.getInt(KEY_AGG_DETAILS)!!.toInt())
+            DetailPost(it.arguments?.getInt(KEY_AGG_DETAILS)!!.toInt(), navController)
 //            Log.d("argAF", it.arguments?.getInt(KEY_AGG_DETAILS).toString())
         }
     }
 }
 
 const val KEY_AGG_DETAILS = "postId"
-//sealed class DetailsScreen(val route: String) {
-//    object Info : DetailsScreen(route = "detail_post/${KEY_AGG_DETAILS}"){
-//        fun postId(id: Int): String{
-//            return "detail_post/${id}"
-//        }
-//    }
-//}
