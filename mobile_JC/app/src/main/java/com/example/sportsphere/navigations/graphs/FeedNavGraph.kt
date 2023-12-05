@@ -1,6 +1,9 @@
 package com.example.sportsphere.navigations.graphs
 
+import TabScreen
 import android.util.Log
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -18,20 +21,23 @@ import com.example.sportsphere.screens.profile.ProfilePage
 import com.example.sportsphere.screens.trainingPlans.TrainingPlansPage
 
 @Composable
-fun HomeNavGraph(navController: NavHostController) {
+fun HomeNavGraph(navController: NavHostController, itM: PaddingValues) {
     NavHost(
         navController = navController,
         route = Graph.HOME,
         startDestination = BottomBarScreen.Home.route
     ) {
         composable(route = BottomBarScreen.Home.route) {
-            FeedPage(navController = navController)
+                TabScreen(navController = navController, itM)
+//            FeedPage(navController = navController, itM)
+//            Scaffold {
+//            }
         }
         composable(route = BottomBarScreen.TrainingPlans.route) {
-            TrainingPlansPage()
+            TrainingPlansPage(itM)
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfilePage(navController = navController)
+            ProfilePage(navController = navController, itM)
         }
         detailsNavGraph(navController = navController)
     }

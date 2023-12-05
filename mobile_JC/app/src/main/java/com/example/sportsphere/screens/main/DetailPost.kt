@@ -54,16 +54,18 @@ id: Int,
 navController: NavController
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text(text = "Подробнее") },
-                navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Localized description",
-                    tint = Color.White
-                )
-            }
-        },) }
+        topBar = { TopAppBar(
+            title = { Text(text = "Подробнее") },
+            navigationIcon = {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Localized description",
+                        tint = Color.White
+                    )
+                }
+            },
+        ) }
     ) { it ->
     Column(modifier = Modifier.padding(it)) {
         DetalPostContent(dataPosts[id])

@@ -2,4 +2,13 @@
 <resources>
 
     <style name="Theme.SportSphere" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.SportSphere.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.SportSphere.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.SportSphere.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

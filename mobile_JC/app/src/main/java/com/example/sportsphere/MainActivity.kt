@@ -46,9 +46,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             SportSphereTheme {
                 // A surface container using the 'background' color from the theme
-
                     RootNavigationGraph(navController = rememberNavController())
-
             }
         }
     }
@@ -58,7 +56,6 @@ class MainActivity : ComponentActivity() {
 
 
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainPage(navController: NavHostController = rememberNavController()) {
 
@@ -70,7 +67,7 @@ fun MainPage(navController: NavHostController = rememberNavController()) {
     Scaffold(
         bottomBar = { BottomBar(navController) }
     ) {
-        HomeNavGraph(navController = navController)
+        HomeNavGraph(navController = navController, it)
 //        RootNavigationGraph(navController)
     }
 }

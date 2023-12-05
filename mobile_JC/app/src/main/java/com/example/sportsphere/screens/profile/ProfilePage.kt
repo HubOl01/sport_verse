@@ -61,8 +61,9 @@ import com.example.sportsphere.screens.main.communities
 import com.example.sportsphere.ui.theme.GrayImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfilePage(navController: NavController) {
+fun ProfilePage(navController: NavController, itM: PaddingValues) {
     Scaffold(
+        modifier = Modifier.padding(itM),
         topBar = {
             TopAppBar(title = { Text(text = "Профиль") },
                 actions = {

@@ -3,6 +3,7 @@ package com.example.sportsphere.screens.trainingPlans
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,8 +32,9 @@ import com.example.sportsphere.ui.theme.GrayPost
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
 @Composable
-fun TrainingPlansPage() {
+fun TrainingPlansPage(itM: PaddingValues) {
     Scaffold(
+        modifier = Modifier.padding(itM),
         topBar = {
             TopAppBar(title = { Text(text = "План тренировок") }, actions = {
                 IconButton(onClick = {  }) {
