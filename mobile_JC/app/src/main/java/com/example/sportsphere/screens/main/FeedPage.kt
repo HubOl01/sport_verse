@@ -97,7 +97,7 @@ fun Post(post: PostModel, navController: NavController, index:Int) {
             .fillMaxWidth()
             .background(color = GrayPost)
             .clickable {
-                navController.navigate(Screen.Detail.passId(post.idPost))
+                navController.navigate(Screen.DetailPost.passId(post.idPost))
             }
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {

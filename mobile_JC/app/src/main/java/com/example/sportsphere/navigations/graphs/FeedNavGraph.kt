@@ -18,6 +18,7 @@ import com.example.sportsphere.screens.main.FeedPage
 import com.example.sportsphere.screens.main.PostModel
 import com.example.sportsphere.screens.main.dataPosts
 import com.example.sportsphere.screens.profile.ProfilePage
+import com.example.sportsphere.screens.trainingPlans.TrainingPlanDetailPage
 import com.example.sportsphere.screens.trainingPlans.TrainingPlansPage
 
 @Composable
@@ -34,21 +35,22 @@ fun HomeNavGraph(navController: NavHostController, itM: PaddingValues) {
 //            }
         }
         composable(route = BottomBarScreen.TrainingPlans.route) {
-            TrainingPlansPage(itM)
+            TrainingPlansPage(itM, navController)
         }
         composable(route = BottomBarScreen.Profile.route) {
             ProfilePage(navController = navController, itM)
         }
         detailsNavGraph(navController = navController)
+        trainingPlanDetailNavGraph(navController)
     }
 }
 
 fun NavGraphBuilder.detailsNavGraph(navController: NavHostController) {
     navigation(
         route = Graph.DETAIL,
-        startDestination = Screen.Detail.route
+        startDestination = Screen.DetailPost.route
     ) {
-        composable(route = Screen.Detail.route,
+        composable(route = Screen.DetailPost.route,
             arguments = listOf(
                 navArgument(KEY_AGG_DETAILS){
                     type= NavType.IntType
@@ -58,6 +60,17 @@ fun NavGraphBuilder.detailsNavGraph(navController: NavHostController) {
             ) {
             DetailPost(it.arguments?.getInt(KEY_AGG_DETAILS)!!.toInt(), navController)
 //            Log.d("argAF", it.arguments?.getInt(KEY_AGG_DETAILS).toString())
+        }
+    }
+}
+fun NavGraphBuilder.trainingPlanDetailNavGraph(navController: NavHostController) {
+    navigation(
+        route = Graph.DETAIL,
+        startDestination = Screen.TrainingPlanDetail.route
+    ) {
+        composable(route = Screen.TrainingPlanDetail.route,
+        ) {
+            TrainingPlanDetailPage(navController = navController)
         }
     }
 }

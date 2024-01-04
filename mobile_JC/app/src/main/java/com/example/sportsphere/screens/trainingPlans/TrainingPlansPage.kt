@@ -1,6 +1,7 @@
 package com.example.sportsphere.screens.trainingPlans
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,13 +27,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.sportsphere.R
+import com.example.sportsphere.navigations.graphs.Screen
 import com.example.sportsphere.ui.theme.GrayPost
 
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
 @Composable
-fun TrainingPlansPage(itM: PaddingValues) {
+fun TrainingPlansPage(itM: PaddingValues, navController: NavController) {
     Scaffold(
         modifier = Modifier.padding(itM),
         topBar = {
@@ -44,7 +47,7 @@ fun TrainingPlansPage(itM: PaddingValues) {
     ) { it ->
         LazyColumn(modifier = Modifier.padding(it)) {
             items(11) {
-                CardPlan()
+                CardPlan(navController)
             }
         }
     }
@@ -52,8 +55,8 @@ fun TrainingPlansPage(itM: PaddingValues) {
 
 @Preview
 @Composable
-fun CardPlan() {
-    Card(modifier = Modifier.padding(10.dp)) {
+fun CardPlan(navController: NavController) {
+    Card(modifier = Modifier.padding(10.dp).clickable { navController.navigate(Screen.TrainingPlanDetail.route) }) {
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)) {

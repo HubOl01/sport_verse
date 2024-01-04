@@ -143,7 +143,7 @@ fun Posts(posts: PostModel, navController: NavController){
             .clip(RoundedCornerShape(10))
             .background(color = GrayImage)
             .clickable {
-                navController.navigate(Screen.Detail.passId(posts.idPost))
+                navController.navigate(Screen.DetailPost.passId(posts.idPost))
             },
     ) {
         AsyncImage(posts.photos!!.first().url_image,

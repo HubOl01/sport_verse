@@ -30,13 +30,14 @@ object Graph {
 
 sealed class Screen(val route: String) {
     object Home : Screen(route = "home_screen")
-    object Detail : Screen(route = "detail_screen?${KEY_AGG_DETAILS}={${KEY_AGG_DETAILS}}") {
+    object DetailPost : Screen(route = "detail_screen?${KEY_AGG_DETAILS}={${KEY_AGG_DETAILS}}") {
         fun passId(
             id: Int,
         ): String {
             return "detail_screen?$KEY_AGG_DETAILS=$id"
         }
     }
+    object TrainingPlanDetail : Screen(route = "trainingPlan_detail")
     object Login: Screen(route = "login_screen")
     object SignUp: Screen(route = "sign_up_screen")
 }
