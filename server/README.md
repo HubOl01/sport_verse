@@ -49,3 +49,25 @@ prisma generate
 
 nexus build
 ```
+
+
+```sh
+cd server
+npm ci
+docker-compose up -d
+npx prisma migrate dev --name init - делаем только один раз
+npx prisma generate
+npm run start:dev
+
+npx prisma migrate reset #--Для пересоздания миграции
+# Создание новой миграции
+npx prisma migrate dev --name your_migration_name
+# После создания миграции ее нужно применить к базе данных:
+npx prisma migrate deploy
+```
+
+Для постоянного запуска
+```sh
+docker-compose up -d (или без -d)
+npm run start:dev
+```
