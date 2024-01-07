@@ -71,3 +71,8 @@ npx prisma migrate deploy
 docker-compose up -d (или без -d)
 npm run start:dev
 ```
+
+для генерации RestAPI
+```sh
+npx nest generate resource
+```

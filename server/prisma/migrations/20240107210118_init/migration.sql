@@ -46,8 +46,8 @@ CREATE TABLE "UserCommunity" (
 -- CreateTable
 CREATE TABLE "Post" (
     "idPost" SERIAL NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "communityId" INTEGER NOT NULL,
+    "userId" INTEGER,
+    "communityId" INTEGER,
     "title" TEXT,
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -60,7 +60,11 @@ CREATE TABLE "Post" (
 CREATE TABLE "Photo_for_post" (
     "idPhoto" SERIAL NOT NULL,
     "url_image" TEXT NOT NULL,
+    "type" TEXT,
+    "name_image" TEXT,
     "postId" INTEGER NOT NULL,
+    "userId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Photo_for_post_pkey" PRIMARY KEY ("idPhoto")
 );
@@ -69,7 +73,11 @@ CREATE TABLE "Photo_for_post" (
 CREATE TABLE "Video_for_post" (
     "idVideo" SERIAL NOT NULL,
     "url_video" TEXT NOT NULL,
+    "type" TEXT,
+    "name_video" TEXT,
+    "userId" INTEGER,
     "postId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Video_for_post_pkey" PRIMARY KEY ("idVideo")
 );
@@ -78,7 +86,11 @@ CREATE TABLE "Video_for_post" (
 CREATE TABLE "File_for_post" (
     "idFile" SERIAL NOT NULL,
     "url_File" TEXT NOT NULL,
+    "type" TEXT,
+    "name_file" TEXT,
+    "userId" INTEGER,
     "postId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "File_for_post_pkey" PRIMARY KEY ("idFile")
 );
@@ -265,16 +277,25 @@ ALTER TABLE "UserCommunity" ADD CONSTRAINT "UserCommunity_userId_fkey" FOREIGN K
 ALTER TABLE "UserCommunity" ADD CONSTRAINT "UserCommunity_communityId_fkey" FOREIGN KEY ("communityId") REFERENCES "Community"("idCommunity") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Post" ADD CONSTRAINT "Post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("idUser") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Post" ADD CONSTRAINT "Post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("idUser") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Post" ADD CONSTRAINT "Post_communityId_fkey" FOREIGN KEY ("communityId") REFERENCES "Community"("idCommunity") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Post" ADD CONSTRAINT "Post_communityId_fkey" FOREIGN KEY ("communityId") REFERENCES "Community"("idCommunity") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Photo_for_post" ADD CONSTRAINT "Photo_for_post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("idUser") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Photo_for_post" ADD CONSTRAINT "Photo_for_post_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("idPost") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Video_for_post" ADD CONSTRAINT "Video_for_post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("idUser") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Video_for_post" ADD CONSTRAINT "Video_for_post_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("idPost") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "File_for_post" ADD CONSTRAINT "File_for_post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("idUser") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "File_for_post" ADD CONSTRAINT "File_for_post_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("idPost") ON DELETE RESTRICT ON UPDATE CASCADE;
