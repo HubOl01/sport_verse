@@ -7,8 +7,13 @@ export class CreatePhotosForPostDto {
   url_image: string;
 
   @ApiProperty()
+  @IsOptional()
   @IsInt()
   postId: number;
+
+  @ApiProperty()
+  @IsInt()
+  userId?: number;
 
   @ApiProperty()
   @IsOptional()
