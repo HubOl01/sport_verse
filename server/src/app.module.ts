@@ -6,10 +6,12 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { PhotosForPostModule } from './photos_for_post/photos_for_post.module';
 // import { MulterModule } from '@nestjs/platform-express';
+import { LikesModule } from './likes/likes.module';
+import { ViewsModule } from './views/views.module';
 
 @Module({
   
-  imports: [PrismaModule, UsersModule, PostsModule, PhotosForPostModule, 
+  imports: [PrismaModule, UsersModule, PostsModule, PhotosForPostModule, LikesModule, ViewsModule, 
    ],
   controllers: [AppController],
   providers: [AppService],

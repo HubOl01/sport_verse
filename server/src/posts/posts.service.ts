@@ -12,7 +12,19 @@ export class PostsService {
   }
 
   findAll() {
-    return this.prisma.post.findMany();
+    return this.prisma.post.findMany({
+      include: {
+        user: true,
+        community: true,
+        photos: true,
+        videos: true,
+        files: true,
+        comments: true,
+        likes: true,
+        views: true,
+        bookmarksPost: true,
+      },
+    });
   }
 
   findOne(id: number) {

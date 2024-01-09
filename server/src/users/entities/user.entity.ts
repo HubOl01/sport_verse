@@ -17,6 +17,8 @@ export class UserEntity implements User {
     @ApiProperty({ required: false, default: false })
     isBan: boolean = false;
     @ApiProperty({ required: false, default: false })
+    isAdmin: boolean = false;
+    @ApiProperty({ required: false, default: false })
     isOffical: boolean = false;
     @ApiProperty({ required: false })
     createdAt: Date;

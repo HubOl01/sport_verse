@@ -20,6 +20,7 @@ model User {
   isCoach         Boolean          @default(false)
   isBan           Boolean          @default(false)
   isOffical       Boolean          @default(false)
+  isAdmin         Boolean          @default(false)
   profile         Profile?
   posts           Post[]
   comments        Comment[]
@@ -183,6 +184,8 @@ model Like_for_post {
   user   User @relation(fields: [userId], references: [idUser])
   postId Int
   post   Post @relation(fields: [postId], references: [idPost])
+
+  @@unique([userId, postId])  // Уникальный составной ключ 
 }
 
 // Модель для кол-ва просмотров посетителей
