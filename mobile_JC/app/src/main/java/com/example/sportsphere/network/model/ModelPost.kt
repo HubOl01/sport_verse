@@ -1,7 +1,7 @@
 // To parse the JSON, install kotlin's serialization plugin and do:
 //
-// val json     = Json { allowStructuredMapKeys = true }
-// val teachers = json.parse(Teachers.serializer(), jsonString)
+// val json  = Json { allowStructuredMapKeys = true }
+// val posts = json.parse(Posts.serializer(), jsonString)
 
 package com.example.sportsphere
 
@@ -10,10 +10,10 @@ import kotlinx.serialization.json.*
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
 
-typealias Teachers = JsonArray<Teacher>
+typealias Posts = List<Post>
 
 @Serializable
-data class Teacher (
+data class Post (
     val idPost: Long,
 
     @SerialName("userId")
