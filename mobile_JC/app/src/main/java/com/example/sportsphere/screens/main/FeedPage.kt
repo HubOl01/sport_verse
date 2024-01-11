@@ -1,5 +1,6 @@
 package com.example.sportsphere.screens.main
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -85,10 +86,10 @@ fun FeedPage(navController: NavController) {
                 Post(posts[index], navController, index)
                 Spacer(modifier = Modifier.height(10.dp))
             }
+
         }
     }
 
-    // Инициализация списка при первой загрузке
     LaunchedEffect(Unit) {
         refreshPosts()
     }

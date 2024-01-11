@@ -6,7 +6,7 @@ import retrofit2.http.GET
 
 interface PostService {
 
-    @GET("your_endpoint_here")
+    @GET("posts")
     suspend fun getPosts(): List<Post>
 
 }
