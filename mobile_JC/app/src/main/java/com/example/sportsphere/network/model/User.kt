@@ -1,4 +1,4 @@
-package com.example.sportsphere.network.data.posts
+package com.example.sportsphere.network.model
 
 data class User(
     val createdAt: String,

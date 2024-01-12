@@ -7,6 +7,7 @@ android {
     namespace = "com.example.sportsphere"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "com.example.sportsphere"
         minSdk = 31
@@ -62,8 +63,6 @@ dependencies {
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
-//    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.5.0")
@@ -84,6 +83,8 @@ dependencies {
     implementation("androidx.compose.material:material:1.6.0-beta03")
     implementation("androidx.compose.material:material:1.6.0-beta03")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

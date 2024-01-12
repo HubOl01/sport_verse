@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,9 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,58 +39,40 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import com.example.sportsphere.Post
 import com.example.sportsphere.R
 import com.example.sportsphere.navigations.graphs.Screen
-import com.example.sportsphere.network.interfaces.postService
-import com.example.sportsphere.ui.theme.GrayImage
+import com.example.sportsphere.network.interfaces.ApiService
+import com.example.sportsphere.network.model.Post
 import com.example.sportsphere.ui.theme.GrayPost
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
 
 @Composable
 fun FeedPage(navController: NavController) {
-    val (posts, setPosts) = remember { mutableStateOf<List<Post>>(emptyList()) }
-    val (isRefreshing, setIsRefreshing) = remember { mutableStateOf(false) }
-
-    fun refreshPosts() {
-        setIsRefreshing(true)
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val fetchedPosts = postService.getPosts()
-                setPosts(fetchedPosts)
-            } catch (e: Exception) {
-                // Обработка ошибки
-            } finally {
-                setIsRefreshing(false)
-            }
-        }
-    }
-
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing),
-        onRefresh = { refreshPosts() }
-    ) {
-        LazyColumn(modifier = Modifier.fillMaxSize().padding()) {
-            item {
-                Stories()
-            }
-            items(posts.size) { index ->
-                Post(posts[index], navController, index)
-                Spacer(modifier = Modifier.height(10.dp))
-            }
-
-        }
-    }
+    val postService = remember { ApiService.retrofit }
+    val postsState = remember { mutableStateOf<List<Post>>(emptyList()) }
 
     LaunchedEffect(Unit) {
-        refreshPosts()
+        try {
+            val posts = postService.getPosts()
+            postsState.value = posts
+        } catch (e: Exception) {
+            Log.e("postsERR", e.message.toString())
+        }
+
+    }
+    LazyColumn(modifier = Modifier
+        .fillMaxSize()
+        .padding()) {
+        item {
+            Stories()
+        }
+        items(postsState.value.size) { index ->
+            Post(postsState.value[index], navController, index)
+            Spacer(modifier = Modifier.height(10.dp))
+        }
     }
 }
+
 
 @Composable
 fun Stories() {
@@ -177,11 +156,14 @@ fun Post(post: Post, navController: NavController, index: Int) {
             }
             Box {
                 Box(
-                    modifier = if (post.photos.isNullOrEmpty()) Modifier
-                        .fillMaxWidth() else Modifier
+                    modifier =
+//                    if (post.photos.isNullOrEmpty())
+                        Modifier
                         .fillMaxWidth()
-                        .aspectRatio(4f / 4f)
-                        .background(color = GrayImage)
+//                    else Modifier
+//                        .fillMaxWidth()
+//                        .aspectRatio(4f / 4f)
+//                        .background(color = GrayImage)
                 ) {
 //                    if (!post.photos.isNullOrEmpty()) AsyncImage(
 //                        post.,
@@ -190,29 +172,29 @@ fun Post(post: Post, navController: NavController, index: Int) {
 //                        modifier = Modifier.fillMaxSize()
 //                    )
 //                    if (post.photos.isNullOrEmpty())
-                        Column {
-                            if (post.title != null.toString() && post.title != "") Text(
-                                text = post.title,
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp, vertical = 10.dp),
-                                style = TextStyle(
-                                    fontSize = 20.sp,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold
-                                ),
-                            )
-                            Text(
-                                text = post.description,
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp, vertical = 10.dp),
-                                style = TextStyle(
-                                    fontSize = 16.sp,
-                                    color = Color.Black,
-                                ),
-                                maxLines = 10,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
+                    Column {
+                        if (post.title != null.toString() && post.title != "") Text(
+                            text = post.title,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp, vertical = 10.dp),
+                            style = TextStyle(
+                                fontSize = 20.sp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            ),
+                        )
+                        Text(
+                            text = post.description,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp, vertical = 10.dp),
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                color = Color.Black,
+                            ),
+                            maxLines = 10,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
 //                    else Text(
 //                        text = if (post.title != null.toString() && post.title != "") post.title else post.description!!,
 //                        modifier = Modifier

@@ -1,6 +1,6 @@
-package com.example.sportsphere.network.data.posts
+package com.example.sportsphere.network.model
 
-data class postsItem(
+data class Post(
     val bookmarksPost: List<Any>,
     val comments: List<Any>,
     val community: Any,
