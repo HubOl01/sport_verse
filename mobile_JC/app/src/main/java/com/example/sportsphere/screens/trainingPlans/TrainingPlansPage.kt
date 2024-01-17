@@ -56,7 +56,9 @@ fun TrainingPlansPage(itM: PaddingValues, navController: NavController) {
 @Preview
 @Composable
 fun CardPlan(navController: NavController) {
-    Card(modifier = Modifier.padding(10.dp).clickable { navController.navigate(Screen.TrainingPlanDetail.route) }) {
+    Card(modifier = Modifier.padding(10.dp).clip(RoundedCornerShape(10.dp))
+        .clickable { navController.navigate(Screen.TrainingPlanDetail.route) },
+    ) {
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)) {

@@ -8,10 +8,11 @@ import { PhotosForPostModule } from './photos_for_post/photos_for_post.module';
 // import { MulterModule } from '@nestjs/platform-express';
 import { LikesModule } from './likes/likes.module';
 import { ViewsModule } from './views/views.module';
+import { ProfilesModule } from './profiles/profiles.module';
 
 @Module({
   
-  imports: [PrismaModule, UsersModule, PostsModule, PhotosForPostModule, LikesModule, ViewsModule, 
+  imports: [PrismaModule, UsersModule, PostsModule, PhotosForPostModule, LikesModule, ViewsModule, ProfilesModule, 
    ],
   controllers: [AppController],
   providers: [AppService],

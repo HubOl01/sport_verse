@@ -39,6 +39,7 @@ import com.example.sportsphere.screens.main.FeedPage
 import com.example.sportsphere.screens.profile.ProfilePage
 import com.example.sportsphere.screens.trainingPlans.TrainingPlansPage
 import com.example.sportsphere.ui.theme.SportSphereTheme
+import com.example.sportsphere.viewModel.PostViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,14 +47,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             SportSphereTheme {
                 // A surface container using the 'background' color from the theme
-                    RootNavigationGraph(navController = rememberNavController())
+                RootNavigationGraph(navController = rememberNavController())
             }
         }
     }
 }
-
-
-
 
 
 @Composable
@@ -85,7 +83,7 @@ fun BottomBar(navController: NavHostController) {
 
     val bottomBarDestination = screens.any { it.route == currentDestination?.route }
     if (bottomBarDestination) {
-        BottomNavigation {
+        BottomNavigation() {
             screens.forEach { screen ->
                 AddItem(
                     screen = screen,

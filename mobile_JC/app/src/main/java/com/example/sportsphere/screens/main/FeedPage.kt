@@ -17,17 +17,24 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,38 +45,64 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.sportsphere.R
-import com.example.sportsphere.navigations.graphs.Screen
-import com.example.sportsphere.network.interfaces.ApiService
 import com.example.sportsphere.network.model.Post
 import com.example.sportsphere.ui.theme.GrayPost
+import com.example.sportsphere.viewModel.PostViewModel
+import kotlinx.coroutines.launch
 
 
+//    val postService = remember { ApiService.retrofit }
+//    val postsState = remember { mutableStateOf<List<Post>>(emptyList()) }
+
+//    LaunchedEffect(Unit) {
+//        try {
+//            val posts = postService.getPosts()
+//            postsState.value = posts
+//        } catch (e: Exception) {
+//            Log.e("postsERR", e.message.toString())
+//        }
+//
+//    }
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FeedPage(navController: NavController) {
-    val postService = remember { ApiService.retrofit }
-    val postsState = remember { mutableStateOf<List<Post>>(emptyList()) }
-
-    LaunchedEffect(Unit) {
-        try {
-            val posts = postService.getPosts()
-            postsState.value = posts
-        } catch (e: Exception) {
-            Log.e("postsERR", e.message.toString())
-        }
-
+    val refreshScope = rememberCoroutineScope()
+    var refreshing by remember { mutableStateOf(false) }
+    val postViewModel: PostViewModel = viewModel()
+    postViewModel.getPostsList()
+    fun refresh() = refreshScope.launch {
+        Log.d("LoadingPost", "Loading...")
+        refreshing = true
+        postViewModel.getPostsList()
+        refreshing = false
+        Log.d("LoadingPost", "Loaded")
     }
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()
-        .padding()) {
-        item {
-            Stories()
+
+    val pullRefreshState = rememberPullRefreshState(refreshing, ::refresh)
+
+    Box(Modifier.pullRefresh(pullRefreshState)) {
+        if (!refreshing) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding()
+            ) {
+                item {
+                    Stories()
+                }
+                items(postViewModel.postsListResponse.size) { index ->
+                    Post(postViewModel.postsListResponse[index], navController, index)
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
+            }
+        }else{
+        CircularProgressIndicator(modifier = Modifier.fillMaxSize())
+
         }
-        items(postsState.value.size) { index ->
-            Post(postsState.value[index], navController, index)
-            Spacer(modifier = Modifier.height(10.dp))
-        }
+        PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
     }
 }
 
@@ -77,8 +110,7 @@ fun FeedPage(navController: NavController) {
 @Composable
 fun Stories() {
     LazyRow(
-        Modifier
-            .fillMaxWidth(),
+        Modifier.fillMaxWidth(),
     ) {
         items(6) {
             Card(
@@ -100,17 +132,14 @@ fun Stories() {
 fun Post(post: Post, navController: NavController, index: Int) {
     val like = remember { mutableStateOf(false) }
     val colorStops = arrayOf(
-        .001f to Color.Transparent,
-        .4f to Color.Black.copy(alpha = .6f)
+        .001f to Color.Transparent, .4f to Color.Black.copy(alpha = .6f)
     )
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = GrayPost)
-            .clickable {
-                navController.navigate(Screen.DetailPost.passId(post.idPost.toInt()))
-            }
-    ) {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .background(color = GrayPost)
+        .clickable {
+//                navController.navigate(Screen.DetailPost.passId(post.idPost.toInt()))
+        }) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier
@@ -142,8 +171,7 @@ fun Post(post: Post, navController: NavController, index: Int) {
                             style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         )
                         androidx.compose.material3.Text(
-                            text = post.description,
-                            style = TextStyle(fontSize = 14.sp)
+                            text = post.description, style = TextStyle(fontSize = 14.sp)
                         )
                     }
                 }
@@ -158,8 +186,7 @@ fun Post(post: Post, navController: NavController, index: Int) {
                 Box(
                     modifier =
 //                    if (post.photos.isNullOrEmpty())
-                        Modifier
-                        .fillMaxWidth()
+                    Modifier.fillMaxWidth()
 //                    else Modifier
 //                        .fillMaxWidth()
 //                        .aspectRatio(4f / 4f)
@@ -175,18 +202,14 @@ fun Post(post: Post, navController: NavController, index: Int) {
                     Column {
                         if (post.title != null.toString() && post.title != "") Text(
                             text = post.title,
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp, vertical = 10.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp),
                             style = TextStyle(
-                                fontSize = 20.sp,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
+                                fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.Bold
                             ),
                         )
                         Text(
                             text = post.description,
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp, vertical = 10.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp),
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 color = Color.Black,
@@ -237,8 +260,7 @@ fun Post(post: Post, navController: NavController, index: Int) {
                     TextButton(
                         onClick = { like.value = !like.value },
                         colors = ButtonDefaults.buttonColors(
-                            contentColor = Color.Black,
-                            containerColor = Color.Transparent
+                            contentColor = Color.Black, containerColor = Color.Transparent
                         )
                     ) {
                         Row(

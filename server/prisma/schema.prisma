@@ -185,7 +185,7 @@ model Like_for_post {
   postId Int
   post   Post @relation(fields: [postId], references: [idPost])
 
-  @@unique([userId, postId])  // Уникальный составной ключ 
+  @@unique([userId, postId]) // Уникальный составной ключ 
 }
 
 // Модель для кол-ва просмотров посетителей
@@ -209,10 +209,28 @@ model TrainingPlan {
   isPublic              Boolean?                 @default(false) // Сделать доступным для всех
   createdAt             DateTime                 @default(now())
   PlanProgress          Float?
+  typeOfSport           TypeOfSport[]
+  categories            Category[]
   exercises             Exercise[]
   trainingResults       TrainingResult[]
   bookmarksTrainingPlan BookmarkedTrainingPlan[]
   user                  User                     @relation(fields: [userId], references: [idUser])
+}
+
+// Модель для вида спорта в трен. плане
+model TypeOfSport {
+  idTypeOfSport  Int          @id @default(autoincrement())
+  trainingPlanId Int
+  nameType       String
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
+}
+
+// Модель для категории в трен. плане
+model Category {
+  idCategory     Int          @id @default(autoincrement())
+  trainingPlanId Int
+  nameCategory   String
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
 }
 
 // Модель для упражнений в тренировочном плане
@@ -282,6 +300,7 @@ model Ban {
   userId    Int
   adminId   Int // ID администратора, который вынес бан
   reason    String // Причина бана
+  beginAt   DateTime // Время начала срока бана
   period    Int // Время бана в минутах
   expiresAt DateTime // Время истечения срока бана
   // Связь с пользователем

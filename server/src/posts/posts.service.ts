@@ -24,6 +24,9 @@ export class PostsService {
         views: true,
         bookmarksPost: true,
       },
+      orderBy: {
+        idPost: 'desc',
+      },
     });
   }
 

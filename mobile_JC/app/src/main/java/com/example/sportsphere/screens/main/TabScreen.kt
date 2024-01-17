@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -22,25 +23,29 @@ import com.example.sportsphere.navigations.BottomBarScreen.Home.icon
 import com.example.sportsphere.screens.main.FeedPage
 import com.example.sportsphere.screens.main.PhotoPage
 import com.example.sportsphere.screens.main.VideoPage
+import com.example.sportsphere.ui.theme.TabColor
 import kotlinx.coroutines.launch
 
 data class TabModel(
     val title: String,
 )
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TabScreen(navController: NavController, it: PaddingValues) {
     val tabItems = listOf(
         TabModel("Главная"),
-        TabModel("Видео"),
+//        TabModel("Видео"),
         TabModel("Фото"),
     )
 
-    val pagerState = rememberPagerState(pageCount = {tabItems.size})
+    val pagerState = rememberPagerState(pageCount = { tabItems.size })
     val scope = rememberCoroutineScope()
 
     Column(Modifier.padding(it)) {
-        TabRow(selectedTabIndex = pagerState.currentPage) {
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+        ) {
             tabItems.forEachIndexed { index, item ->
                 TabItem(
                     onClick = { scope.launch { pagerState.scrollToPage(index) } },
@@ -50,10 +55,18 @@ fun TabScreen(navController: NavController, it: PaddingValues) {
             }
         }
         HorizontalPager(state = pagerState) { currentPage ->
-            when(currentPage) {
-                0 -> { FeedPage(navController) }
-                1 -> { VideoPage() }
-                2 -> { PhotoPage() }
+            when (currentPage) {
+                0 -> {
+                    FeedPage(navController)
+                }
+
+                1 -> {
+                    VideoPage()
+                }
+
+                2 -> {
+                    PhotoPage()
+                }
             }
         }
     }
@@ -65,15 +78,18 @@ fun TabItem(
     selected: Boolean,
     title: String,
 ) {
-    val selectedColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+    val selectedColor =
+        if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
 
     Tab(selected = selected, onClick = onClick) {
 
-            Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(10.dp),
-                text = title,
-                color = selectedColor
-            )
-        }
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(10.dp),
+            text = title,
+            color = selectedColor
+        )
+    }
 
 }
