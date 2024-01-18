@@ -1,6 +1,10 @@
 package com.example.sportsphere.screens.trainingPlans
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,14 +23,20 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +54,24 @@ fun TrainingPlanDetailPage(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+    val isVisible = rememberSaveable { mutableStateOf(true) }
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                // Hide FAB
+                if (available.y < -1) {
+                    isVisible.value = false
+                }
+
+                // Show FAB
+                if (available.y > 1) {
+                    isVisible.value = true
+                }
+
+                return Offset.Zero
+            }
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,47 +86,62 @@ fun TrainingPlanDetailPage(
                     }
                 },
             )
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = isVisible.value,
+                enter = slideInVertically(initialOffsetY = { it * 2 }),
+                exit = slideOutVertically(targetOffsetY = { it * 2 }),
+            ) {
+                FloatingActionButton(onClick = { /*TODO*/ }, containerColor = Color.LightGray) {
+                    Text(
+                        "Начать тренировку",
+                        Modifier.padding(10.dp),
+                        style = TextStyle(fontSize = 16.sp)
+                    )
+                }
+            }
         }
     ) {
-        TrainingPlanContent(it)
+        TrainingPlanContent(it, nestedScrollConnection=nestedScrollConnection)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun TrainingPlanContentPreview() {
-    TrainingPlanContent(it = PaddingValues(0.dp))
+//    TrainingPlanContent(it = PaddingValues(0.dp))
 }
 
 
 @Composable
-fun TrainingPlanContent(it: PaddingValues) {
+fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: NestedScrollConnection) {
     LazyColumn(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
+            .fillMaxWidth().nestedScroll(nestedScrollConnection),
     ) {
         item {
-            Text(
-                "Описание",
-                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                listsTrainingPlan[0].description,
-                style = TextStyle(fontSize = 18.sp)
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                "Упражнения",
-                modifier = Modifier.fillMaxWidth(),
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+            Column(Modifier.padding(10.dp)) {
+                Text(
+                    "Описание",
+                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 )
-            )
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    listsTrainingPlan[0].description,
+                    style = TextStyle(fontSize = 18.sp)
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    "Упражнения",
+                    modifier = Modifier.fillMaxWidth(),
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                )
+            }
         }
         items(listsExercise.size) {
             exerciseItem(listsExercise[it])
@@ -134,7 +177,7 @@ val listsExercise: Array<Exercise> = arrayOf(
         trainingPlan = listsTrainingPlan[0]
     ),
     Exercise(
-        idExercise = 1,
+        idExercise = 2,
         trainingPlanId = listsTrainingPlan[0].idTrainingPlan,
         name = "Приседания",
         description = "Это упражнение укрепляет бедра, ягодицы и спину. Выполняется с прямой спиной, колени не должны выходить за пальцы ног.",
@@ -142,7 +185,7 @@ val listsExercise: Array<Exercise> = arrayOf(
         trainingPlan = listsTrainingPlan[0]
     ),
     Exercise(
-        idExercise = 1,
+        idExercise = 3,
         trainingPlanId = listsTrainingPlan[0].idTrainingPlan,
         name = "Подтягивания",
         description = "Это упражнение развивает мышцы спины, бицепсы и предплечья. Выполнять его можно на турнике или специальной перекладине.",
@@ -150,7 +193,7 @@ val listsExercise: Array<Exercise> = arrayOf(
         trainingPlan = listsTrainingPlan[0]
     ),
     Exercise(
-        idExercise = 1,
+        idExercise = 4,
         trainingPlanId = listsTrainingPlan[0].idTrainingPlan,
         name = "Жим гантелей лежа",
         description = "Это упражнение предназначено для развития грудных мышц и трицепса. Выполнять его следует на горизонтальной скамье, гантели должны быть подняты до уровня груди.",
@@ -158,7 +201,7 @@ val listsExercise: Array<Exercise> = arrayOf(
         trainingPlan = listsTrainingPlan[0]
     ),
     Exercise(
-        idExercise = 1,
+        idExercise = 5,
         trainingPlanId = listsTrainingPlan[0].idTrainingPlan,
         name = "Тяга гантелей к поясу",
         description = "Это упражнение помогает укрепить мышцы спины и бицепсы. Выполняется стоя, гантели поднимаются к поясу.",
@@ -166,7 +209,7 @@ val listsExercise: Array<Exercise> = arrayOf(
         trainingPlan = listsTrainingPlan[0]
     ),
     Exercise(
-        idExercise = 1,
+        idExercise = 6,
         trainingPlanId = listsTrainingPlan[0].idTrainingPlan,
         name = "Выпады с гантелями",
         description = "Это упражнение способствует развитию мышц ног и ягодиц. Выполняются выпады вперед и назад, гантели держат в руках.",
@@ -174,7 +217,7 @@ val listsExercise: Array<Exercise> = arrayOf(
         trainingPlan = listsTrainingPlan[0]
     ),
     Exercise(
-        idExercise = 1,
+        idExercise = 7,
         trainingPlanId = listsTrainingPlan[0].idTrainingPlan,
         name = "Разгибание рук с гантелей из-за головы",
         description = "Это упражнение направлено на укрепление трицепсов. Выполняется сидя, гантель поднимается над головой.",
@@ -192,36 +235,37 @@ fun exerciseItem(exercise: Exercise) {
         modifier = Modifier
             .padding(10.dp)
             .clip(RoundedCornerShape(10.dp))
+            .clickable { isShow.value = !isShow.value }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)
+                .background(Color.White.copy(alpha = .5f))
                 .padding(10.dp)
         ) {
             Text(
                 exercise.name,
                 style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
             )
-            TextButton(
-                modifier = Modifier.padding(0.dp),
-                onClick = {isShow.value = !isShow.value},
-                content = {
-                    if (isShow.value) {
-                        Text(
-                            text = exercise.description,
-                            style = TextStyle(fontSize = 18.sp)
-                        )
-                    } else {
-                        Text(
-                            text = "Подробнее...",
-                            style = TextStyle(fontSize = 18.sp, fontStyle = FontStyle.Italic)
-                        )
-
-                    }
-                },
-
+            Spacer(modifier = Modifier.height(10.dp))
+            if (isShow.value) {
+                Text(
+                    text = exercise.description,
+                    style = TextStyle(fontSize = 18.sp)
                 )
+            } else {
+                Text(
+                    text = "Подробнее...",
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontStyle = FontStyle.Italic,
+                        color = Color.Gray
+                    )
+                )
+
+            }
+
+
         }
     }
 }

@@ -79,7 +79,7 @@ fun Preview(){
     Card(modifier = Modifier.padding(10.dp).clip(RoundedCornerShape(10.dp))
     ) {
         Column(modifier = Modifier
-            .fillMaxWidth().background(Color.White)
+            .fillMaxWidth().background(Color.White.copy(alpha = .5f))
             .padding(10.dp)) {
             Text(
                 "Тренировка на 23.11.2023",
