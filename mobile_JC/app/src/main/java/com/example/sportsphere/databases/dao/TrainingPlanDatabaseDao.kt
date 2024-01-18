@@ -8,7 +8,7 @@ import androidx.room.Update
 import com.example.sportsphere.databases.models.TrainingPlan
 
 
-interface TrainingPlanDao {
+interface TrainingPlanDatabaseDao {
     @Query("SELECT * from training_plan")
     fun getAll(): LiveData<List<TrainingPlan>>
 

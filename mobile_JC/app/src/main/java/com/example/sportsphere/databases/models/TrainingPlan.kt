@@ -111,7 +111,7 @@ data class TrainingPlan(
 
     val endDate: LocalDateTime?,
 
-    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val createdAt: LocalDateTime? = LocalDateTime.now(),
 
     val PlanProgress: Float?,
 
@@ -131,7 +131,7 @@ data class TrainingPlan(
 )
 
 // Модель для вида спорта в трен. плане
-@Entity
+@Entity(tableName = "type_of_sport")
 data class TypeOfSport(
     @PrimaryKey(autoGenerate = true)
     val idTypeOfSport: Int = 0,
@@ -146,7 +146,7 @@ data class TypeOfSport(
 )
 
 // Модель для категории в трен. плане
-@Entity
+@Entity(tableName = "category")
 data class Category(
     @PrimaryKey(autoGenerate = true)
     val idCategory: Int = 0,
@@ -161,7 +161,7 @@ data class Category(
 )
 
 // Модель для упражнений в тренировочном плане
-@Entity
+@Entity(tableName = "exercise")
 data class Exercise(
     @PrimaryKey(autoGenerate = true)
     val idExercise: Int = 0,
@@ -182,7 +182,7 @@ data class Exercise(
 )
 
 // Модель для результатов тренировки
-@Entity
+@Entity(tableName = "training_result")
 data class TrainingResult(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -208,7 +208,7 @@ data class TrainingResult(
 )
 
 // Модель для результатов упражнений
-@Entity
+@Entity(tableName = "exercise_result")
 data class ExerciseResult(
     @PrimaryKey(autoGenerate = true)
     val idExerciseResult: Int = 0,
@@ -231,7 +231,7 @@ data class ExerciseResult(
 )
 
 
-@Entity
+@Entity(tableName = "bookmarked_training_plan")
 data class BookmarkedTrainingPlan(
     @PrimaryKey(autoGenerate = true)
     val id: Int,

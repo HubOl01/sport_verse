@@ -6,7 +6,7 @@ import androidx.room.Relation
 import java.time.LocalDateTime
 
 // Модель пользователя
-@Entity
+@Entity(tableName = "user")
 data class User(
     @PrimaryKey(autoGenerate = true)
     val idUser: Int = 0,
