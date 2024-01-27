@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateViewDto } from './dto/create-view.dto';
 import { UpdateViewDto } from './dto/update-view.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { View_for_post } from '@prisma/client';
 
 @Injectable()
 export class ViewsService {
@@ -33,7 +32,7 @@ export class ViewsService {
   }
 
   update(id: number, updateViewDto: UpdateViewDto) {
-    return `This action updates a #${id} view`;
+    return `This action updates a #${id} view ${updateViewDto}`;
   }
 
   remove(id: number) {

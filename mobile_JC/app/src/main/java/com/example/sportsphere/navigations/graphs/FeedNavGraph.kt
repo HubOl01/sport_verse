@@ -18,6 +18,7 @@ import com.example.sportsphere.screens.main.FeedPage
 import com.example.sportsphere.screens.main.PostModel
 import com.example.sportsphere.screens.main.dataPosts
 import com.example.sportsphere.screens.profile.ProfilePage
+import com.example.sportsphere.screens.trainingPlans.TrainingPlanAddPage
 import com.example.sportsphere.screens.trainingPlans.TrainingPlanDetailPage
 import com.example.sportsphere.screens.trainingPlans.TrainingPlansPage
 
@@ -29,10 +30,7 @@ fun HomeNavGraph(navController: NavHostController, itM: PaddingValues) {
         startDestination = BottomBarScreen.Home.route
     ) {
         composable(route = BottomBarScreen.Home.route) {
-                TabScreen(navController = navController, itM)
-//            FeedPage(navController = navController, itM)
-//            Scaffold {
-//            }
+            TabScreen(navController = navController, itM)
         }
         composable(route = BottomBarScreen.TrainingPlans.route) {
             TrainingPlansPage(itM, navController)
@@ -42,6 +40,7 @@ fun HomeNavGraph(navController: NavHostController, itM: PaddingValues) {
         }
         detailsNavGraph(navController = navController)
         trainingPlanDetailNavGraph(navController)
+        trainingPlanAddNavGraph(navController)
     }
 }
 
@@ -52,27 +51,52 @@ fun NavGraphBuilder.detailsNavGraph(navController: NavHostController) {
     ) {
         composable(route = Screen.DetailPost.route,
             arguments = listOf(
-                navArgument(KEY_AGG_DETAILS){
-                    type= NavType.IntType
+                navArgument(KEY_AGG_POST_DETAILS) {
+                    type = NavType.IntType
 //                    defaultValue = 0
                 }
             )
-            ) {
-            DetailPost(it.arguments?.getInt(KEY_AGG_DETAILS)!!.toInt(), navController)
+        ) {
+            DetailPost(it.arguments?.getInt(KEY_AGG_POST_DETAILS)!!.toInt(), navController)
 //            Log.d("argAF", it.arguments?.getInt(KEY_AGG_DETAILS).toString())
         }
     }
 }
+
 fun NavGraphBuilder.trainingPlanDetailNavGraph(navController: NavHostController) {
     navigation(
         route = Graph.DETAIL,
         startDestination = Screen.TrainingPlanDetail.route
     ) {
-        composable(route = Screen.TrainingPlanDetail.route,
+        composable(
+            route = Screen.TrainingPlanDetail.route,
+            arguments = listOf(
+                navArgument(KEY_AGG_TRAINING_PLAN_DETAILS) {
+                    type = NavType.IntType
+                }
+            )
         ) {
-            TrainingPlanDetailPage(navController = navController)
+            TrainingPlanDetailPage(
+                navController = navController, idTrainingPlan = it.arguments?.getInt(
+                    KEY_AGG_TRAINING_PLAN_DETAILS
+                )!!.toInt()
+            )
         }
     }
 }
 
-const val KEY_AGG_DETAILS = "postId"
+fun NavGraphBuilder.trainingPlanAddNavGraph(navController: NavHostController) {
+    navigation(
+        route = Graph.ADD,
+        startDestination = Screen.TrainingPlanAdd.route
+    ) {
+        composable(
+            route = Screen.TrainingPlanAdd.route,
+        ) {
+            TrainingPlanAddPage(navController = navController)
+        }
+    }
+}
+
+const val KEY_AGG_POST_DETAILS = "postId"
+const val KEY_AGG_TRAINING_PLAN_DETAILS = "trainingPlanId"

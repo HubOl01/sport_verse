@@ -1,20 +1,18 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { View_for_post } from "@prisma/client"
-import { IsInt } from "class-validator"
+import { ApiProperty } from '@nestjs/swagger';
+import { View_for_post } from '@prisma/client';
+import { IsInt } from 'class-validator';
 
 export class ViewEntity implements View_for_post {
-    
-    @IsInt()
-    idView:number
+  @IsInt()
+  idView: number;
 
-    @ApiProperty()
-    @IsInt()
-    userId:number
+  @ApiProperty()
+  @IsInt()
+  userId: number;
 
-    @ApiProperty()
-    @IsInt()
-    postId:number
-
+  @ApiProperty()
+  @IsInt()
+  postId: number;
 }
 
 /* model View_for_post {

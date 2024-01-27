@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.sportsphere.R
+import com.example.sportsphere.databases.models.TrainingPlan
 import com.example.sportsphere.navigations.graphs.Screen
-import com.example.sportsphere.ui.theme.GrayPost
 
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
@@ -40,34 +40,34 @@ fun TrainingPlansPage(itM: PaddingValues, navController: NavController) {
         modifier = Modifier.padding(itM),
         topBar = {
             TopAppBar(title = { Text(text = "План тренировок") }, actions = {
-                IconButton(onClick = {  }) {
+                IconButton(onClick = { navController.navigate(Screen.TrainingPlanAdd.route) }) {
                 Icon(painter = painterResource(id = R.drawable.baseline_add_24), contentDescription = null)
             }})
         }
     ) { it ->
         LazyColumn(modifier = Modifier.padding(it)) {
-            items(11) {
-                CardPlan(navController)
+            items(listsTrainingPlan.size) {
+                CardPlan(navController, listsTrainingPlan[it])
             }
         }
     }
 }
 
 @Composable
-fun CardPlan(navController: NavController) {
+fun CardPlan(navController: NavController, trainingPlan: TrainingPlan) {
     Card(modifier = Modifier.padding(10.dp).clip(RoundedCornerShape(10.dp))
-        .clickable { navController.navigate(Screen.TrainingPlanDetail.route) },
+        .clickable { navController.navigate(Screen.TrainingPlanDetail.planId(trainingPlan.idTrainingPlan)) },
     ) {
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)) {
             Text(
-                "Тренировка на 23.11.2023",
+                trainingPlan.title,
                 style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold)
             )
             Row {
-                ClipText(text = "Тяжелая атлетика", color = Color.Red)
-                ClipText(text = "Силовая", color = Color.DarkGray)
+//                ClipText(text = trainingPlan.typeOfSport[0].nameType, color = Color.Red)
+//                ClipText(text = trainingPlan.categories[0].nameCategory, color = Color.DarkGray)
             }
         }
     }

@@ -52,6 +52,7 @@ import java.time.LocalDateTime
 @Composable
 fun TrainingPlanDetailPage(
     modifier: Modifier = Modifier,
+    idTrainingPlan: Int,
     navController: NavController
 ) {
     val isVisible = rememberSaveable { mutableStateOf(true) }
@@ -103,22 +104,23 @@ fun TrainingPlanDetailPage(
             }
         }
     ) {
-        TrainingPlanContent(it, nestedScrollConnection=nestedScrollConnection)
+        TrainingPlanContent(it, nestedScrollConnection = nestedScrollConnection)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun TrainingPlanContentPreview() {
+private fun TrainingPlanContentPreview() {
 //    TrainingPlanContent(it = PaddingValues(0.dp))
 }
 
 
 @Composable
-fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: NestedScrollConnection) {
+private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: NestedScrollConnection) {
     LazyColumn(
         modifier = Modifier
-            .fillMaxWidth().nestedScroll(nestedScrollConnection),
+            .fillMaxWidth()
+            .nestedScroll(nestedScrollConnection),
     ) {
         item {
             Column(Modifier.padding(10.dp)) {
@@ -156,6 +158,18 @@ val listsTrainingPlan: Array<TrainingPlan> = arrayOf(
         description = "“Силовой прорыв” - это интенсивная силовая тренировка, предназначенная для быстрого и эффективного развития мышечной массы и силы. Эта тренировка включает в себя различные упражнения с использованием собственного веса тела, гантелей и эспандеров, которые выполняются в несколько раундов и сетов.\n" +
                 "\n" +
                 "Цель “Силового прорыва” - обеспечить максимальное увеличение силы и мышечной массы за минимальное время. Эта тренировка идеально подходит для тех, кто хочет быстро достичь результатов и улучшить свою физическую форму. Для достижения наилучших результатов важно соблюдать правильную технику выполнения упражнений и регулярно увеличивать вес и количество повторений.",
+        startDate = LocalDateTime.now(),
+        endDate = LocalDateTime.now(),
+        createdAt = LocalDateTime.now(),
+        PlanProgress = 0f,
+        typeOfSport = emptyList(),
+        categories = emptyList(),
+        exercises = emptyList(),
+        trainingResults = emptyList()
+    ), TrainingPlan(
+        idTrainingPlan = 2,
+        title = "Тренировка №1",
+        description = "",
         startDate = LocalDateTime.now(),
         endDate = LocalDateTime.now(),
         createdAt = LocalDateTime.now(),

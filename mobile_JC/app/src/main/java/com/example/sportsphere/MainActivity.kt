@@ -32,7 +32,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.sportsphere.navigations.BottomBarScreen
-import com.example.sportsphere.navigations.Screens
 import com.example.sportsphere.navigations.graphs.HomeNavGraph
 import com.example.sportsphere.navigations.graphs.RootNavigationGraph
 import com.example.sportsphere.screens.main.FeedPage

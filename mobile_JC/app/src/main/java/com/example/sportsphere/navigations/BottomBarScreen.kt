@@ -28,21 +28,3 @@ sealed class BottomBarScreen(
         icon = Icons.Default.Person
     )
 }
-
-//val listOfNavItem = listOf(
-//    NavItem(
-//        "Новости",
-//        ImageVector.vectorResource(R.drawable.baseline_newspaper_24),
-//        Screens.MainPage.name
-//    ),
-//    NavItem(
-//        "Тренировочные планы",
-//        ImageVector.vectorResource(R.drawable.baseline_sports_24),
-//        Screens.TrainingPlansPage.name
-//    ),
-//    NavItem(
-//        "Профиль",
-//        ImageVector.vectorResource(R.drawable.baseline_person_24),
-//        Screens.ProfilePage.name
-//    )
-//)

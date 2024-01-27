@@ -209,36 +209,61 @@ model TrainingPlan {
   isPublic              Boolean?                 @default(false) // Сделать доступным для всех
   createdAt             DateTime                 @default(now())
   PlanProgress          Float?
-  typeOfSport           TypeOfSport[]
-  categories            Category[]
   exercises             Exercise[]
   trainingResults       TrainingResult[]
   bookmarksTrainingPlan BookmarkedTrainingPlan[]
   user                  User                     @relation(fields: [userId], references: [idUser])
+  TypesOnPlans          TypesOnPlans[]
+  CategoriesOnPlans     CategoriesOnPlans[]
 }
 
 // Модель для вида спорта в трен. плане
 model TypeOfSport {
-  idTypeOfSport  Int          @id @default(autoincrement())
-  trainingPlanId Int
-  nameType       String
-  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
+  idTypeOfSport Int            @id @default(autoincrement())
+  // trainingPlanId Int
+  nameType      String
+  colorType     String?
+  TypesOnPlans  TypesOnPlans[]
 }
 
 // Модель для категории в трен. плане
 model Category {
-  idCategory     Int          @id @default(autoincrement())
-  trainingPlanId Int
-  nameCategory   String
+  idCategory        Int                 @id @default(autoincrement())
+  nameCategory      String
+  colorCategory     String?
+  CategoriesOnPlans CategoriesOnPlans[]
+}
+
+model TypesOnPlans {
   trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
+  trainingPlanId Int
+  typeOfSport    TypeOfSport  @relation(fields: [typeOfSportId], references: [idTypeOfSport])
+  typeOfSportId  Int
+
+  @@id([trainingPlanId, typeOfSportId])
+}
+
+model CategoriesOnPlans {
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan])
+  trainingPlanId Int
+  category       Category     @relation(fields: [categoryId], references: [idCategory])
+  categoryId     Int
+
+  @@id([trainingPlanId, categoryId])
 }
 
 // Модель для упражнений в тренировочном плане
 model Exercise {
-  idExercise      Int              @id @default(autoincrement())
-  trainingPlanId  Int
-  name            String
-  description     String
+  idExercise     Int    @id @default(autoincrement())
+  trainingPlanId Int
+  name           String
+  description    String
+
+  duration         BigInt? // задержка/время выполнения упражнения в сек. (если много, то потом можно перевести в мин, часы)
+  distance         Float? // расстояние проведенное во время упражнения изммеряется в см (если много, то потом можно перевести в м, км)
+  numberApproaches Int? // Кол-во подходов упражнений
+  numberExercise   Int? // кол-во упражнений нужно выполнить
+
   exerciseResults ExerciseResult[]
   trainingPlan    TrainingPlan     @relation(fields: [trainingPlanId], references: [idTrainingPlan])
 }
@@ -261,11 +286,13 @@ model ExerciseResult {
   idExerciseResult Int      @id @default(autoincrement())
   exerciseId       Int
   date             DateTime
-  duration         BigInt?
-  distance         Float?
 
-  doneExercise  Boolean?
-  resultsNumber Float?
+  duration         BigInt? // задержка/время выполнения упражнения
+  distance         Float? // расстояние проведенное во время упражнения
+  numberApproaches Int? // Кол-во подходов упражнений
+  resultsNumber    Int? // кол-во выполненных упражнений
+
+  doneExercise Boolean?
 
   exercise Exercise @relation(fields: [exerciseId], references: [idExercise])
 }
