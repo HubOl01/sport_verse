@@ -151,34 +151,34 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
     }
 }
 
-val listsTrainingPlan: Array<TrainingPlan> = arrayOf(
-    TrainingPlan(
-        idTrainingPlan = 1,
-        title = "Силовой прорыв",
-        description = "“Силовой прорыв” - это интенсивная силовая тренировка, предназначенная для быстрого и эффективного развития мышечной массы и силы. Эта тренировка включает в себя различные упражнения с использованием собственного веса тела, гантелей и эспандеров, которые выполняются в несколько раундов и сетов.\n" +
-                "\n" +
-                "Цель “Силового прорыва” - обеспечить максимальное увеличение силы и мышечной массы за минимальное время. Эта тренировка идеально подходит для тех, кто хочет быстро достичь результатов и улучшить свою физическую форму. Для достижения наилучших результатов важно соблюдать правильную технику выполнения упражнений и регулярно увеличивать вес и количество повторений.",
-        startDate = LocalDateTime.now(),
-        endDate = LocalDateTime.now(),
-        createdAt = LocalDateTime.now(),
-        PlanProgress = 0f,
-        typeOfSport = emptyList(),
-        categories = emptyList(),
-        exercises = emptyList(),
-        trainingResults = emptyList()
-    ), TrainingPlan(
-        idTrainingPlan = 2,
-        title = "Тренировка №1",
-        description = "",
-        startDate = LocalDateTime.now(),
-        endDate = LocalDateTime.now(),
-        createdAt = LocalDateTime.now(),
-        PlanProgress = 0f,
-        typeOfSport = emptyList(),
-        categories = emptyList(),
-        exercises = emptyList(),
-        trainingResults = emptyList()
-    )
+var listsTrainingPlan: Array<TrainingPlan> = emptyArray<TrainingPlan>(
+//    TrainingPlan(
+//        idTrainingPlan = 1,
+//        title = "Силовой прорыв",
+//        description = "“Силовой прорыв” - это интенсивная силовая тренировка, предназначенная для быстрого и эффективного развития мышечной массы и силы. Эта тренировка включает в себя различные упражнения с использованием собственного веса тела, гантелей и эспандеров, которые выполняются в несколько раундов и сетов.\n" +
+//                "\n" +
+//                "Цель “Силового прорыва” - обеспечить максимальное увеличение силы и мышечной массы за минимальное время. Эта тренировка идеально подходит для тех, кто хочет быстро достичь результатов и улучшить свою физическую форму. Для достижения наилучших результатов важно соблюдать правильную технику выполнения упражнений и регулярно увеличивать вес и количество повторений.",
+//        startDate = LocalDateTime.now(),
+//        endDate = LocalDateTime.now(),
+//        createdAt = LocalDateTime.now(),
+//        PlanProgress = 0f,
+//        typeOfSport = emptyList(),
+//        categories = emptyList(),
+//        exercises = emptyList(),
+//        trainingResults = emptyList()
+//    ), TrainingPlan(
+//        idTrainingPlan = 2,
+//        title = "Тренировка №1",
+//        description = "",
+//        startDate = LocalDateTime.now(),
+//        endDate = LocalDateTime.now(),
+//        createdAt = LocalDateTime.now(),
+//        PlanProgress = 0f,
+//        typeOfSport = emptyList(),
+//        categories = emptyList(),
+//        exercises = emptyList(),
+//        trainingResults = emptyList()
+//    )
 )
 
 val listsExercise: Array<Exercise> = arrayOf(

@@ -96,8 +96,34 @@ import java.time.LocalDateTime
 import java.util.*
 
 
+@Entity
+data class TypeOfSport(
+    @PrimaryKey(autoGenerate = true) val idTypeOfSport: Int = 0,
+    val nameType: String,
+    val colorType: String?,
+    val TypesOnPlans: List<TypesOnPlans>,
+)
 
-// Модель для тренировочных планов
+@Entity
+data class Category(
+    @PrimaryKey(autoGenerate = true) val idCategory: Int = 0,
+    val nameCategory: String,
+    val colorCategory: String?,
+    val CategoriesOnPlans: List<CategoriesOnPlans>,
+)
+
+@Entity(primaryKeys = ["trainingPlanId", "typeOfSportId"])
+data class TypesOnPlans(
+    val trainingPlanId: Int,
+    val typeOfSportId: Int,
+)
+
+@Entity(primaryKeys = ["trainingPlanId", "categoryId"])
+data class CategoriesOnPlans(
+    val trainingPlanId: Int,
+    val categoryId: Int,
+)
+
 @Entity(tableName = "training_plan")
 data class TrainingPlan(
     @PrimaryKey(autoGenerate = true)
@@ -127,40 +153,12 @@ data class TrainingPlan(
     val exercises: List<Exercise>,
 
     @Relation(parentColumn = "idTrainingPlan", entityColumn = "trainingPlanId")
-    val trainingResults: List<TrainingResult>
+    val trainingResults: List<TrainingResult>,
+
+    val TypesOnPlans: List<TypesOnPlans>,
+    val CategoriesOnPlans: List<CategoriesOnPlans>,
 )
 
-// Модель для вида спорта в трен. плане
-@Entity(tableName = "type_of_sport")
-data class TypeOfSport(
-    @PrimaryKey(autoGenerate = true)
-    val idTypeOfSport: Int = 0,
-
-    val trainingPlanId: Int,
-
-    val nameType: String,
-
-    // Зависимость от другой таблицы
-    @Relation(parentColumn = "trainingPlanId", entityColumn = "idTrainingPlan")
-    val trainingPlan: TrainingPlan
-)
-
-// Модель для категории в трен. плане
-@Entity(tableName = "category")
-data class Category(
-    @PrimaryKey(autoGenerate = true)
-    val idCategory: Int = 0,
-
-    val trainingPlanId: Int,
-
-    val nameCategory: String,
-
-    // Зависимость от другой таблицы
-    @Relation(parentColumn = "trainingPlanId", entityColumn = "idTrainingPlan")
-    val trainingPlan: TrainingPlan
-)
-
-// Модель для упражнений в тренировочном плане
 @Entity(tableName = "exercise")
 data class Exercise(
     @PrimaryKey(autoGenerate = true)

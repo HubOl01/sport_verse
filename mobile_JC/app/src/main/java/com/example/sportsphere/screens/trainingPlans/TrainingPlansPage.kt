@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +19,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -36,31 +42,67 @@ import com.example.sportsphere.navigations.graphs.Screen
 //@Preview(showBackground = true)
 @Composable
 fun TrainingPlansPage(itM: PaddingValues, navController: NavController) {
+//    var listsTrainingPlanner by remember {
+//
+//    }
+    var listsTrainingPlanner by remember { mutableStateOf<Array<TrainingPlan>?>(null) }
     Scaffold(
         modifier = Modifier.padding(itM),
         topBar = {
             TopAppBar(title = { Text(text = "План тренировок") }, actions = {
                 IconButton(onClick = { navController.navigate(Screen.TrainingPlanAdd.route) }) {
-                Icon(painter = painterResource(id = R.drawable.baseline_add_24), contentDescription = null)
-            }})
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_add_24),
+                        contentDescription = null
+                    )
+                }
+            })
         }
     ) { it ->
+//        LazyColumn(modifier = Modifier.padding(it)) {
+//                if (listsTrainingPlan.isNotEmpty())
+//                    items(listsTrainingPlan.size) {
+//                        CardPlan(navController, listsTrainingPlan[it])
+//                    }
+//                else
+//            item {
+//                Text(text = "Нет данных", modifier = Modifier.fillMaxSize())
+//
+//            }
+//        }
         LazyColumn(modifier = Modifier.padding(it)) {
-            items(listsTrainingPlan.size) {
-                CardPlan(navController, listsTrainingPlan[it])
+            when {
+                listsTrainingPlanner != null && listsTrainingPlanner!!.isNotEmpty() -> {
+                    items(listsTrainingPlanner!!.size) {
+                        CardPlan(navController, listsTrainingPlanner!![it])
+                    }
+                }
+
+                else -> {
+                    item {
+                        Text(text = "Нет данных", modifier = Modifier.fillMaxSize())
+                    }
+                }
             }
+
         }
+
     }
 }
 
 @Composable
 fun CardPlan(navController: NavController, trainingPlan: TrainingPlan) {
-    Card(modifier = Modifier.padding(10.dp).clip(RoundedCornerShape(10.dp))
-        .clickable { navController.navigate(Screen.TrainingPlanDetail.planId(trainingPlan.idTrainingPlan)) },
+    Card(
+        modifier = Modifier
+            .padding(10.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .clickable { navController.navigate(Screen.TrainingPlanDetail.planId(trainingPlan.idTrainingPlan)) },
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
             Text(
                 trainingPlan.title,
                 style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold)
@@ -75,12 +117,18 @@ fun CardPlan(navController: NavController, trainingPlan: TrainingPlan) {
 
 @Preview
 @Composable
-fun Preview(){
-    Card(modifier = Modifier.padding(10.dp).clip(RoundedCornerShape(10.dp))
+fun Preview() {
+    Card(
+        modifier = Modifier
+            .padding(10.dp)
+            .clip(RoundedCornerShape(10.dp))
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth().background(Color.White.copy(alpha = .5f))
-            .padding(10.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White.copy(alpha = .5f))
+                .padding(10.dp)
+        ) {
             Text(
                 "Тренировка на 23.11.2023",
                 style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold)
