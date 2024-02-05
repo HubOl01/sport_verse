@@ -93,8 +93,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
+fun getDateFormaters(localDateTime: LocalDateTime): String {
+    return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+}
 
 @Entity
 data class TypeOfSport(
@@ -124,6 +128,7 @@ data class CategoriesOnPlans(
     val categoryId: Int,
 )
 
+
 @Entity(tableName = "training_plan")
 data class TrainingPlan(
     @PrimaryKey(autoGenerate = true)
@@ -133,11 +138,11 @@ data class TrainingPlan(
 
     val description: String,
 
-    val startDate: LocalDateTime?,
+    val startDate: String? = getDateFormaters(LocalDateTime.now()),
 
-    val endDate: LocalDateTime?,
+    val endDate: String? = getDateFormaters(LocalDateTime.now()),
 
-    val createdAt: LocalDateTime? = LocalDateTime.now(),
+    val createdAt: String? = getDateFormaters(LocalDateTime.now()),
 
     val PlanProgress: Float?,
 

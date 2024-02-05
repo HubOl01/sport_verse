@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.sportsphere.databases.dao.TrainingPlanDatabaseDao
 import com.example.sportsphere.databases.models.TrainingPlan
 
-@Database(entities = [TrainingPlan::class], version = 1)
+@Database(entities = [TrainingPlan::class], version = 1, exportSchema = false)
 abstract class TrainingPlanDatabase : RoomDatabase() {
     abstract fun trainingPlanDao(): TrainingPlanDatabaseDao
     companion object {
@@ -19,7 +19,7 @@ abstract class TrainingPlanDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         TrainingPlanDatabase::class.java,
-                        "training_plan_database"
+                        "training_plan_db"
                     ).fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = instance

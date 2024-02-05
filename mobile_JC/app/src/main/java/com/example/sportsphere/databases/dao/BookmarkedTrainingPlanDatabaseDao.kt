@@ -1,13 +1,14 @@
 package com.example.sportsphere.databases.dao
 
 import androidx.lifecycle.LiveData
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.sportsphere.databases.models.Exercise
 
-
+@Dao
 interface BookmarkedTrainingPlanDatabaseDao {
     @Query("SELECT * from bookmarked_training_plan")
     fun getAll(): LiveData<List<Exercise>>

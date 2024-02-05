@@ -1,7 +1,9 @@
 package com.example.sportsphere.screens.trainingPlans
 
+import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,23 +22,31 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.sportsphere.R
 import com.example.sportsphere.databases.models.TrainingPlan
 import com.example.sportsphere.navigations.graphs.Screen
+//import com.example.sportsphere.viewModel.TrainingPlansModel
+import com.example.sportsphere.viewModel.TrainingPlansViewModel
+import com.example.sportsphere.viewModel.TrainingPlansViewModelFactory
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true)
@@ -45,12 +55,39 @@ fun TrainingPlansPage(itM: PaddingValues, navController: NavController) {
 //    var listsTrainingPlanner by remember {
 //
 //    }
-    var listsTrainingPlanner by remember { mutableStateOf<Array<TrainingPlan>?>(null) }
+    val context = LocalContext.current
+    val mTrainingPlanModel: TrainingPlansViewModel = viewModel(
+        factory = TrainingPlansViewModelFactory(context.applicationContext as Application)
+    )
+    val plans = mTrainingPlanModel.readAllData.observeAsState(listOf()).value
+    var count by remember {
+        mutableStateOf(0)
+    }
     Scaffold(
         modifier = Modifier.padding(itM),
         topBar = {
             TopAppBar(title = { Text(text = "План тренировок") }, actions = {
-                IconButton(onClick = { navController.navigate(Screen.TrainingPlanAdd.route) }) {
+                IconButton(onClick = {
+                    count++
+//                    navController.navigate(Screen.TrainingPlanAdd.route)
+                    mTrainingPlanModel.addData(
+                        TrainingPlan(
+//                            idTrainingPlan = count,
+                            title = "plan ${count}",
+                            description = "",
+                            startDate = LocalDateTime.now(),
+                            endDate = LocalDateTime.now(),
+//                            createdAt = LocalDateTime.now(),
+                            PlanProgress = 1f,
+                            typeOfSport = emptyList(),
+                            categories = emptyList(),
+                            exercises = emptyList(),
+                            trainingResults = emptyList(),
+                            TypesOnPlans = emptyList(),
+                            CategoriesOnPlans = emptyList()
+                        )
+                    )
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_add_24),
                         contentDescription = null
@@ -70,17 +107,29 @@ fun TrainingPlansPage(itM: PaddingValues, navController: NavController) {
 //
 //            }
 //        }
-        LazyColumn(modifier = Modifier.padding(it)) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize(),
+            horizontalAlignment = if (listsTrainingPlan.isEmpty()) Alignment.CenterHorizontally else Alignment.Start,
+            verticalArrangement = if (listsTrainingPlan.isEmpty()) Arrangement.Center else Arrangement.Top,
+        ) {
             when {
-                listsTrainingPlanner != null && listsTrainingPlanner!!.isNotEmpty() -> {
-                    items(listsTrainingPlanner!!.size) {
-                        CardPlan(navController, listsTrainingPlanner!![it])
+                plans.isNotEmpty() -> {
+                    items(plans.size) {
+                        CardPlan(navController, plans[it])
                     }
                 }
 
                 else -> {
                     item {
-                        Text(text = "Нет данных", modifier = Modifier.fillMaxSize())
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Text(text = "Нет данных")
+                        }
                     }
                 }
             }
