@@ -6,7 +6,7 @@ import com.example.sportsphere.databases.models.TrainingPlan
 
 
 class TrainingPlanRepository(private val trainingPlanDatabaseDao: TrainingPlanDatabaseDao) {
-    val readAllData : LiveData<List<TrainingPlan>> =  trainingPlanDatabaseDao.getAll()
+    val readAllData : LiveData<List<TrainingPlan>> = trainingPlanDatabaseDao.getAll()
     suspend fun addPlan(trainingPlanItem: TrainingPlan) {
         trainingPlanDatabaseDao.insert(trainingPlanItem)
     }

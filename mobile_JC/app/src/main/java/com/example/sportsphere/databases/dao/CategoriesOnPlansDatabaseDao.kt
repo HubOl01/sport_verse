@@ -6,25 +6,25 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.sportsphere.databases.models.Exercise
+import com.example.sportsphere.databases.models.CategoriesOnPlans
 
 @Dao
-interface TrainingResultDatabaseDao {
-    @Query("SELECT * from training_result")
-    fun getAll(): LiveData<List<Exercise>>
+interface CategoriesOnPlansDatabaseDao {
+    @Query("SELECT * from CategoriesOnPlans")
+    fun getAll(): LiveData<List<CategoriesOnPlans>>
 
-    @Query("SELECT * from training_result where idTrainingResult = :id")
-    fun getById(id: Int) : Exercise?
+    @Query("SELECT * from CategoriesOnPlans where trainingPlanId = :id")
+    fun getById(id: Int) : CategoriesOnPlans?
 
     @Insert
-    suspend fun insert(item:Exercise)
+    suspend fun insert(item:CategoriesOnPlans)
 
     @Update
-    suspend fun update(item:Exercise)
+    suspend fun update(item:CategoriesOnPlans)
 
     @Delete
-    suspend fun delete(item:Exercise)
+    suspend fun delete(item:CategoriesOnPlans)
 
-    @Query("DELETE FROM training_result")
+    @Query("DELETE FROM CategoriesOnPlans")
     suspend fun deleteAll()
 }

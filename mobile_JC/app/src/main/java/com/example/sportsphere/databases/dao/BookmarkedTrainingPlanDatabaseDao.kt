@@ -13,7 +13,7 @@ interface BookmarkedTrainingPlanDatabaseDao {
     @Query("SELECT * from bookmarked_training_plan")
     fun getAll(): LiveData<List<Exercise>>
 
-    @Query("SELECT * from bookmarked_training_plan where id = :id")
+    @Query("SELECT * from bookmarked_training_plan where idBookmarkedTrainingPlan = :id")
     fun getById(id: Int) : Exercise?
 
     @Insert

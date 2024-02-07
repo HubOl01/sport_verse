@@ -13,7 +13,7 @@ interface TrainingResultDatabaseDao {
     @Query("SELECT * from training_result")
     fun getAll(): LiveData<List<Exercise>>
 
-    @Query("SELECT * from training_result where id = :id")
+    @Query("SELECT * from training_result where idTrainingResult = :id")
     fun getById(id: Int) : Exercise?
 
     @Insert
