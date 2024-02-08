@@ -36,7 +36,7 @@ import com.example.sportsphere.navigations.graphs.HomeNavGraph
 import com.example.sportsphere.navigations.graphs.RootNavigationGraph
 import com.example.sportsphere.screens.main.FeedPage
 import com.example.sportsphere.screens.profile.ProfilePage
-import com.example.sportsphere.screens.trainingPlans.TrainingPlansPage
+//import com.example.sportsphere.screens.trainingPlans.TrainingPlansPage
 import com.example.sportsphere.ui.theme.SportSphereTheme
 import com.example.sportsphere.viewModel.PostViewModel
 

@@ -45,7 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.sportsphere.databases.models.Exercise
+//import com.example.sportsphere.databases.models.Exercise
 import com.example.sportsphere.databases.models.TrainingPlan
 import java.time.LocalDateTime
 
@@ -130,7 +130,8 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    listsTrainingPlan[0].description,
+//                    listsTrainingPlan[0].description,
+                    "",
                     style = TextStyle(fontSize = 18.sp)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -152,46 +153,46 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
 }
 
 
-@Composable
-fun exerciseItem(exercise: Exercise) {
-    val isShow = remember {
-        mutableStateOf(false)
-    }
-    Card(
-        modifier = Modifier
-            .padding(10.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .clickable { isShow.value = !isShow.value }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White.copy(alpha = .5f))
-                .padding(10.dp)
-        ) {
-            Text(
-                exercise.name,
-                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            if (isShow.value) {
-                Text(
-                    text = exercise.description,
-                    style = TextStyle(fontSize = 18.sp)
-                )
-            } else {
-                Text(
-                    text = "Подробнее...",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontStyle = FontStyle.Italic,
-                        color = Color.Gray
-                    )
-                )
-
-            }
-
-
-        }
-    }
-}
+//@Composable
+//fun exerciseItem(exercise: Exercise) {
+//    val isShow = remember {
+//        mutableStateOf(false)
+//    }
+//    Card(
+//        modifier = Modifier
+//            .padding(10.dp)
+//            .clip(RoundedCornerShape(10.dp))
+//            .clickable { isShow.value = !isShow.value }
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .background(Color.White.copy(alpha = .5f))
+//                .padding(10.dp)
+//        ) {
+//            Text(
+//                exercise.name,
+//                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
+//            )
+//            Spacer(modifier = Modifier.height(10.dp))
+//            if (isShow.value) {
+//                Text(
+//                    text = exercise.description,
+//                    style = TextStyle(fontSize = 18.sp)
+//                )
+//            } else {
+//                Text(
+//                    text = "Подробнее...",
+//                    style = TextStyle(
+//                        fontSize = 18.sp,
+//                        fontStyle = FontStyle.Italic,
+//                        color = Color.Gray
+//                    )
+//                )
+//
+//            }
+//
+//
+//        }
+//    }
+//}

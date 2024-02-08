@@ -19,15 +19,15 @@ data class User(
 
     val isAdmin: Boolean = false,
 
-    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val createdAt: String = getDateFormaters(LocalDateTime.now()),
 
     // Зависимости от других таблиц
-    @Relation(parentColumn = "idUser", entityColumn = "userId")
-    val trainingPlans: List<TrainingPlan>,
+//    @Relation(parentColumn = "idUser", entityColumn = "userId")
+//    val trainingPlans: List<TrainingPlan>,
 
-    @Relation(parentColumn = "idUser", entityColumn = "userId")
-    val trainingResults: List<TrainingResult>,
-
-    @Relation(parentColumn = "idUser", entityColumn = "userId")
-    val bookmarksTrainingPlan: List<BookmarkedTrainingPlan>
+//    @Relation(parentColumn = "idUser", entityColumn = "userId")
+//    val trainingResults: List<TrainingResult>,
+//
+//    @Relation(parentColumn = "idUser", entityColumn = "userId")
+//    val bookmarksTrainingPlan: List<BookmarkedTrainingPlan>
 )

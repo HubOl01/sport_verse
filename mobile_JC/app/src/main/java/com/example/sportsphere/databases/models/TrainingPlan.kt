@@ -89,76 +89,85 @@ model ExerciseResult {
 }
 }*/
 
+//import com.example.sportsphere.utilities.CategoriesOnPlansConverter
+//import com.example.sportsphere.utilities.CategoryConverter
+//import com.example.sportsphere.utilities.TypeOfSportConverter
+//import com.example.sportsphere.utilities.TypesOnPlansConverter
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import androidx.room.TypeConverters
-import com.example.sportsphere.utilities.CategoriesOnPlansConverter
-import com.example.sportsphere.utilities.CategoryConverter
 import com.example.sportsphere.utilities.ExerciseConverter
-import com.example.sportsphere.utilities.ExerciseResultConverter
-import com.example.sportsphere.utilities.TypeOfSportConverter
-import com.example.sportsphere.utilities.TypesOnPlansConverter
+import com.example.sportsphere.utilities.TrainingResultConverter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 fun getDateFormaters(localDateTime: LocalDateTime): String {
     return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 }
 
-@Entity
-@TypeConverters(TypesOnPlansConverter::class)
-data class TypeOfSport(
-    @PrimaryKey(autoGenerate = true) val idTypeOfSport: Int = 0,
-    val nameType: String,
-    val colorType: String?,
-    @Relation(parentColumn = "idTypeOfSport", entityColumn = "typeOfSportId")
-    val typesOnPlans: List<TypesOnPlans>,
-)
+//@Entity
+//@TypeConverters(TypesOnPlansConverter::class)
+//data class TypeOfSport(
+//    @PrimaryKey(autoGenerate = true) val idTypeOfSport: Int = 0,
+//    val nameType: String,
+//    val colorType: String?,
+//)
 
-@Entity
-@TypeConverters(CategoriesOnPlansConverter::class)
-data class Category(
-    @PrimaryKey(autoGenerate = true) val idCategory: Int = 0,
-    val nameCategory: String,
-    val colorCategory: String?,
-    @Relation(parentColumn = "idCategory", entityColumn = "categoryId")
-    val categoriesOnPlans: List<CategoriesOnPlans>,
-)
+//@Entity
+//@TypeConverters(CategoriesOnPlansConverter::class)
+//data class Category(
+//    @PrimaryKey(autoGenerate = true) val idCategory: Int = 0,
+//    val nameCategory: String,
+//    val colorCategory: String?,
+//)
 
-@Entity(primaryKeys = ["trainingPlanId", "typeOfSportId"])
-data class TypesOnPlans(
-    val trainingPlanId: Int,
-    val typeOfSportId: Int,
-)
+//@Entity
+//data class TypesOnPlans(
+//    @PrimaryKey(autoGenerate = true) val idTypesOnPlans: Long,
+//    val trainingPlanId: Int,
+//    val typeOfSportId: Int,
+//)
 
-@Entity
-data class TypeOfSportWithPlans(
-    @Embedded val typeOfSport: TypeOfSport,
-    @Relation(
-        parentColumn = "idTypeOfSport",
-        entityColumn = "typeOfSportId"
-    )
-    val typesOnPlans: List<TypesOnPlans>
-)
-
-@Entity(primaryKeys = ["trainingPlanId", "categoryId"])
-data class CategoriesOnPlans(
-    val trainingPlanId: Int,
-    val categoryId: Int,
-)
+//data class TypeOfSportWithPlans(
+//    @Embedded val typeOfSport: TypeOfSport,
+//    @Relation(
+//        parentColumn = "idTypeOfSport",
+//        entityColumn = "typeOfSportId",
+//        entity = TypesOnPlans::class,
+//        projection = ["trainingPlanId"]
+//    )
+//    val typesOnPlansIDs: List<Long>
+//)
+//data class CategoryWithPlans(
+//    @Embedded val category: Category,
+//    @Relation(
+//        parentColumn = "idCategory",
+//        entityColumn = "categoryId",
+//        entity = CategoriesOnPlans::class,
+//        projection = ["trainingPlanId"]
+//    )
+//    val categoriesOnPlans: List<CategoriesOnPlans>
+//)
+//@Entity(primaryKeys = ["trainingPlanId", "categoryId"])
+//data class CategoriesOnPlans(
+//    @PrimaryKey(autoGenerate = true) val idCategoriesOnPlans: Long,
+//    val trainingPlanId: Int,
+//    val categoryId: Int,
+//)
 
 
 @Entity(tableName = "training_plan")
 @TypeConverters(
-    TypesOnPlansConverter::class,
-    CategoriesOnPlansConverter::class,
-    TypeOfSportConverter::class,
-    CategoryConverter::class,
-    ExerciseConverter::class
+//    TypesOnPlansConverter::class,
+//    CategoriesOnPlansConverter::class,
+//    TypeOfSportConverter::class,
+//    CategoryConverter::class,
+    ExerciseConverter::class,
+    TrainingResultConverter::class
 )
 data class TrainingPlan(
     @PrimaryKey(autoGenerate = true)
@@ -178,32 +187,46 @@ data class TrainingPlan(
 
     // Зависимости от других таблиц
 
-    @Relation(parentColumn = "idTrainingPlan", entityColumn = "trainingPlanId")
-    val typeOfSport: List<TypeOfSport>,
+//    @Relation(parentColumn = "idTrainingPlan", entityColumn = "trainingPlanId")
+//    val typeOfSport: List<TypeOfSport>,
+//
+//    @Relation(parentColumn = "idTrainingPlan", entityColumn = "trainingPlanId")
+//    val categories: List<Category>,
+//
+//
+//    @Relation(parentColumn = "idTrainingPlan", entityColumn = "trainingPlanId")
+//    val trainingResults: List<TrainingResult>,
 
-    @Relation(parentColumn = "idTrainingPlan", entityColumn = "trainingPlanId")
-    val categories: List<Category>,
-
-    @Relation(parentColumn = "idTrainingPlan", entityColumn = "trainingPlanId")
-    val exercises: List<Exercise>,
-
-    @Relation(parentColumn = "idTrainingPlan", entityColumn = "trainingPlanId")
-    val trainingResults: List<TrainingResult>,
-
+//    @Relation(
+//        parentColumn = "idTrainingPlan",
+//        entityColumn = "trainingPlanId",
+//    )
+//    val typesOnPlans: List<TypeOfSport>,
+//    @Relation(
+//        parentColumn = "idTrainingPlan",
+//        entityColumn = "trainingPlanId",
+//    )
+//    val categoriesOnPlans: List<Category>,
+)
+data class ExerciseWithResults(
+    @Embedded val exercise: Exercise,
     @Relation(
-        parentColumn = "idTrainingPlan",
-        entityColumn = "trainingPlanId",
+        parentColumn = "idExercise",
+        entityColumn = "exerciseId"
     )
-    val typesOnPlans: List<TypeOfSport>,
-    @Relation(
-        parentColumn = "idTrainingPlan",
-        entityColumn = "trainingPlanId",
-    )
-    val categoriesOnPlans: List<Category>,
+    val results: List<ExerciseResult>
 )
 
+data class TrainingPlanWithResults(
+    @Embedded val trainingPlan: TrainingPlan,
+    @Relation(
+        parentColumn = "idTrainingPlan",
+        entityColumn = "trainingPlanId"
+    )
+    val trainingResults: List<TrainingResult>
+)
 @Entity(tableName = "exercise")
-@TypeConverters(ExerciseResultConverter::class)
+
 data class Exercise(
     @PrimaryKey(autoGenerate = true)
     val idExercise: Int = 0,
@@ -214,8 +237,9 @@ data class Exercise(
 
     val description: String,
 
-    @Relation(parentColumn = "idExercise", entityColumn = "exerciseId")
-    val exerciseResults: List<ExerciseResult>,
+//    @Relation(parentColumn = "idExercise", entityColumn = "exerciseId")
+////    @TypeConverters(ExerciseResultConverter::class)
+//    val exerciseResults: List<ExerciseResult>,
 
 
     // Зависимость от другой таблицы
@@ -235,7 +259,7 @@ data class TrainingResult(
 
     val exerciseId: Int,
 
-    val date: Date,
+    val date: String = getDateFormaters(LocalDateTime.now()),
 
     val duration: Long?,
 
@@ -257,7 +281,7 @@ data class ExerciseResult(
 
     val exerciseId: Int,
 
-    val date: Date,
+    val date: String = getDateFormaters(LocalDateTime.now()),
 
     val duration: Long?,
 
@@ -271,17 +295,17 @@ data class ExerciseResult(
     @Relation(parentColumn = "exerciseId", entityColumn = "idExercise")
     val exercise: Exercise
 )
-
-
-@Entity(tableName = "bookmarked_training_plan")
-data class BookmarkedTrainingPlan(
-    @PrimaryKey(autoGenerate = true)
-    val idBookmarkedTrainingPlan: Int,
-    val userId: Int,
-    @Relation(parentColumn = "userId", entityColumn = "idUser")
-    val user: User,
-
-    @Relation(parentColumn = "trainingPlanId", entityColumn = "idTrainingPlan")
-    val trainingPlan: TrainingPlan
-)
+//
+//
+//@Entity(tableName = "bookmarked_training_plan")
+//data class BookmarkedTrainingPlan(
+//    @PrimaryKey(autoGenerate = true)
+//    val idBookmarkedTrainingPlan: Int,
+//    val userId: Int,
+//    @Relation(parentColumn = "userId", entityColumn = "idUser")
+//    val user: User,
+//
+//    @Relation(parentColumn = "trainingPlanId", entityColumn = "idTrainingPlan")
+//    val trainingPlan: TrainingPlan
+//)
 // https://dev.to/aseemwangoo/using-room-in-jetpack-compose-44a5

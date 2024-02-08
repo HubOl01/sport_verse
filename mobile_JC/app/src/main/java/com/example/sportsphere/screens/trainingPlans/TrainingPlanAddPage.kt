@@ -57,7 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.sportsphere.R
-import com.example.sportsphere.databases.models.Exercise
+//import com.example.sportsphere.databases.models.Exercise
 import com.example.sportsphere.databases.models.TrainingPlan
 import java.time.LocalDateTime
 

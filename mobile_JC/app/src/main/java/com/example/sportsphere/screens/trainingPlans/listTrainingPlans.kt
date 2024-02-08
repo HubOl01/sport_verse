@@ -1,74 +1,74 @@
 package com.example.sportsphere.screens.trainingPlans
-
-import com.example.sportsphere.databases.models.Exercise
-import com.example.sportsphere.databases.models.TrainingPlan
-import com.example.sportsphere.databases.models.TypesOnPlans
-import java.time.LocalDateTime
-
-var listsTrainingPlan = arrayOf<TrainingPlan>(
-    TrainingPlan(
-        idTrainingPlan = 1,
-        title = "Силовой прорыв",
-        description = "“Силовой прорыв” - это интенсивная силовая тренировка, предназначенная для быстрого и эффективного развития мышечной массы и силы. Эта тренировка включает в себя различные упражнения с использованием собственного веса тела, гантелей и эспандеров, которые выполняются в несколько раундов и сетов.\n" +
-                "\n" +
-                "Цель “Силового прорыва” - обеспечить максимальное увеличение силы и мышечной массы за минимальное время. Эта тренировка идеально подходит для тех, кто хочет быстро достичь результатов и улучшить свою физическую форму. Для достижения наилучших результатов важно соблюдать правильную технику выполнения упражнений и регулярно увеличивать вес и количество повторений.",
-        startDate = LocalDateTime.now(),
-        endDate = LocalDateTime.now(),
-        createdAt = LocalDateTime.now(),
-        PlanProgress = 1f,
-        typeOfSport = emptyList(),
-        categories = emptyList(),
-        exercises = emptyList(),
-        trainingResults = emptyList(),
-        TypesOnPlans = emptyList(),
-        CategoriesOnPlans = emptyList()
-    ),
-    TrainingPlan(
-        idTrainingPlan = 2,
-        title = "Test",
-        description = "",
-        startDate = LocalDateTime.now(),
-        endDate = LocalDateTime.now(),
-        createdAt = LocalDateTime.now(),
-        PlanProgress = 1f,
-        typeOfSport = emptyList(),
-        categories = emptyList(),
-        exercises = emptyList(),
-        trainingResults = emptyList(),
-        TypesOnPlans = emptyList(),
-        CategoriesOnPlans = emptyList()
-    ),
-    TrainingPlan(
-        idTrainingPlan = 3,
-        title = "Test1",
-        description = "",
-        startDate = LocalDateTime.now(),
-        endDate = LocalDateTime.now(),
-        createdAt = LocalDateTime.now(),
-        PlanProgress = 0.7f,
-        typeOfSport = emptyList(),
-        categories = emptyList(),
-        exercises = emptyList(),
-        trainingResults = emptyList(),
-        TypesOnPlans = emptyList(),
-        CategoriesOnPlans = emptyList()
-    ),
-    TrainingPlan(
-        idTrainingPlan = 4,
-        title = "Test3",
-        description = "",
-        startDate = LocalDateTime.now(),
-        endDate = LocalDateTime.now(),
-        createdAt = LocalDateTime.now(),
-        PlanProgress = 0.4f,
-        typeOfSport = emptyList(),
-        categories = emptyList(),
-        exercises = emptyList(),
-        trainingResults = emptyList(),
-        TypesOnPlans = emptyList(),
-        CategoriesOnPlans = emptyList()
-    )
-)
+//
+//import com.example.sportsphere.databases.models.Exercise
+//import com.example.sportsphere.databases.models.TrainingPlan
+//import com.example.sportsphere.databases.models.TypesOnPlans
+//import java.time.LocalDateTime
+//
+//var listsTrainingPlan = arrayOf<TrainingPlan>(
+//    TrainingPlan(
+//        idTrainingPlan = 1,
+//        title = "Силовой прорыв",
+//        description = "“Силовой прорыв” - это интенсивная силовая тренировка, предназначенная для быстрого и эффективного развития мышечной массы и силы. Эта тренировка включает в себя различные упражнения с использованием собственного веса тела, гантелей и эспандеров, которые выполняются в несколько раундов и сетов.\n" +
+//                "\n" +
+//                "Цель “Силового прорыва” - обеспечить максимальное увеличение силы и мышечной массы за минимальное время. Эта тренировка идеально подходит для тех, кто хочет быстро достичь результатов и улучшить свою физическую форму. Для достижения наилучших результатов важно соблюдать правильную технику выполнения упражнений и регулярно увеличивать вес и количество повторений.",
+//        startDate = LocalDateTime.now(),
+//        endDate = LocalDateTime.now(),
+//        createdAt = LocalDateTime.now(),
+//        PlanProgress = 1f,
+//        typeOfSport = emptyList(),
+//        categories = emptyList(),
+//        exercises = emptyList(),
+//        trainingResults = emptyList(),
+//        TypesOnPlans = emptyList(),
+//        CategoriesOnPlans = emptyList()
+//    ),
+//    TrainingPlan(
+//        idTrainingPlan = 2,
+//        title = "Test",
+//        description = "",
+//        startDate = LocalDateTime.now(),
+//        endDate = LocalDateTime.now(),
+//        createdAt = LocalDateTime.now(),
+//        PlanProgress = 1f,
+//        typeOfSport = emptyList(),
+//        categories = emptyList(),
+//        exercises = emptyList(),
+//        trainingResults = emptyList(),
+//        TypesOnPlans = emptyList(),
+//        CategoriesOnPlans = emptyList()
+//    ),
+//    TrainingPlan(
+//        idTrainingPlan = 3,
+//        title = "Test1",
+//        description = "",
+//        startDate = LocalDateTime.now(),
+//        endDate = LocalDateTime.now(),
+//        createdAt = LocalDateTime.now(),
+//        PlanProgress = 0.7f,
+//        typeOfSport = emptyList(),
+//        categories = emptyList(),
+//        exercises = emptyList(),
+//        trainingResults = emptyList(),
+//        TypesOnPlans = emptyList(),
+//        CategoriesOnPlans = emptyList()
+//    ),
+//    TrainingPlan(
+//        idTrainingPlan = 4,
+//        title = "Test3",
+//        description = "",
+//        startDate = LocalDateTime.now(),
+//        endDate = LocalDateTime.now(),
+//        createdAt = LocalDateTime.now(),
+//        PlanProgress = 0.4f,
+//        typeOfSport = emptyList(),
+//        categories = emptyList(),
+//        exercises = emptyList(),
+//        trainingResults = emptyList(),
+//        TypesOnPlans = emptyList(),
+//        CategoriesOnPlans = emptyList()
+//    )
+//)
 
 
 //
