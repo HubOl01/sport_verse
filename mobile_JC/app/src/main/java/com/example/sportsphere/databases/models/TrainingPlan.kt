@@ -109,66 +109,60 @@ fun getDateFormaters(localDateTime: LocalDateTime): String {
     return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 }
 
-//@Entity
-//@TypeConverters(TypesOnPlansConverter::class)
-//data class TypeOfSport(
-//    @PrimaryKey(autoGenerate = true) val idTypeOfSport: Int = 0,
-//    val nameType: String,
-//    val colorType: String?,
-//)
+@Entity
+data class TypeOfSport(
+    @PrimaryKey(autoGenerate = true) val idTypeOfSport: Int = 0,
+    val nameType: String,
+    val colorType: String?,
+)
 
-//@Entity
-//@TypeConverters(CategoriesOnPlansConverter::class)
-//data class Category(
-//    @PrimaryKey(autoGenerate = true) val idCategory: Int = 0,
-//    val nameCategory: String,
-//    val colorCategory: String?,
-//)
+@Entity
+data class Category(
+    @PrimaryKey(autoGenerate = true) val idCategory: Int = 0,
+    val nameCategory: String,
+    val colorCategory: String?,
+)
 
-//@Entity
-//data class TypesOnPlans(
-//    @PrimaryKey(autoGenerate = true) val idTypesOnPlans: Long,
-//    val trainingPlanId: Int,
-//    val typeOfSportId: Int,
-//)
+@Entity
+data class TypesOnPlans(
+    @PrimaryKey(autoGenerate = true) val idTypesOnPlans: Long,
+    val trainingPlanId: Int,
+    val typeOfSportId: Int,
+)
 
-//data class TypeOfSportWithPlans(
-//    @Embedded val typeOfSport: TypeOfSport,
-//    @Relation(
-//        parentColumn = "idTypeOfSport",
-//        entityColumn = "typeOfSportId",
-//        entity = TypesOnPlans::class,
-//        projection = ["trainingPlanId"]
-//    )
-//    val typesOnPlansIDs: List<Long>
-//)
-//data class CategoryWithPlans(
-//    @Embedded val category: Category,
-//    @Relation(
-//        parentColumn = "idCategory",
-//        entityColumn = "categoryId",
-//        entity = CategoriesOnPlans::class,
-//        projection = ["trainingPlanId"]
-//    )
-//    val categoriesOnPlans: List<CategoriesOnPlans>
-//)
-//@Entity(primaryKeys = ["trainingPlanId", "categoryId"])
-//data class CategoriesOnPlans(
-//    @PrimaryKey(autoGenerate = true) val idCategoriesOnPlans: Long,
-//    val trainingPlanId: Int,
-//    val categoryId: Int,
-//)
+data class TypeOfSportWithPlans(
+    @Embedded val trainingPlan: TrainingPlan,
+    @Relation(
+        parentColumn = "idTrainingPlan",
+        entityColumn = "trainingPlanId"
+    )
+    val typesOnPlansIDs: List<TypesOnPlans>
+)
+data class CategoryWithPlans(
+    @Embedded val trainingPlan: TrainingPlan,
+    @Relation(
+        parentColumn = "idTrainingPlan",
+        entityColumn = "trainingPlanId"
+    )
+    val categoriesOnPlans: List<CategoriesOnPlans>
+)
+@Entity
+data class CategoriesOnPlans(
+    @PrimaryKey(autoGenerate = true) val idCategoriesOnPlans: Long,
+    val trainingPlanId: Int,
+    val categoryId: Int,
+)
 
 
 @Entity(tableName = "training_plan")
-@TypeConverters(
+//@TypeConverters(
 //    TypesOnPlansConverter::class,
 //    CategoriesOnPlansConverter::class,
 //    TypeOfSportConverter::class,
 //    CategoryConverter::class,
-    ExerciseConverter::class,
-    TrainingResultConverter::class
-)
+//    ExerciseConverter::class,
+//    TrainingResultConverter::class
+//)
 data class TrainingPlan(
     @PrimaryKey(autoGenerate = true)
     val idTrainingPlan: Int = 0,
