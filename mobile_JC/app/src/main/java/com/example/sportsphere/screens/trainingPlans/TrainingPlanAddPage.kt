@@ -26,16 +26,22 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -59,6 +65,7 @@ import androidx.navigation.NavController
 import com.example.sportsphere.R
 //import com.example.sportsphere.databases.models.Exercise
 import com.example.sportsphere.databases.models.TrainingPlan
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @Composable
@@ -67,6 +74,9 @@ fun TrainingPlanAddPage(
     navController: NavController
 ) {
     val isVisible = rememberSaveable { mutableStateOf(true) }
+    val listExercise by remember {
+        mutableStateOf(listsExercise)
+    }
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
@@ -89,7 +99,8 @@ fun TrainingPlanAddPage(
             TopAppBar(
                 title = { Text(text = "Создание тренировочного плана") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(
+                        onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Localized description",
@@ -126,6 +137,7 @@ private fun TrainingPlanContentPreview() {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: NestedScrollConnection) {
     var titleText by remember {
@@ -134,6 +146,9 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
     var descriptionText by remember {
         mutableStateOf(TextFieldValue(""))
     }
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -179,13 +194,49 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
                             textAlign = TextAlign.Center
                         )
                     )
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        showBottomSheet = true
+                    }) {
                         Icon(
                             Icons.Rounded.Add,
                             contentDescription = Icons.Rounded.Add.name
                         )
                     }
                 }
+                    if (showBottomSheet) {
+                        ModalBottomSheet(
+                            onDismissRequest = {
+                                showBottomSheet = false
+                            },
+                            sheetState = sheetState
+                        ) {
+                            Column(modifier = Modifier.padding(bottom = 30.dp, start = 10.dp, end = 10.dp)) {
+                                OutlinedTextField(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    value = titleText,
+                                    onValueChange = { newText -> titleText = newText },
+                                    label = { Text("Название тренировки") },
+                                    maxLines = 1
+                                )
+                                OutlinedTextField(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    value = descriptionText,
+                                    onValueChange = { newText -> descriptionText = newText },
+                                    label = { Text("Описание тренировки") },
+                                    maxLines = 10
+                                )
+                            }
+//                            Button(onClick = {
+//                                scope.launch { sheetState.hide() }.invokeOnCompletion {
+//                                    if (!sheetState.isVisible) {
+//                                        showBottomSheet = false
+//                                    }
+//                                }
+//                            }) {
+//                                Text("Hide bottom sheet")
+//                            }
+                        }
+                    }
             }
         }
 //        items(listsExercise.size) {

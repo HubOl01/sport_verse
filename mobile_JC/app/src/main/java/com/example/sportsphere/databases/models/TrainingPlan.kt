@@ -89,10 +89,6 @@ model ExerciseResult {
 }
 }*/
 
-//import com.example.sportsphere.utilities.CategoriesOnPlansConverter
-//import com.example.sportsphere.utilities.CategoryConverter
-//import com.example.sportsphere.utilities.TypeOfSportConverter
-//import com.example.sportsphere.utilities.TypesOnPlansConverter
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -155,14 +151,6 @@ data class CategoriesOnPlans(
 
 
 @Entity(tableName = "training_plan")
-//@TypeConverters(
-//    TypesOnPlansConverter::class,
-//    CategoriesOnPlansConverter::class,
-//    TypeOfSportConverter::class,
-//    CategoryConverter::class,
-//    ExerciseConverter::class,
-//    TrainingResultConverter::class
-//)
 data class TrainingPlan(
     @PrimaryKey(autoGenerate = true)
     val idTrainingPlan: Int = 0,
@@ -177,7 +165,7 @@ data class TrainingPlan(
 
     val createdAt: String? = getDateFormaters(LocalDateTime.now()),
 
-    val PlanProgress: Float?,
+    val PlanProgress: Float? = 0f,
 
     // Зависимости от других таблиц
 
@@ -231,10 +219,11 @@ data class Exercise(
 
     val description: String,
 
-//    @Relation(parentColumn = "idExercise", entityColumn = "exerciseId")
-////    @TypeConverters(ExerciseResultConverter::class)
-//    val exerciseResults: List<ExerciseResult>,
+    val duration: Long? = 0,
 
+    val distance: Float? = 0f,
+
+    val resultsNumber: Float? = 0f,
 
     // Зависимость от другой таблицы
     @Relation(parentColumn = "trainingPlanId", entityColumn = "idTrainingPlan")
@@ -277,13 +266,13 @@ data class ExerciseResult(
 
     val date: String = getDateFormaters(LocalDateTime.now()),
 
-    val duration: Long?,
+    val duration: Long? = 0,
 
-    val distance: Float?,
+    val distance: Float? = 0f,
 
-    val doneExercise: Boolean?,
+    val resultsNumber: Float? = 0f,
 
-    val resultsNumber: Float?,
+    val doneExercise: Boolean? = false,
 
     // Зависимость от другой таблицы
     @Relation(parentColumn = "exerciseId", entityColumn = "idExercise")
@@ -291,15 +280,24 @@ data class ExerciseResult(
 )
 //
 //
-//@Entity(tableName = "bookmarked_training_plan")
-//data class BookmarkedTrainingPlan(
-//    @PrimaryKey(autoGenerate = true)
-//    val idBookmarkedTrainingPlan: Int,
-//    val userId: Int,
-//    @Relation(parentColumn = "userId", entityColumn = "idUser")
-//    val user: User,
-//
-//    @Relation(parentColumn = "trainingPlanId", entityColumn = "idTrainingPlan")
-//    val trainingPlan: TrainingPlan
-//)
+@Entity(tableName = "bookmarked_training_plan")
+data class BookmarkedTrainingPlan(
+    @PrimaryKey(autoGenerate = true)
+    val idBookmarkedTrainingPlan: Int,
+    val userId: Int,
+    @Relation(parentColumn = "userId", entityColumn = "idUser")
+    val user: User,
+    val trainingPlanId: Int,
+    @Relation(parentColumn = "trainingPlanId", entityColumn = "idTrainingPlan")
+    val trainingPlan: TrainingPlan
+)
+
+data class BookmarkedWithPlan(
+    @Embedded val trainingPlan: TrainingPlan,
+    @Relation(
+        parentColumn = "idTrainingPlan",
+        entityColumn = "trainingPlanId"
+    )
+    val trainingResults: List<BookmarkedTrainingPlan>
+)
 // https://dev.to/aseemwangoo/using-room-in-jetpack-compose-44a5

@@ -20,6 +20,8 @@ import com.example.sportsphere.screens.main.dataPosts
 import com.example.sportsphere.screens.profile.ProfilePage
 import com.example.sportsphere.screens.trainingPlans.TrainingPlanAddPage
 import com.example.sportsphere.screens.trainingPlans.TrainingPlanDetailPage
+import com.example.sportsphere.screens.trainingPlans.TrainingPlansPage
+
 //import com.example.sportsphere.screens.trainingPlans.TrainingPlansPage
 
 @Composable
@@ -33,7 +35,7 @@ fun HomeNavGraph(navController: NavHostController, itM: PaddingValues) {
             TabScreen(navController = navController, itM)
         }
         composable(route = BottomBarScreen.TrainingPlans.route) {
-//            TrainingPlansPage(itM, navController)
+            TrainingPlansPage(itM, navController)
         }
         composable(route = BottomBarScreen.Profile.route) {
             ProfilePage(navController = navController, itM)
