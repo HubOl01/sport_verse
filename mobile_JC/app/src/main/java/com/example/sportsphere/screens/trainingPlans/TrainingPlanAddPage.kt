@@ -63,7 +63,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.sportsphere.R
-//import com.example.sportsphere.databases.models.Exercise
+import com.example.sportsphere.components.MultiToggleButton
+import com.example.sportsphere.databases.models.Exercise
 import com.example.sportsphere.databases.models.TrainingPlan
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -170,6 +171,7 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
                     label = { Text("Описание тренировки") },
                     maxLines = 10
                 )
+                MultiToggleButton(currentSelection = "Дистанция", toggleStates = listOf("Дистанция", "Время", "Количество"), onToggleChange = {})
 //                Text(
 //                    "Описание",
 //                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
