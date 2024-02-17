@@ -16,12 +16,12 @@ import retrofit2.http.GET
 
 interface ApiService {
     @GET("/posts")
-    suspend fun getPosts() : Posts
+    suspend fun getPosts(): Posts
 
 
     companion object {
         var apiService: ApiService? = null
-        fun getInstance() : ApiService {
+        fun getInstance(): ApiService {
             if (apiService == null) {
                 apiService = Retrofit.Builder()
                     .baseUrl("http://192.168.1.68:3000")

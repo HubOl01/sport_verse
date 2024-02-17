@@ -1,5 +1,6 @@
 package com.example.sportsphere.screens.trainingPlans
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -29,6 +31,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -49,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -56,6 +60,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -147,9 +152,21 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
     var descriptionText by remember {
         mutableStateOf(TextFieldValue(""))
     }
+    var distanceText by remember {
+        mutableStateOf(TextFieldValue(""))
+    }
+    var timeText by remember {
+        mutableStateOf(TextFieldValue(""))
+    }
+    var countText by remember {
+        mutableStateOf(TextFieldValue(""))
+    }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
+    var select by remember {
+        mutableStateOf(0)
+    }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -171,7 +188,36 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
                     label = { Text("Описание тренировки") },
                     maxLines = 10
                 )
-                MultiToggleButton(currentSelection = "Дистанция", toggleStates = listOf("Дистанция", "Время", "Количество"), onToggleChange = {})
+                Spacer(modifier = Modifier.height(10.dp))
+                MultiToggleButton(
+                    currentSelection = select,
+                    toggleStates = listOf("Дистанция", "Время", "Количество"),
+                    onToggleChange = { i -> select = i })
+
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = descriptionText,
+                    onValueChange = { newText ->
+                        when (select) {
+                            0 -> distanceText = newText
+                            1 -> timeText = newText
+                            2 -> countText = newText
+                            else -> distanceText = newText
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    label = {
+                        Text(
+                            text = when (select) {
+                                0 -> "Введите дистанцию (м)"
+                                1 -> "Введите время в сек"
+                                2 -> "Введите кол-во"
+                                else -> ""
+                            }
+                        )
+                    }
+                )
+
 //                Text(
 //                    "Описание",
 //                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
@@ -205,40 +251,52 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
                         )
                     }
                 }
-                    if (showBottomSheet) {
-                        ModalBottomSheet(
-                            onDismissRequest = {
-                                showBottomSheet = false
-                            },
-                            sheetState = sheetState
+                if (showBottomSheet) {
+                    ModalBottomSheet(
+                        onDismissRequest = {
+                            showBottomSheet = false
+                        },
+                        sheetState = sheetState
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(
+                                bottom = 30.dp,
+                                start = 10.dp,
+                                end = 10.dp
+                            )
                         ) {
-                            Column(modifier = Modifier.padding(bottom = 30.dp, start = 10.dp, end = 10.dp)) {
-                                OutlinedTextField(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    value = titleText,
-                                    onValueChange = { newText -> titleText = newText },
-                                    label = { Text("Название тренировки") },
-                                    maxLines = 1
-                                )
-                                OutlinedTextField(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    value = descriptionText,
-                                    onValueChange = { newText -> descriptionText = newText },
-                                    label = { Text("Описание тренировки") },
-                                    maxLines = 10
-                                )
+                            OutlinedTextField(
+                                modifier = Modifier.fillMaxWidth(),
+                                value = titleText,
+                                onValueChange = { newText -> titleText = newText },
+                                label = { Text("Название тренировки") },
+                                maxLines = 1
+                            )
+                            OutlinedTextField(
+                                modifier = Modifier.fillMaxWidth(),
+                                value = descriptionText,
+                                onValueChange = { newText -> descriptionText = newText },
+                                label = { Text("Описание тренировки") },
+                                maxLines = 10
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            ElevatedButton(
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(50.dp),
+                                onClick = {
+                                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                        if (!sheetState.isVisible) {
+                                            showBottomSheet = false
+                                        }
+                                    }
+                                }) {
+                                Text("Сохранить")
                             }
-//                            Button(onClick = {
-//                                scope.launch { sheetState.hide() }.invokeOnCompletion {
-//                                    if (!sheetState.isVisible) {
-//                                        showBottomSheet = false
-//                                    }
-//                                }
-//                            }) {
-//                                Text("Hide bottom sheet")
-//                            }
                         }
                     }
+                }
             }
         }
 //        items(listsExercise.size) {
