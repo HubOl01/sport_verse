@@ -5,7 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.sportsphere.databases.dao.ExerciseDatabaseDao
 import com.example.sportsphere.databases.dao.TrainingPlanDatabaseDao
+import com.example.sportsphere.databases.models.Exercise
 import com.example.sportsphere.databases.models.TrainingPlan
 //import com.example.sportsphere.utilities.CategoriesOnPlansConverter
 //import com.example.sportsphere.utilities.CategoryConverter
@@ -16,18 +18,10 @@ import com.example.sportsphere.utilities.TrainingResultConverter
 //import com.example.sportsphere.utilities.TypeOfSportConverter
 //import com.example.sportsphere.utilities.TypesOnPlansConverter
 
-@Database(entities = [TrainingPlan::class], version = 1, exportSchema = false)
-@TypeConverters(
-    ExerciseConverter::class,
-    TrainingResultConverter::class
-//    TypesOnPlansConverter::class,
-//    CategoriesOnPlansConverter::class,
-//    TypeOfSportConverter::class,
-//    CategoryConverter::class,
-//    ExerciseConverter::class
-)
+@Database(entities = [TrainingPlan::class, Exercise::class], version = 2, exportSchema = false)
 abstract class TrainingPlanDatabase : RoomDatabase() {
     abstract fun trainingPlanDao(): TrainingPlanDatabaseDao
+    abstract fun exerciseDao(): ExerciseDatabaseDao
     companion object {
         private var INSTANCE: TrainingPlanDatabase? = null
         fun getInstance(context: Context): TrainingPlanDatabase {

@@ -1,5 +1,6 @@
 package com.example.sportsphere.screens.trainingPlans
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -19,6 +20,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AppBarDefaults
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -42,6 +45,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -165,8 +169,10 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     var select by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
+    val listExerciseState = remember { mutableStateOf(arrayListOf<Exercise>()) }
+    val listExercise = listExerciseState.value
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -188,35 +194,7 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
                     label = { Text("Описание тренировки") },
                     maxLines = 10
                 )
-                Spacer(modifier = Modifier.height(10.dp))
-                MultiToggleButton(
-                    currentSelection = select,
-                    toggleStates = listOf("Дистанция", "Время", "Количество"),
-                    onToggleChange = { i -> select = i })
 
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = descriptionText,
-                    onValueChange = { newText ->
-                        when (select) {
-                            0 -> distanceText = newText
-                            1 -> timeText = newText
-                            2 -> countText = newText
-                            else -> distanceText = newText
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    label = {
-                        Text(
-                            text = when (select) {
-                                0 -> "Введите дистанцию (м)"
-                                1 -> "Введите время в сек"
-                                2 -> "Введите кол-во"
-                                else -> ""
-                            }
-                        )
-                    }
-                )
 
 //                Text(
 //                    "Описание",
@@ -280,19 +258,52 @@ private fun TrainingPlanContent(it: PaddingValues, nestedScrollConnection: Neste
                                 maxLines = 10
                             )
                             Spacer(modifier = Modifier.height(10.dp))
-                            ElevatedButton(
+                            MultiToggleButton(
+                                currentSelection = select,
+                                toggleStates = listOf("Дистанция", "Время", "Количество"),
+                                onToggleChange = { i -> select = i })
+
+                            OutlinedTextField(
+                                modifier = Modifier.fillMaxWidth(),
+                                value = descriptionText,
+                                onValueChange = { newText ->
+                                    when (select) {
+                                        0 -> distanceText = newText
+                                        1 -> timeText = newText
+                                        2 -> countText = newText
+                                        else -> distanceText = newText
+                                    }
+                                },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                label = {
+                                    Text(
+                                        text = when (select) {
+                                            0 -> "Введите дистанцию (м)"
+                                            1 -> "Введите время в сек"
+                                            2 -> "Введите кол-во"
+                                            else -> ""
+                                        }
+                                    )
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Button(
                                 shape = RoundedCornerShape(10.dp),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(50.dp),
+                                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFF9e00ff)
+                                ),
                                 onClick = {
+
                                     scope.launch { sheetState.hide() }.invokeOnCompletion {
                                         if (!sheetState.isVisible) {
                                             showBottomSheet = false
                                         }
                                     }
                                 }) {
-                                Text("Сохранить")
+                                Text("Сохранить", color = Color.White)
                             }
                         }
                     }

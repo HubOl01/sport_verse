@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
@@ -29,7 +30,7 @@ fun MultiToggleButton(
 
     Row(modifier = Modifier
         .height(IntrinsicSize.Min)
-        .border(BorderStroke(1.dp, Color.LightGray))) {
+        .border(BorderStroke(1.dp, Color.LightGray), RoundedCornerShape(10.dp))) {
         toggleStates.forEachIndexed { index, toggleState ->
             val isSelected = currentSelection == index
             val backgroundTint = if (isSelected) selectedTint else unselectedTint

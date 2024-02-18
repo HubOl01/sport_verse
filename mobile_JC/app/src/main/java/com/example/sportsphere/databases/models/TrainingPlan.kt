@@ -208,7 +208,6 @@ data class TrainingPlanWithResults(
     val trainingResults: List<TrainingResult>
 )
 @Entity(tableName = "exercise")
-
 data class Exercise(
     @PrimaryKey(autoGenerate = true)
     val idExercise: Int = 0,
@@ -226,8 +225,8 @@ data class Exercise(
     val resultsNumber: Float? = 0f,
 
     // Зависимость от другой таблицы
-    @Relation(parentColumn = "trainingPlanId", entityColumn = "idTrainingPlan")
-    val trainingPlan: TrainingPlan
+//    @Relation(parentColumn = "trainingPlanId", entityColumn = "idTrainingPlan")
+//    val trainingPlan: TrainingPlan
 )
 
 // Модель для результатов тренировки

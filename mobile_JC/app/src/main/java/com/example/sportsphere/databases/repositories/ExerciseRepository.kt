@@ -8,16 +8,16 @@ import com.example.sportsphere.databases.models.TrainingPlan
 
 class ExerciseRepository(private val exerciseDatabaseDao: ExerciseDatabaseDao) {
     val readAllData : LiveData<List<Exercise>> = exerciseDatabaseDao.getAll()
-    suspend fun addPlan(exerciseItem: Exercise) {
+    suspend fun addExercise(exerciseItem: Exercise) {
         exerciseDatabaseDao.insert(exerciseItem)
     }
-    suspend fun updatePlan(exerciseItem: Exercise) {
+    suspend fun updateExercise(exerciseItem: Exercise) {
         exerciseDatabaseDao.update(exerciseItem)
     }
-    suspend fun deletePlan(exerciseItem: Exercise) {
+    suspend fun deleteExercise(exerciseItem: Exercise) {
         exerciseDatabaseDao.delete(exerciseItem)
     }
-    suspend fun deleteAllPlans() {
+    suspend fun deleteAllExercise() {
         exerciseDatabaseDao.deleteAll()
     }
 }
