@@ -218,7 +218,7 @@ data class Exercise(
 
     val description: String,
 
-    val duration: Long? = 0,
+    val duration: Long? = 0L,
 
     val distance: Float? = 0f,
 
