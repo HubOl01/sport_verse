@@ -386,3 +386,61 @@ fun exerciseItemPreview() {
         )
     )
 }
+
+fun convertDistance(dtw: String): String{
+    if (dtw.contains("km", ignoreCase = true)){
+        dtw.replace("km", "")
+    }
+    if(dtw.contains("км", ignoreCase = true)){
+        dtw.replace("км", "")
+    }
+    if (dtw.contains("m", ignoreCase = true)){
+        dtw.replace("m", "")
+    }
+    if(dtw.contains("м", ignoreCase = true)){
+        dtw.replace("м", "")
+    }
+    return dtw
+}
+fun convertTime(dtw: String): String{
+    if (dtw.contains("s", ignoreCase = true)){
+        dtw.replace("s", "")
+    }
+    if(dtw.contains("с", ignoreCase = true)){
+        dtw.replace("с", "")
+    }
+    if (dtw.contains("m", ignoreCase = true)){
+        dtw.replace("m", "")
+    }
+    if (dtw.contains("м", ignoreCase = true)){
+        dtw.replace("м", "")
+    }
+    if(dtw.contains("h", ignoreCase = true)){
+        dtw.replace("h", "")
+    }
+    if (dtw.contains("ч", ignoreCase = true)){
+        dtw.replace("ч", "")
+    }
+    if(dtw.contains("h", ignoreCase = true)){
+        dtw.replace("h", "")
+    }
+    return dtw
+}
+fun convertWeight(dtw: String): String{
+    if (dtw.contains("kg", ignoreCase = true)){
+        dtw.replace("kg", "")
+    }
+    if (dtw.contains("g", ignoreCase = true)){
+        dtw.replace("g", "")
+    }
+    if (dtw.contains("кг", ignoreCase = true)){
+        dtw.replace("кг", "")
+    }
+    if (dtw.contains("г", ignoreCase = true)){
+        dtw.replace("г", "")
+    }
+    if(dtw.contains("gm", ignoreCase = true)){
+        dtw.replace("gm", "")
+    }
+    return dtw
+}
