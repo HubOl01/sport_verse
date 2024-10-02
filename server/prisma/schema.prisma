@@ -10,296 +10,151 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// model Auth {
+//   id    Int     @id @default(autoincrement())
+//   email String
+//   pass  String
+//   VKID  String?
+// }
 
 // Модель для пользователя
 model User {
-  idUser Int @id @default(autoincrement())
-  email String? @unique
-  username String
-  idUsername String? @default(dbgenerated("'user_' || floor(random())::text")) @unique
-  url_avatar String? @default("https://sun6-20.userapi.com/impg/Pu7YGIlBWPmDkiuzAEDCvKRx4KWScdw7Bquizg/KQjrBVk8hL8.jpg?size=1024x1024&quality=96&sign=7efd05f6ab573527e8a2fbdbc47ddf93&type=album")
-  isCoach Boolean @default(false)
-  isBan Boolean @default(false)
-  isOffical Boolean @default(false)
-  profile Profile?
-  posts Post[]
-  comments Comment[]
-  likes Like_for_post[]
-  views View_for_post[]
-  communities UserCommunity[]
-  trainingPlans TrainingPlan[]
-  trainingResults TrainingResult[]
-  createdAt DateTime @default(now())
-  // Связь с тренировочными группами (спортсмены)
-  athletesIn TrainingGroup[] @relation("Athletes")
-  // Связь с тренировочными группами (тренер)
-  trainersIn TrainingGroup[] @relation("Trainers")
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  username String? @unique @default(dbgenerated("'user_' || floor(random())::text"))
 
-  kindUsers Complaint[] @relation("KindUsers")
-  badUsers Complaint[] @relation("BadUsers")
-  usersBan Ban[] @relation("UsersBan")
-  adminsBan Ban[] @relation("AdminsBan")
-  
-  bookmarksPost BookmarkedPost[]
-  bookmarksPhotoPost BookmarkedPhoto[]
-  bookmarksVideoPost BookmarkedVideo[]
-  bookmarksFilePost BookmarkedFile[]
-  bookmarksTrainingPlan BookmarkedTrainingPlan[]
+  profile    Profile?
+  createdAt  DateTime   @default(now())
+  statusUser StatusUser @default(USER)
+
+  // Связь с тренировочными группами (спортсмены)
+  athletesIn   TrainingGroup[] @relation("Athletes")
+  // Связь с тренировочными группами (тренер)
+  trainersIn   TrainingGroup[] @relation("Trainers")
+  TrainingPlan TrainingPlan[]
 }
 
 // Модель для профиля пользователя
-model Profile{
-  idProfile Int @id @default(autoincrement())
-  status String?
-  sport_type String?
-  about String?
+model Profile {
+  id          Int       @id @default(autoincrement())
+  name        String?
   dateOfBirth DateTime?
-  userId Int @unique
-  user User @relation(fields: [userId], references: [idUser]) 
+  url_avatar  String?
+  about       String?
+  statusId    Int?
+  roleId      Int
+  isVerified  Boolean   @default(false)
+
+  userId           Int                @unique
+  user             User               @relation(fields: [userId], references: [id])
+  role             Role               @relation(fields: [roleId], references: [id])
+  status           Status?            @relation(fields: [statusId], references: [id])
+  ProfileSportType ProfileSportType[]
 }
 
-// Модель для сообществ
-model Community{
-  idCommunity Int @id @default(autoincrement())
-  name String @unique
-  createdAt DateTime @default(now())
-
-
-  subscribers UserCommunity[]
-  posts Post[]
+model Role {
+  id      Int       @id @default(autoincrement())
+  title   String
+  Profile Profile[]
 }
 
-// Модель для 
-model UserCommunity{
-  idUserComunity Int @id @default(autoincrement())
-  userId Int
-  communityId Int
-  user User @relation(fields: [userId], references: [idUser]) 
-  community Community @relation(fields: [communityId], references: [idCommunity]) 
+model Status {
+  id        Int       @id @default(autoincrement())
+  title     String
+  desc      String
+  svg_image String
+  Profile   Profile[]
 }
 
-
-// Модель для поста
-model Post{
-  idPost Int @id @default(autoincrement())
-
-  userId Int
-  user User? @relation(fields: [userId], references: [idUser])
-  communityId Int
-  community Community? @relation(fields: [communityId], references: [idCommunity]) 
-
-  title String?
-  description String?
-  photos Photo_for_post[]
-  videos Video_for_post[]
-  files File_for_post[]
-  comments Comment[]
-  likes Like_for_post[]
-  views View_for_post[]
-  bookmarksPost BookmarkedPost[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model SportType {
+  id               Int                @id @default(autoincrement())
+  title            String
+  ProfileSportType ProfileSportType[]
+  TrainingPlan     TrainingPlan[]
 }
 
-
-// Модель для изображении в посте
-  model Photo_for_post {
-    idPhoto Int @id @default(autoincrement())
-    url_image String
-    postId Int
-    post Post? @relation(fields: [postId], references: [idPost]) 
-    bookmarksPhoto BookmarkedPhoto[]
-  }
-  // Модель для видео в посте
-  model Video_for_post {
-    idVideo Int @id @default(autoincrement())
-    url_video String
-    postId Int
-    post Post? @relation(fields: [postId], references: [idPost]) 
-    bookmarksVideo BookmarkedVideo[]
-  }
-  // Модель для файлов в посте
-  model File_for_post {
-    idFile Int @id @default(autoincrement())
-    url_File String
-    postId Int
-    post Post? @relation(fields: [postId], references: [idPost]) 
-    bookmarksFile BookmarkedFile[]
-  }
-
-
-  // Модель для комментов снизу поста
-  model Comment{
-    idComment Int @id @default(autoincrement())
-    userId Int
-    user User @relation(fields: [userId], references: [idUser])
-    postId Int
-    post Post? @relation(fields: [postId], references: [idPost]) 
-    CommentText String
-    CommentDate DateTime @default(now())
-  }
-
-
-// Модель для лайков поста
-model Like_for_post {
-  idLike Int @id @default(autoincrement())
-  userId Int
-  user User @relation(fields: [userId], references: [idUser])
-  postId Int
-  post Post @relation(fields: [postId], references: [idPost]) 
-}
-// Модель для кол-ва просмотров посетителей
-model View_for_post {
-  idView Int @id @default(autoincrement())
-  userId Int
-  user User @relation(fields: [userId], references: [idUser])
-  postId Int
-  post Post @relation(fields: [postId], references: [idPost]) 
+model ProfileSportType {
+  id          Int       @id @default(autoincrement())
+  profileId   Int
+  sportTypeId Int
+  profile     Profile   @relation(fields: [profileId], references: [id])
+  sportType   SportType @relation(fields: [sportTypeId], references: [id])
 }
 
-
-// Модель для тренировочных планов
 model TrainingPlan {
-  idTrainingPlan  Int @id @default(autoincrement())
-  userId      Int
-  title       String
-  description String
-  startDate   DateTime?
-  endDate     DateTime?
-  isDraft Boolean? @default(true) // Черновик
-  isPublic Boolean? @default(false) // Сделать доступным для всех
-  createdAt DateTime @default(now())
-  PlanProgress Float?
-  exercises Exercise[]
-  trainingResults TrainingResult[]
-  bookmarksTrainingPlan BookmarkedTrainingPlan[]
-  user User @relation(fields: [userId], references: [idUser])
+  id             Int            @id @default(autoincrement())
+  title          String
+  statusPublish  Int
+  description    String?
+  date_created   DateTime
+  userId         Int
+  SportTypeId    Int
+  date_start     DateTime
+  date_end       DateTime
+  statusTraining Int
+  sportTypeId    Int
+  sportType      SportType      @relation(fields: [sportTypeId], references: [id])
+  user           User           @relation(fields: [userId], references: [id])
+  PlanExercise   PlanExercise[]
 }
 
-// Модель для упражнений в тренировочном плане
+model PlanExercise {
+  id             Int           @id @default(autoincrement())
+  idPlanExercise Int
+  trainingPlanId Int
+  setTotal       Int
+  repTotal       Int
+  exerciseStatus Int
+  exerciseId     Int
+  exercise       Exercise      @relation(fields: [exerciseId], references: [id])
+  trainingPlan   TrainingPlan  @relation(fields: [trainingPlanId], references: [id])
+  ExerciseSet    ExerciseSet[]
+}
+
 model Exercise {
-  idExercise Int @id @default(autoincrement())
-  trainingPlanId Int
-  name String
-  description String
-  exerciseResults ExerciseResult[]
-  trainingPlan TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan]) 
+  id                 Int            @id @default(autoincrement())
+  planExerciseId     Int
+  name               String
+  description        String?
+  ExerciseCategoryId Int
+  imageString        String?
+  PlanExercise       PlanExercise[]
 }
 
-// Модель для результатов тренировки
-model TrainingResult {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  trainingPlanId Int
-  exerciseId Int
-  date        DateTime
-  duration    BigInt?
-  difficulty Int? @default(5) // сложность тренировки от 0-10
-  user User @relation(fields: [userId], references: [idUser])
-  trainingPlan TrainingPlan @relation(fields: [trainingPlanId], references: [idTrainingPlan]) 
+model ExerciseCategory {
+  id    Int    @id @default(autoincrement())
+  title String
 }
 
-// Модель для результатов упражнений
-model ExerciseResult {
-  idExerciseResult Int @id @default(autoincrement())
-  exerciseId Int
-  date DateTime
-  duration BigInt?
-  distance Float?
+model ExerciseSet {
+  id Int @id @default(autoincrement())
 
-  doneExercise Boolean?
-  resultsNumber Float?
+  planExerciseId Int
+  date           DateTime
 
-  exercise Exercise @relation(fields: [exerciseId], references: [idExercise]) 
+  duration        BigInt?
+  distance        Float?
+  weight          Float?
+  repetitions     Int?
+  calories_burned Int?
+  route_gpx       String?
+
+  stringType   String?
+  planExercise PlanExercise @relation(fields: [planExerciseId], references: [id])
 }
 
 // Модель для группы с тренером и спортсменами
 model TrainingGroup {
-  idTrainingGroup Int @id @default(autoincrement())
+  id        Int  @id @default(autoincrement())
   trainerId Int
   athleteId Int
   // Связь с тренером
-  trainer User @relation("Trainers", fields: [trainerId], references: [idUser]) 
+  trainer   User @relation("Trainers", fields: [trainerId], references: [id])
   // Связь со спортсменом
-  athlete User @relation("Athletes", fields: [athleteId], references: [idUser]) 
+  athlete   User @relation("Athletes", fields: [athleteId], references: [id])
 }
 
-// жалобы пользователя
-model Complaint {
-  idComplaint Int @id @default(autoincrement())
-  name String
-  description String
-  resolved Boolean @default(false) // Показывает, решена ли жалоба
-  kindUserId Int
-  kindUser User @relation("KindUsers", fields: [kindUserId], references: [idUser])
-  userBanId Int
-  badUser User @relation("BadUsers", fields: [userBanId], references: [idUser]) 
-  createdAt DateTime @default(now())
-}
-
-// бан пользователя
-model Ban {
-  idBan Int @id @default(autoincrement())
-  userId Int
-  adminId Int // ID администратора, который вынес бан
-  reason String // Причина бана
-  period Int // Время бана в минутах
-  expiresAt DateTime // Время истечения срока бана
-  // Связь с пользователем
-  user User @relation("UsersBan", fields: [userId], references: [idUser]) 
-  // Связь с администратором
-  admin User @relation("AdminsBan", fields: [adminId], references: [idUser]) 
-}
-
-// Модель для постов, добавляемых в закладки пользователя
-model BookmarkedPost {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  postId      Int
-  // Связь с пользователем
-  user        User     @relation(fields: [userId], references: [idUser])
-  // Связь с постом
-  post        Post     @relation(fields: [postId], references: [idPost])
-}
-
-// Модель для видео, добавленных в закладки пользователя
-model BookmarkedVideo {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  videoId     Int
-  // Связь с пользователем
-  user        User     @relation(fields: [userId], references: [idUser])
-  // Связь с видео
-  video       Video_for_post    @relation(fields: [videoId], references: [idVideo])
-}
-
-// Модель для фото, добавленных в закладки пользователя
-model BookmarkedPhoto {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  photoId     Int
-  // Связь с пользователем
-  user        User     @relation(fields: [userId], references: [idUser])
-  // Связь с фото
-  photo       Photo_for_post    @relation(fields: [photoId], references: [idPhoto])
-}
-
-model BookmarkedFile {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  fileId      Int
-  // Связь с пользователем
-  user        User     @relation(fields: [userId], references: [idUser])
-  // Связь с файлом
-  file       File_for_post    @relation(fields: [fileId], references: [idFile])
-}
-// Модель для тренировочных планов, добавленных в закладки пользователя
-model BookmarkedTrainingPlan {
-  id              Int             @id @default(autoincrement())
-  userId          Int
-  trainingPlanId  Int
-  // Связь с пользователем
-  user            User            @relation(fields: [userId], references: [idUser])
-  // Связь с тренировочным планом
-  trainingPlan    TrainingPlan    @relation(fields: [trainingPlanId], references: [idTrainingPlan])
+enum StatusUser {
+  USER
+  ADMIN
 }
