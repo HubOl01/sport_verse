@@ -143,6 +143,14 @@ model ExerciseSet {
   planExercise PlanExercise @relation(fields: [planExerciseId], references: [id])
 }
 
+model TrainingResult {
+  id             Int      @id @default(autoincrement())
+  trainingPlanId Int
+  date_end       DateTime
+  duration       BigInt?
+  difficulty     Int?     @default(0) // сложность тренировки от 0-10
+}
+
 // Модель для группы с тренером и спортсменами
 model TrainingGroup {
   id        Int  @id @default(autoincrement())
@@ -157,4 +165,9 @@ model TrainingGroup {
 enum StatusUser {
   USER
   ADMIN
+}
+
+model StatusPublish {
+  id    Int    @id @default(autoincrement())
+  title String
 }
