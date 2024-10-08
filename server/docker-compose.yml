@@ -1,10 +1,8 @@
 # docker-compose.yml
 
-version: '3.8'
 services:
-
   postgres:
-    image: postgres:13.5
+    image: postgres
     restart: always
     environment:
       - POSTGRES_USER=ru_developer
@@ -27,7 +25,6 @@ services:
       - pgadmin:/var/lib/pgadmin
     depends_on:
       - postgres
-
 
 volumes:
   postgres:

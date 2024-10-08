@@ -48,19 +48,19 @@ model Profile {
   userId           Int                @unique
   user             User               @relation(fields: [userId], references: [id])
   role             Role               @relation(fields: [roleId], references: [id])
-  status           Status?            @relation(fields: [statusId], references: [id])
+  status           StatusProfile?     @relation(fields: [statusId], references: [id])
   ProfileSportType ProfileSportType[]
 }
 
 model Role {
   id      Int       @id @default(autoincrement())
-  title   String
+  title   String    @unique
   Profile Profile[]
 }
 
-model Status {
+model StatusProfile {
   id        Int       @id @default(autoincrement())
-  title     String
+  title     String    @unique
   desc      String
   svg_image String
   Profile   Profile[]
@@ -68,7 +68,8 @@ model Status {
 
 model SportType {
   id               Int                @id @default(autoincrement())
-  title            String
+  title            String             @unique
+  image            String?
   ProfileSportType ProfileSportType[]
   TrainingPlan     TrainingPlan[]
 }
@@ -100,7 +101,6 @@ model TrainingPlan {
 
 model PlanExercise {
   id             Int           @id @default(autoincrement())
-  idPlanExercise Int
   trainingPlanId Int
   setTotal       Int
   repTotal       Int
@@ -113,8 +113,7 @@ model PlanExercise {
 
 model Exercise {
   id                 Int            @id @default(autoincrement())
-  planExerciseId     Int
-  name               String
+  name               String         @unique
   description        String?
   ExerciseCategoryId Int
   imageString        String?
@@ -123,7 +122,7 @@ model Exercise {
 
 model ExerciseCategory {
   id    Int    @id @default(autoincrement())
-  title String
+  title String @unique
 }
 
 model ExerciseSet {
@@ -169,5 +168,5 @@ enum StatusUser {
 
 model StatusPublish {
   id    Int    @id @default(autoincrement())
-  title String
+  title String @unique
 }
