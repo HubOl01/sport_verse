@@ -7,22 +7,27 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ProfileSportTypesService {
   constructor(private prisma: PrismaService) {}
   create(createProfileSportTypeDto: CreateProfileSportTypeDto) {
-    return 'This action adds a new profileSportType';
+    return this.prisma.profileSportType.create({
+      data: createProfileSportTypeDto,
+    });
   }
 
   findAll() {
-    return `This action returns all profileSportTypes`;
+    return this.prisma.profileSportType.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} profileSportType`;
+    return this.prisma.profileSportType.findUnique({ where: { id: id } });
   }
 
   update(id: number, updateProfileSportTypeDto: UpdateProfileSportTypeDto) {
-    return `This action updates a #${id} profileSportType`;
+    return this.prisma.profileSportType.update({
+      data: updateProfileSportTypeDto,
+      where: { id: id },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} profileSportType`;
+    return this.prisma.profileSportType.delete({ where: { id: id } });
   }
 }

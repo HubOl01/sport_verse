@@ -1,9 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ExerciseSetsService } from './exercise-sets.service';
 import { CreateExerciseSetDto } from './dto/create-exercise-set.dto';
 import { UpdateExerciseSetDto } from './dto/update-exercise-set.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('exercise-sets')
+@ApiTags('exercise-sets')
 export class ExerciseSetsController {
   constructor(private readonly exerciseSetsService: ExerciseSetsService) {}
 
@@ -23,7 +33,10 @@ export class ExerciseSetsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExerciseSetDto: UpdateExerciseSetDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateExerciseSetDto: UpdateExerciseSetDto,
+  ) {
     return this.exerciseSetsService.update(+id, updateExerciseSetDto);
   }
 

@@ -7,22 +7,25 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class TrainingResultsService {
   constructor(private prisma: PrismaService) {}
   create(createTrainingResultDto: CreateTrainingResultDto) {
-    return 'This action adds a new trainingResult';
+    return this.prisma.trainingResult.create({ data: createTrainingResultDto });
   }
 
   findAll() {
-    return `This action returns all trainingResults`;
+    return this.prisma.trainingResult.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} trainingResult`;
+    return this.prisma.trainingResult.findUnique({ where: { id: id } });
   }
 
   update(id: number, updateTrainingResultDto: UpdateTrainingResultDto) {
-    return `This action updates a #${id} trainingResult`;
+    return this.prisma.trainingResult.update({
+      data: updateTrainingResultDto,
+      where: { id: id },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} trainingResult`;
+    return this.prisma.trainingResult.delete({ where: { id: id } });
   }
 }

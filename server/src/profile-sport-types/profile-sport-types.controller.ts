@@ -1,11 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ProfileSportTypesService } from './profile-sport-types.service';
 import { CreateProfileSportTypeDto } from './dto/create-profile-sport-type.dto';
 import { UpdateProfileSportTypeDto } from './dto/update-profile-sport-type.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('profile-sport-types')
+@ApiTags('profile-sport-types')
 export class ProfileSportTypesController {
-  constructor(private readonly profileSportTypesService: ProfileSportTypesService) {}
+  constructor(
+    private readonly profileSportTypesService: ProfileSportTypesService,
+  ) {}
 
   @Post()
   create(@Body() createProfileSportTypeDto: CreateProfileSportTypeDto) {
@@ -23,7 +35,10 @@ export class ProfileSportTypesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProfileSportTypeDto: UpdateProfileSportTypeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateProfileSportTypeDto: UpdateProfileSportTypeDto,
+  ) {
     return this.profileSportTypesService.update(+id, updateProfileSportTypeDto);
   }
 

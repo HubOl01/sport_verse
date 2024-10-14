@@ -7,22 +7,25 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class PlanExercisesService {
   constructor(private prisma: PrismaService) {}
   create(createPlanExerciseDto: CreatePlanExerciseDto) {
-    return 'This action adds a new planExercise';
+    return this.prisma.planExercise.create({ data: createPlanExerciseDto });
   }
 
   findAll() {
-    return `This action returns all planExercises`;
+    return this.prisma.planExercise.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} planExercise`;
+    return this.prisma.planExercise.findUnique({ where: { id: id } });
   }
 
   update(id: number, updatePlanExerciseDto: UpdatePlanExerciseDto) {
-    return `This action updates a #${id} planExercise`;
+    return this.prisma.planExercise.update({
+      data: updatePlanExerciseDto,
+      where: { id: id },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} planExercise`;
+    return this.prisma.planExercise.delete({ where: { id: id } });
   }
 }

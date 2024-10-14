@@ -7,22 +7,25 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ExerciseSetsService {
   constructor(private prisma: PrismaService) {}
   create(createExerciseSetDto: CreateExerciseSetDto) {
-    return 'This action adds a new exerciseSet';
+    return this.prisma.exerciseSet.create({ data: createExerciseSetDto });
   }
 
   findAll() {
-    return `This action returns all exerciseSets`;
+    return this.prisma.exerciseSet.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} exerciseSet`;
+    return this.prisma.exerciseSet.findUnique({ where: { id: id } });
   }
 
   update(id: number, updateExerciseSetDto: UpdateExerciseSetDto) {
-    return `This action updates a #${id} exerciseSet`;
+    return this.prisma.exerciseSet.update({
+      data: updateExerciseSetDto,
+      where: { id: id },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} exerciseSet`;
+    return this.prisma.exerciseSet.delete({ where: { id: id } });
   }
 }
