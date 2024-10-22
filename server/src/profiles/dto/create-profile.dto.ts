@@ -12,10 +12,10 @@ export class CreateProfileDto {
   @ApiProperty({ required: true })
   @IsString()
   about: string;
-  @ApiProperty({ required: false, default: 1 })
+  @ApiProperty({ required: false, default: 2 })
   @IsNumber()
   statusId: number;
-  @ApiProperty({ required: false, default: 2 })
+  @ApiProperty({ required: false, default: 1 })
   @IsNumber()
   roleId: number;
   @IsBoolean()

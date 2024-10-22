@@ -1,8 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ExercisesService } from './exercises.service';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { UpdateExerciseDto } from './dto/update-exercise.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ExerciseEntity } from './entities/exercise.entity';
 
 @Controller('exercises')
 @ApiTags('exercises')
@@ -16,7 +25,7 @@ export class ExercisesController {
   }
 
   @Get()
-  @ApiOkResponse()
+  @ApiOkResponse({ type: ExerciseEntity, isArray: true })
   findAll() {
     return this.exercisesService.findAll();
   }
@@ -29,7 +38,10 @@ export class ExercisesController {
 
   @Patch(':id')
   @ApiCreatedResponse()
-  update(@Param('id') id: string, @Body() updateExerciseDto: UpdateExerciseDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateExerciseDto: UpdateExerciseDto,
+  ) {
     return this.exercisesService.update(+id, updateExerciseDto);
   }
 
