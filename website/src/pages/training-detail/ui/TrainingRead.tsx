@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function TrainingRead() {
+export default function TrainingDetail() {
   return (
     <div>TrainingRead</div>
   )

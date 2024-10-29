@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
-import img from './../../assets/image/profile.jpg';
+import img from './../../../assets/image/profile.jpg';
 import { Menu, MenuItem } from '@mui/material';
 import React from 'react';
 
