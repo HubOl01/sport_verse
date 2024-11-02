@@ -1,5 +1,14 @@
+import TrainingEdit from "../../training-edit/ui/TrainingEdit";
+import CardTraining from "./cardTraining";
+
 export default function Training() {
   return (
-    <div>Training</div>
+    <div>
+      <CardTraining />
+      <CardTraining />
+      <CardTraining />
+      <CardTraining />
+      <CardTraining />
+    </div>
   )
 }

@@ -5,8 +5,10 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: rgba(255, 255, 255, 0.87);
+  /* background-color: #2424FFFFFF
 
+/*  */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -20,5 +22,3 @@ body {
   min-width: 320px;
   min-height: 100vh; */
 }
-
-
