@@ -1,17 +1,21 @@
 import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
+import { ITraining } from "../../../shared/model/ITraining";
 
-export default function CardTraining() {
+interface CardTrainingProps {
+    training: ITraining
+}
+
+export default function CardTraining({ training }: CardTrainingProps) {
     return (
         <div className="mr-5 mt-5 ml-5">
             <Card>
                 <CardActionArea>
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
-                            Lizard
+                            {training.title}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            Lizards are a widespread group of squamate reptiles, with over 6,000
-                            species, ranging across all continents except Antarctica
+                            {training.description}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

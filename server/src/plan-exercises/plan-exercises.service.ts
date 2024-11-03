@@ -11,7 +11,11 @@ export class PlanExercisesService {
   }
 
   findAll() {
-    return this.prisma.planExercise.findMany();
+    return this.prisma.planExercise.findMany({
+      include: {
+        exercise: true,
+      },
+    });
   }
 
   findOne(id: number) {

@@ -1,8 +1,8 @@
-import axios from "axios"
+import axios from "axios";
 
 export const TrainingService = {
-    async getAll() {
-      const response = await axios.get("http://localhost:4200/tr")
-      return response.data
-    },
-}
+  async getAll() {
+    const response = await axios.get(`http://localhost:3000/training-plans`);
+    return response.data;
+  },
+};

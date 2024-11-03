@@ -11,11 +11,31 @@ export class TrainingPlansService {
   }
 
   findAll() {
-    return this.prisma.trainingPlan.findMany();
+    return this.prisma.trainingPlan.findMany({
+      include: {
+        statusPublish: true,
+        sportType: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
   }
 
   findOne(id: number) {
-    return this.prisma.trainingPlan.findUnique({ where: { id: id } });
+    return this.prisma.trainingPlan.findUnique({
+      where: { id: id },
+      include: {
+        statusPublish: true,
+        sportType: true,
+        PlanExercise: {
+          include: {
+            exercise: true,
+          },
+        },
+        StatusTraining: true,
+      },
+    });
   }
 
   update(id: number, updateTrainingPlanDto: UpdateTrainingPlanDto) {

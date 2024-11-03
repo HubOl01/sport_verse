@@ -19,10 +19,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
           <Header />
           <div className='block sm:flex h-fit min-h-screen'>
-            <div className='w-full sm:w-1/4 bg-gray-900'>
+            <div className='w-full sm:w-1/5 bg-gray-900'>
               <LeftBar />
             </div>
-            <div className="w-full sm:w-3/4 ">
+            <div className="w-full sm:w-4/5 ">
 
               <Routers></Routers>
             </div>
