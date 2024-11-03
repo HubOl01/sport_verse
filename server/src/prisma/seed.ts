@@ -5,10 +5,18 @@ import { exerciseCategories } from './data/exerciseCategories';
 import { roles } from './data/roles';
 import { profileStatuses } from './data/profileStatuses';
 import { exercises } from './data/exercises';
+import { statusesTraining } from './data/statusesTraining';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  for (const item of statusesTraining) {
+    await prisma.statusTraining.upsert({
+      where: { title: item.title },
+      update: {},
+      create: item,
+    });
+  }
   for (const item of sportTypes) {
     await prisma.sportType.upsert({
       where: { title: item.title },

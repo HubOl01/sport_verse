@@ -8,9 +8,8 @@ export class TrainingPlanEntity implements TrainingPlan {
   description: string;
   date_created: Date;
   userId: number;
-  SportTypeId: number;
   date_start: Date;
   date_end: Date;
-  statusTraining: number;
+  statusTrainingId: number;
   sportTypeId: number;
 }

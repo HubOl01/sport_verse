@@ -15,6 +15,7 @@ import { ExerciseCategoriesModule } from './exercise-categories/exercise-categor
 import { ExerciseSetsModule } from './exercise-sets/exercise-sets.module';
 import { TrainingResultsModule } from './training-results/training-results.module';
 import { PublishStatusesModule } from './publish-statuses/publish-statuses.module';
+import { StatusesTrainingModule } from './statuses-training/statuses-training.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PublishStatusesModule } from './publish-statuses/publish-statuses.modul
     ExerciseSetsModule,
     TrainingResultsModule,
     PublishStatusesModule,
+    StatusesTrainingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
