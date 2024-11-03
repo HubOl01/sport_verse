@@ -12,7 +12,7 @@ export default function Routers() {
       <Route path="/" element={<Main />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/training/" element={<Training />} />
-      <Route path="/training/edit/" element={<TrainingEdit />} />
+      <Route path="/training/new/" element={<TrainingEdit />} />
       <Route path="/training/:id" element={<TrainingDetail />} />
       <Route path="/settings" element={<Settings />} />
     </Routes>

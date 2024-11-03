@@ -1,6 +1,8 @@
 import { Button, TextField } from "@mui/material";
 import styles from "./TrainingEdit.module.scss"
 
+
+
 export default function TrainingEdit() {
   return (
     <div className='mr-5 ml-5'><TextField

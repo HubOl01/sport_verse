@@ -26,7 +26,7 @@ export default function Header() {
         setAnchorEl(null);
     };
     const clickButton = () => {
-        navigate("/training/edit")
+        navigate("/training/new")
     }
 
     return (
