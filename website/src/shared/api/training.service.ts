@@ -1,8 +1,50 @@
-import axios from "axios";
+// import axios from "axios";
+
+// export const TrainingService = {
+//   async getAll() {
+//     const response = await axios.get(`http://localhost:3000/training-plans`);
+//     return response.data;
+//   },
+//   async get(id: string) {
+//     const response = await axios.get(`http://localhost:3000/training-plans/${id}`);
+//     return response.data;
+//   },
+// };
+
+import axios, { AxiosError } from "axios";
+import { ITraining } from "../model/ITraining";
+
+const api = axios.create({
+  baseURL: "http://localhost:3000",
+  timeout: 5000,
+});
 
 export const TrainingService = {
-  async getAll() {
-    const response = await axios.get(`http://localhost:3000/training-plans`);
-    return response.data;
+  async getAll(): Promise<ITraining[]> {
+    try {
+      const response = await api.get<ITraining[]>("/training-plans");
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке всех планов";
+      throw new Error(message);
+    }
+  },
+
+  async get(id: string): Promise<ITraining> {
+    try {
+      const response = await api.get<ITraining>(`/training-plans/${id}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при загрузке плана с ID: ${id}`;
+      throw new Error(message);
+    }
   },
 };
