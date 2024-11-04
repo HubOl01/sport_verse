@@ -2,7 +2,7 @@ import { Button, Card, CardContent, IconButton, TextField } from "@mui/material"
 import styles from "./TrainingEdit.module.scss"
 import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 export default function TrainingEdit() {
   const [arr, setArr] = useState<{ titleExercise: string; }[]>([]);
@@ -24,6 +24,11 @@ export default function TrainingEdit() {
   const handleDeleteExercise = (index: number) => {
     const newArr = arr.filter((_, i) => i !== index);
     setArr(newArr);
+  };
+
+  const handleCopyExercise = (index: number) => {
+    const copiedExercise = { ...arr[index] }; // Копируем выбранное упражнение
+    setArr([...arr, copiedExercise]); // Добавляем его в конец массива
   };
 
   return (
@@ -99,6 +104,14 @@ export default function TrainingEdit() {
             />
             <IconButton
               className="w-10 h-10 self-center"
+              sx={{ color: "" }}
+              onClick={() => handleCopyExercise(index)}
+
+            >
+              <ContentCopyIcon />
+            </IconButton>
+            <IconButton
+              className="w-10 h-10 self-center"
               sx={{ color: "red" }}
               onClick={() => handleDeleteExercise(index)}
 
@@ -107,16 +120,30 @@ export default function TrainingEdit() {
             </IconButton>
           </div>
 
+<>
+
+</>
         </Card>
       ))}
-      <Button variant="contained" sx={{
-        color: "#FFFFFF",
-        backgroundColor: "rgba(0,0,0,.5)",
-        borderRadius: "20px",
-        width: "100%",
-        padding: "8px 15px",
+      <div className="flex gap-2">
+        <Button variant="contained" sx={{
+          color: "#FFFFFF",
+          backgroundColor: "rgba(0,0,0,.5)",
+          borderRadius: "20px",
+          width: "100%",
+          padding: "8px 15px",
 
-      }} onClick={handleAddExercise}>Добавить упражение</Button>
+        }} onClick={handleAddExercise}>Добавить упражение</Button>
+        <Button variant="contained" sx={{
+          color: "#FFFFFF",
+          backgroundColor: "rgba(61, 78, 206, 1)",
+          borderRadius: "20px",
+          width: "300px",
+          padding: "8px 15px",
+
+        }} >Добавить из базы</Button>
+
+      </div>
       <Button variant="contained" sx={{
         marginTop: "20px",
         color: "#FFFFFFFF",

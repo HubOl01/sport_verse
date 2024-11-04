@@ -33,7 +33,9 @@ export default function LeftBar() {
                             selected={selectedIndex === item.id}
                             onClick={() => handleListItemClick(item.id)}
                         >
-                            <ListItemText primary={item.title} />
+                            <ListItemText sx={{
+                                color: "white"
+                            }} primary={item.title} />
                         </ListItemButton>
 
                     </>

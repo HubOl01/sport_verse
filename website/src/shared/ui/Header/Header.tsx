@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 import img from './../../../assets/image/profile.jpg';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { Avatar, Button, Menu, MenuItem } from '@mui/material';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -18,6 +18,9 @@ export default function Header() {
         switch (title) {
             case "profile":
                 navigate("/profile");
+                break;
+            case "my_training":
+                navigate("/training");
                 break;
             default:
                 navigate("/");
@@ -51,7 +54,13 @@ export default function Header() {
 
                 {location.pathname !== '/profile' && (
                     <div>
-                        <img
+                        <Avatar sx={{
+                            height: "50px",
+                            width: "50px",
+                        }}
+                            onClick={handleClick}
+                        />
+                        {/* <img
                             id="basic-button"
                             aria-controls={open ? 'basic-menu' : undefined}
                             aria-haspopup="true"
@@ -61,7 +70,7 @@ export default function Header() {
                             className="rounded-full cursor-pointer"
                             src={img}
                             alt="User Icon"
-                        />
+                        /> */}
 
                         <Menu
                             id="basic-menu"
