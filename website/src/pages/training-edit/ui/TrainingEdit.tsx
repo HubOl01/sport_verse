@@ -1,21 +1,32 @@
-import { Button, Card, CardContent, IconButton, TextField } from "@mui/material";
+import { Button, Card, IconButton, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import styles from "./TrainingEdit.module.scss"
 import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 export default function TrainingEdit() {
-  const [arr, setArr] = useState<{ titleExercise: string; }[]>([]);
+  const [arr, setArr] = useState<{ titleExercise: string; countExercise: string, alignment: string }[]>([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [titleExercise, settitleExercise] = useState('');
+  const [titleExercise, setTitleExercise] = useState('');
+  const [countExercise, setCountExercise] = useState('');
+  const [alignment, setAlignment] = useState('Nan');
+
+  // const handleChange = (
+  //   _event: React.MouseEvent<HTMLElement>,
+  //   newAlignment: string,
+  // ) => {
+  //   setAlignment(newAlignment);
+  // };
 
   const handleAddExercise = () => {
-    setArr([...arr, { titleExercise }]);
-    settitleExercise('');
+    setArr([...arr, { titleExercise, countExercise, alignment }]);
+    setTitleExercise('');
+    setCountExercise('');
+    setAlignment('');
   };
 
-  const handleExerciseChange = (index: number, field: 'titleExercise', value: string) => {
+  const handleExerciseChange = (index: number, field: 'titleExercise' | 'countExercise' | 'alignment', value: string) => {
     const newArr = [...arr];
     newArr[index][field] = value;
     setArr(newArr);
@@ -120,9 +131,90 @@ export default function TrainingEdit() {
             </IconButton>
           </div>
 
-<>
+          <>
+            <ToggleButtonGroup
+              // color="#4758d6"
+              size="small"
+              value={exercise.alignment}
+              exclusive
+              onChange={(_e, val) => handleExerciseChange(index, 'alignment', val)}
+              aria-label="stringType"
+              sx={{
+                paddingLeft: "10px",
+                height: "30px",
+                // borderRadius: "20px",
+                // color: "#4758d6",
+                // background: "#4758d6"
 
-</>
+              }}
+            >
+              <ToggleButton value="Nan">Ничего</ToggleButton>
+              <ToggleButton value="distance">Дистанция</ToggleButton>
+              <ToggleButton value="weight">Вес</ToggleButton>
+              <ToggleButton value="time">Время</ToggleButton>
+              <ToggleButton value="count">Количество</ToggleButton>
+            </ToggleButtonGroup>
+            <div className="flex self-center p-2 pr-3 pl-3">
+
+              {exercise.alignment == 'distance' ? (<> <TextField
+                className="w-20 self-center"
+                placeholder="0"
+                variant="standard"
+                value={exercise.countExercise}
+                onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                slotProps={{
+                  input: {
+                    style: {
+                      fontSize: "16px",
+                    },
+                    disableUnderline: true,
+                  }
+                }}
+              /><div className="self-center">км.</div></>) : exercise.alignment == 'weight' ? (<><TextField
+                className="w-20 self-center"
+                placeholder="0"
+                variant="standard"
+                value={exercise.countExercise}
+                onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                slotProps={{
+                  input: {
+                    style: {
+                      fontSize: "16px",
+                    },
+                    disableUnderline: true,
+                  }
+                }}
+              /><div className="self-center">кг.</div></>) : exercise.alignment == 'time' ? (<><TextField
+                className="w-20 self-center"
+                placeholder="0"
+                variant="standard"
+                value={exercise.countExercise}
+                onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                slotProps={{
+                  input: {
+                    style: {
+                      fontSize: "16px",
+                    },
+                    disableUnderline: true,
+                  }
+                }}
+              /><div className="self-center">сек</div></>) : exercise.alignment == 'count' ? (<><TextField
+                className="w-20 self-center"
+                placeholder="0"
+                variant="standard"
+                value={exercise.countExercise}
+                onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                slotProps={{
+                  input: {
+                    style: {
+                      fontSize: "16px",
+                    },
+                    disableUnderline: true,
+                  }
+                }}
+              /><div className="self-center">раз.</div></>) : (<></>)}
+            </div>
+          </>
         </Card>
       ))}
       <div className="flex gap-2">

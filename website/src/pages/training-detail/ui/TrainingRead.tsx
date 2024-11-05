@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./TrainingRead.module.scss";
 import { ITraining } from '../../../shared/model/ITraining';
-import { AppBar, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Chip, IconButton, Toolbar } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function TrainingDetail() {
@@ -45,8 +45,11 @@ export default function TrainingDetail() {
       </AppBar>
 
       <div className="mr-5 mt-5 ml-5">
+        <Chip className="mb-2" label={data.statusPublish.title} />
         <h1>{data.title}</h1>
+        <p>Вид спорта: {data.sportType.title}</p>
         <p>Описание: {data.description}</p>
+        <div className={`${styles.name} mb-5`}>Упражения</div>
         <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>
       </div>
     </>

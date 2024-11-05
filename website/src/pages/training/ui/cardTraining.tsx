@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, Chip, Typography } from "@mui/material";
 import { ITraining } from "../../../shared/model/ITraining";
 import { useNavigate } from "react-router-dom";
 
@@ -25,6 +25,7 @@ export default function CardTraining({ training }: CardTrainingProps) {
                         <Typography gutterBottom variant="h5" component="div">
                             {training.title}
                         </Typography>
+                        <Chip className="mb-2" label={training.sportType.title} />
                         <Typography variant="body2" color="text.secondary">
                             {training.description}
                         </Typography>
