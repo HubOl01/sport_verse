@@ -4,7 +4,7 @@ import styles from './Profile.module.scss'
 export default function Profile() {
   return (
     <div>
-      <div className={styles.background}>
+      <div className={`${styles.background}`}>
         <div className={styles.backgroundImg}>
           <Avatar sx={{
             height: 100,
@@ -12,7 +12,10 @@ export default function Profile() {
           }} />
 
         </div>
+        <div className={`${styles.title_profile}`}>
+          Jack
+        </div>
       </div>
-    </div>
+    </div >
   )
 }

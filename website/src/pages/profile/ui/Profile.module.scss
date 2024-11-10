@@ -2,6 +2,9 @@
   height: 100px;
   background-color: rgba(71, 88, 214, 50);
   width: 100%;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
 }
 // .profileImg {
 //   width: 100px;
@@ -22,4 +25,10 @@
   align-items: center;
   transform: translate(45px, 45px);
   background-color: rgba(255, 255, 255);
+}
+
+.title_profile {
+  margin-left: 180px;
+  font-size: 30px;
+  font-weight: 600;
 }
