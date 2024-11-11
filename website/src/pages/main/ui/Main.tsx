@@ -1,3 +1,4 @@
+import CardEvent from "./cardEvent";
 import CardMain from "./cardMain";
 
 export default function Main() {
@@ -6,7 +7,7 @@ export default function Main() {
       <div className="flex ">
         <CardMain />
 
-        <CardMain />
+        <CardEvent />
       </div>
     </div >
   )

@@ -1,23 +1,8 @@
-// import axios from "axios";
-
-// export const TrainingService = {
-//   async getAll() {
-//     const response = await axios.get(`http://localhost:3000/training-plans`);
-//     return response.data;
-//   },
-//   async get(id: string) {
-//     const response = await axios.get(`http://localhost:3000/training-plans/${id}`);
-//     return response.data;
-//   },
-// };
-
-import axios, { AxiosError } from "axios";
+import  { AxiosError } from "axios";
 import { ITraining } from "../model/ITraining";
+import { api } from ".";
 
-const api = axios.create({
-  baseURL: "http://localhost:3000",
-  timeout: 5000,
-});
+
 
 export const TrainingService = {
   async getAll(): Promise<ITraining[]> {

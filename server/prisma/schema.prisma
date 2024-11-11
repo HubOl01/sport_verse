@@ -118,6 +118,7 @@ model Exercise {
   description        String?
   ExerciseCategoryId Int
   imageString        String?
+  isPrivate          Boolean           @default(true)
   exerciseCategory   ExerciseCategory? @relation(fields: [ExerciseCategoryId], references: [id])
   PlanExercise       PlanExercise[]
 }

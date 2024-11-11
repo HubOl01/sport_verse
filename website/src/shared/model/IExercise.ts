@@ -1,6 +1,4 @@
-import { Exercise } from '@prisma/client';
-
-export class ExerciseEntity implements Exercise {
+export interface IExercise {
   id: number;
   planExerciseId: number;
   name: string;

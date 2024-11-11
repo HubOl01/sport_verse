@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export class CreateExerciseDto {
   @ApiProperty({ required: true })
@@ -17,4 +17,7 @@ export class CreateExerciseDto {
   @ApiProperty({ required: true })
   @IsString()
   imageString: string;
+  @ApiProperty({ required: true, default: true })
+  @IsBoolean()
+  isPrivate: boolean;
 }

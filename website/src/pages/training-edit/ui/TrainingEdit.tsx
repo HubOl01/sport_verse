@@ -3,6 +3,8 @@ import styles from "./TrainingEdit.module.scss"
 import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { DialogCustom } from "./dialog";
+import { IExercise } from "../../../shared/model/IExercise";
 
 export default function TrainingEdit() {
   const [arr, setArr] = useState<{ titleExercise: string; countExercise: string, alignment: string }[]>([]);
@@ -18,6 +20,26 @@ export default function TrainingEdit() {
   // ) => {
   //   setAlignment(newAlignment);
   // };
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('Dione');
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (newValue?: string) => {
+    setOpen(false);
+
+    if (newValue) {
+      setValue(newValue);
+    }
+  };
+  const handleSelectExercise = (exercise: IExercise) => {
+    setArr([...arr, { titleExercise: exercise.name, countExercise: '', alignment: 'Nan' }]);
+  };
+
+
 
   const handleAddExercise = () => {
     setArr([...arr, { titleExercise, countExercise, alignment }]);
@@ -233,7 +255,14 @@ export default function TrainingEdit() {
           width: "300px",
           padding: "8px 15px",
 
-        }} >Добавить из базы</Button>
+        }} onClick={handleClick} >Добавить из базы</Button>
+        <DialogCustom
+          keepMounted
+          open={open}
+          onClose={handleClose}
+          onSelectExercise={handleSelectExercise}
+          value={value}
+        />
 
       </div>
       <Button variant="contained" sx={{
