@@ -30,6 +30,12 @@ export class ExercisesController {
     return this.exercisesService.findAll();
   }
 
+  @Get('findAllPublic')
+  @ApiOkResponse({ type: ExerciseEntity, isArray: true })
+  findAllPublic() {
+    return this.exercisesService.findAllPublic();
+  }
+
   @Get(':id')
   @ApiOkResponse()
   findOne(@Param('id') id: string) {

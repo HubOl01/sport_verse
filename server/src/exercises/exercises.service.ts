@@ -14,6 +14,14 @@ export class ExercisesService {
     return this.prisma.exercise.findMany();
   }
 
+  findAllPublic() {
+    return this.prisma.exercise.findMany({
+      where: {
+        isPrivate: false,
+      },
+    });
+  }
+
   findOne(id: number) {
     return this.prisma.exercise.findUnique({ where: { id: id } });
   }
