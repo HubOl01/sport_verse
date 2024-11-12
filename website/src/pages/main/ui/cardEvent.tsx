@@ -11,20 +11,20 @@ export default function CardEvent() {
             width: "100%",
 
           }}>
-          <CardActionArea>
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Событие
-              </Typography>
+          {/* <CardActionArea> */}
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              Событие
+            </Typography>
 
-              <Typography variant="body2" color="text.secondary">
-                {/* {quotes[index].quote} */}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {/* {quotes[index].author} */}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
+            <Typography variant="body2" color="text.secondary">
+              {/* {quotes[index].quote} */}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {/* {quotes[index].author} */}
+            </Typography>
+          </CardContent>
+          {/* </CardActionArea> */}
         </Card>
       </div >
     </div >

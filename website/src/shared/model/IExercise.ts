@@ -1,9 +1,8 @@
 export interface IExercise {
-  id: number;
-  planExerciseId: number;
+  id?: number;
   name: string;
   description: string;
   ExerciseCategoryId: number;
-  imageString: string;
+  imageString?: string;
   isPrivate: boolean;
 }

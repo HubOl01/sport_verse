@@ -2,16 +2,16 @@ import { SportType } from "./ISportType";
 import { StatusPublish } from "./IStatusPublish";
 
 export interface ITraining {
-  id: number;
+  id?: number;
   title: string;
-  statusPublishId: number;
+  statusPublishId?: number;
   description: string;
-  date_created: Date;
+  date_created?: Date;
   userId: number;
-  date_start: Date;
-  date_end: Date;
+  date_start?: Date;
+  date_end?: Date;
   statusTrainingId: number;
   sportTypeId: number;
-  statusPublish: StatusPublish;
-  sportType: SportType;
+  statusPublish?: StatusPublish;
+  sportType?: SportType;
 }

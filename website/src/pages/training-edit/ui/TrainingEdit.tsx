@@ -5,6 +5,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { DialogCustom } from "./dialog";
 import { IExercise } from "../../../shared/model/IExercise";
+import { TrainingService } from "../../../shared/api/training.service";
+import { ITraining } from '../../../shared/model/ITraining';
+import { ExercisesService } from "../../../shared/api/exercises.service";
 
 export default function TrainingEdit() {
   const [arr, setArr] = useState<{ titleExercise: string; countExercise: string, alignment: string }[]>([]);
@@ -13,13 +16,6 @@ export default function TrainingEdit() {
   const [titleExercise, setTitleExercise] = useState('');
   const [countExercise, setCountExercise] = useState('');
   const [alignment, setAlignment] = useState('Nan');
-
-  // const handleChange = (
-  //   _event: React.MouseEvent<HTMLElement>,
-  //   newAlignment: string,
-  // ) => {
-  //   setAlignment(newAlignment);
-  // };
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('Dione');
@@ -35,11 +31,9 @@ export default function TrainingEdit() {
       setValue(newValue);
     }
   };
-  const handleSelectExercise = (exercise: IExercise) => {
+  const handleAddSelectedExercise = (exercise: IExercise) => {
     setArr([...arr, { titleExercise: exercise.name, countExercise: '', alignment: 'Nan' }]);
   };
-
-
 
   const handleAddExercise = () => {
     setArr([...arr, { titleExercise, countExercise, alignment }]);
@@ -155,7 +149,6 @@ export default function TrainingEdit() {
 
           <>
             <ToggleButtonGroup
-              // color="#4758d6"
               size="small"
               value={exercise.alignment}
               exclusive
@@ -164,10 +157,6 @@ export default function TrainingEdit() {
               sx={{
                 paddingLeft: "10px",
                 height: "30px",
-                // borderRadius: "20px",
-                // color: "#4758d6",
-                // background: "#4758d6"
-
               }}
             >
               <ToggleButton value="Nan">Ничего</ToggleButton>
@@ -260,7 +249,7 @@ export default function TrainingEdit() {
           keepMounted
           open={open}
           onClose={handleClose}
-          onSelectExercise={handleSelectExercise}
+          onSelectExercise={handleAddSelectedExercise}
           value={value}
         />
 
@@ -273,7 +262,27 @@ export default function TrainingEdit() {
         width: "100%",
         fontWeight: "700",
         padding: "8px 15px"
-      }}>Сохранить</Button>
+      }}
+      onClick={()=> 
+        {
+          ExercisesService.create({
+            name: "", 
+            description: "", 
+            ExerciseCategoryId: 0, 
+            isPrivate: false
+          })
+          TrainingService.create({
+          title: title,
+          description: description,
+          userId: 1, 
+          statusTrainingId: 1, 
+          sportTypeId: 1,
+        });
+       
+      
+      }
+      }
+      >Сохранить</Button>
     </div >
   )
 }

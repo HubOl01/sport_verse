@@ -11,20 +11,20 @@ export default function CardMain() {
             width: "100%",
 
           }}>
-          <CardActionArea>
-            <CardContent>
-              <Typography gutterBottom variant="h5" fontWeight={500} component="div">
-                Цитата дня
-              </Typography>
+          {/* <CardActionArea> */}
+          <CardContent>
+            <Typography gutterBottom variant="h5" fontWeight={500} component="div">
+              Цитата дня
+            </Typography>
 
-              <Typography variant="body1" fontStyle={'italic'} color="text.secondary">
-                {quotes[index].quote}
-              </Typography>
-              <Typography variant="body2" textAlign={'end'} color="text.secondary">
-                {quotes[index].author}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
+            <Typography variant="body1" fontStyle={'italic'} color="text.secondary">
+              {quotes[index].quote}
+            </Typography>
+            <Typography variant="body2" textAlign={'end'} color="text.secondary">
+              {quotes[index].author}
+            </Typography>
+          </CardContent>
+          {/* </CardActionArea> */}
         </Card>
       </div >
     </div >

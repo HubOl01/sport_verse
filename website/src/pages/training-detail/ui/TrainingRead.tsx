@@ -19,7 +19,7 @@ export default function TrainingDetail() {
   if (error) return <p className={styles.text}>Произошла ошибка при загрузке данных.</p>;
   if (!data) return <p className={styles.text}>Нет плана</p>;
 
-  const formattedDateCreated = new Date(data.date_created).toLocaleString("ru-RU", {
+  const formattedDateCreated = new Date(data.date_created!).toLocaleString("ru-RU", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -45,9 +45,9 @@ export default function TrainingDetail() {
       </AppBar>
 
       <div className="mr-5 mt-5 ml-5">
-        <Chip className="mb-2" label={data.statusPublish.title} />
+        <Chip className="mb-2" label={data.statusPublish!.title} />
         <h1>{data.title}</h1>
-        <p>Вид спорта: {data.sportType.title}</p>
+        <p>Вид спорта: {data.sportType!.title}</p>
         <p>Описание: {data.description}</p>
         <div className={`${styles.name} mb-5`}>Упражения</div>
         <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>

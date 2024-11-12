@@ -32,4 +32,17 @@ export const TrainingService = {
       throw new Error(message);
     }
   },
+  async create(training: ITraining): Promise<ITraining> {
+    try {
+      const response = await api.post<ITraining>(`/training-plans`, training);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при создании нового тренировочного плана`;
+      throw new Error(message);
+    }
+  },
 };

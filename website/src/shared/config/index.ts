@@ -1,4 +1,16 @@
-export var api = "http://localhost:3000";
+export var apiHost = "http://localhost:3000";
 export var apiTraining = "/training-plans";
 export var apiProfile = "/profiles";
 export var apiExercises = "/exercises";
+export var apiExercisesPublish = "/exercises/findAllPublic";
+export var apiPlanExercise = "/plan-exercises";
+export var apiProfileSportTypes = "/profile-sport-types";
+export var apiSportTypes = "/sport-types";
+export var apiStatuses = "/statuses";
+export var apiRoles = "/roles";
+export var apiUsers = "/users";
+export var apiExerciseCategories = "/exercise-categories";
+export var apiExerciseSets = "/exercise-sets";
+export var apiTrainingResults = "/training-results";
+export var apiPublishStatuses = "/publish-statuses";
+export var apiStatusesTraining = "/statuses-training";

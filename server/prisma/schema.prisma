@@ -10,19 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model Auth {
-//   id    Int     @id @default(autoincrement())
-//   email String
-//   pass  String
-//   VKID  String?
-// }
+model Auth {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  pass  String
+  VKID  String?
+}
 
 // Модель для пользователя
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  username String? @unique @default(dbgenerated("'user_' || floor(random())::text"))
-
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  username   String?    @unique @default(dbgenerated("'user_' || floor(random())::text"))
+  isAuth     Boolean    @default(false)
   profile    Profile?
   createdAt  DateTime   @default(now())
   statusUser StatusUser @default(USER)

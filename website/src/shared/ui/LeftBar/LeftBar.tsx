@@ -28,7 +28,7 @@ export default function LeftBar() {
         <Box sx={{ width: '100%', }}>
             <List component="nav" aria-label="main mailbox folder">
                 {itemsBar.map((item) =>
-                    <>
+                    <div key={item.id}>
                         <ListItemButton
                             selected={selectedIndex === item.id}
                             onClick={() => handleListItemClick(item.id)}
@@ -38,7 +38,7 @@ export default function LeftBar() {
                             }} primary={item.title} />
                         </ListItemButton>
 
-                    </>
+                    </div>
                 )}
 
             </List>
