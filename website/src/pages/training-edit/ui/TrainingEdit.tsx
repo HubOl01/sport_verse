@@ -6,7 +6,6 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { DialogCustom } from "./dialog";
 import { IExercise } from "../../../shared/model/IExercise";
 import { TrainingService } from "../../../shared/api/training.service";
-import { ITraining } from '../../../shared/model/ITraining';
 import { ExercisesService } from "../../../shared/api/exercises.service";
 
 export default function TrainingEdit() {

@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 import { quotes } from "../../../shared/data/quotes";
 
 export default function CardMain() {

@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <div className=' min-h-screen'>
 
-          <Header />
+          {location.pathname !== '/login' && (<Header />)}
           <div className='block sm:flex h-fit min-h-screen'>
             {location.pathname !== '/login' && (
               <div className='w-full sm:w-1/5 bg-gray-900'>

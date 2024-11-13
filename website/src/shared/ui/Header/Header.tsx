@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
-import img from './../../../assets/image/profile.jpg';
 import { Avatar, Button, Menu, MenuItem } from '@mui/material';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
