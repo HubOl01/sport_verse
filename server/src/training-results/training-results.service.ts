@@ -11,7 +11,9 @@ export class TrainingResultsService {
   }
 
   findAll() {
-    return this.prisma.trainingResult.findMany();
+    return this.prisma.trainingResult.findMany({orderBy: {
+      id: 'desc',
+    },});
   }
 
   findOne(id: number) {

@@ -1,8 +1,7 @@
-import  { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { ITraining } from "../model/ITraining";
 import { api } from ".";
-
-
+import { apiTrainingGetIdFirst } from "../config";
 
 export const TrainingService = {
   async getAll(): Promise<ITraining[]> {
@@ -29,6 +28,19 @@ export const TrainingService = {
         typeof err.response?.data === "string"
           ? err.response.data
           : `Произошла ошибка при загрузке плана с ID: ${id}`;
+      throw new Error(message);
+    }
+  },
+  async getIdFirst(): Promise<ITraining> {
+    try {
+      const response = await api.get<ITraining>(apiTrainingGetIdFirst);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при загрузке плана с getIdFirst`;
       throw new Error(message);
     }
   },

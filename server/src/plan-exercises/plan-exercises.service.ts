@@ -15,6 +15,17 @@ export class PlanExercisesService {
       include: {
         exercise: true,
       },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+
+  getIdFirst() {
+    return this.prisma.planExercise.findFirst({
+      orderBy: {
+        id: 'desc',
+      },
     });
   }
 

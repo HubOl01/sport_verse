@@ -1,9 +1,11 @@
 export var apiHost = "http://localhost:3000";
 export var apiTraining = "/training-plans";
+export var apiTrainingGetIdFirst = "/training-plans/getIdFirst";
 export var apiProfile = "/profiles";
 export var apiExercises = "/exercises";
 export var apiExercisesPublish = "/exercises/findAllPublic";
 export var apiPlanExercise = "/plan-exercises";
+export var apiPlanExercisesGetIdFirst = "/plan-exercises/getIdFirst";
 export var apiProfileSportTypes = "/profile-sport-types";
 export var apiSportTypes = "/sport-types";
 export var apiStatuses = "/statuses";

@@ -22,6 +22,17 @@ export class ExercisesService {
     });
   }
 
+  findOneExercise(name: string) {
+    return this.prisma.exercise.findFirst({
+      where: {
+        name: {
+          equals: name.toLowerCase(),
+          mode: 'insensitive',
+        },
+      },
+    });
+  }
+
   findOne(id: number) {
     return this.prisma.exercise.findUnique({ where: { id: id } });
   }

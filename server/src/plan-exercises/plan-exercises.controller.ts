@@ -26,6 +26,10 @@ export class PlanExercisesController {
   findAll() {
     return this.planExercisesService.findAll();
   }
+  @Get('getIdFirst')
+  getIdFirst() {
+    return this.planExercisesService.getIdFirst();
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

@@ -32,6 +32,20 @@ export const ExercisesService = {
     }
   },
 
+  async getName(name: string): Promise<IExercise> {
+    try {
+      const response = await api.get<IExercise>(`${apiExercises}/${name}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при загрузке плана с ID: ${name}`;
+      throw new Error(message);
+    }
+  },
+
   async create(exercise: IExercise): Promise<IExercise> {
     try {
       const response = await api.post<IExercise>(apiExercisesPublish, exercise);

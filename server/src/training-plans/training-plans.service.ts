@@ -21,6 +21,13 @@ export class TrainingPlansService {
       },
     });
   }
+  getIdFirst() {
+    return this.prisma.trainingPlan.findFirst({
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
 
   findOne(id: number) {
     return this.prisma.trainingPlan.findUnique({

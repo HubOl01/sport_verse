@@ -20,7 +20,7 @@ export default function CardMain() {
             <Typography variant="body1" fontStyle={'italic'} color="text.secondary">
               {quotes[index].quote}
             </Typography>
-            <Typography variant="body2" textAlign={'end'} color="text.secondary">
+            <Typography variant="body2" textAlign={'end'} fontWeight={600} color="text.secondary">
               {quotes[index].author}
             </Typography>
           </CardContent>

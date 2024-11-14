@@ -7,9 +7,15 @@ import { DialogCustom } from "./dialog";
 import { IExercise } from "../../../shared/model/IExercise";
 import { TrainingService } from "../../../shared/api/training.service";
 import { ExercisesService } from "../../../shared/api/exercises.service";
-
+import { ExerciseSetService } from "../../../shared/api/exerciseSet.service";
+import { PlanExerciseService } from "../../../shared/api/planExercise.service";
+import { useQuery } from "react-query";
+import { ITraining } from "../../../shared/model/ITraining";
+interface ArrModel {
+  titleExercise: string; countExercise: string, alignment: string
+}
 export default function TrainingEdit() {
-  const [arr, setArr] = useState<{ titleExercise: string; countExercise: string, alignment: string }[]>([]);
+  const [arr, setArr] = useState<ArrModel[]>([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [titleExercise, setTitleExercise] = useState('');
@@ -262,25 +268,96 @@ export default function TrainingEdit() {
         fontWeight: "700",
         padding: "8px 15px"
       }}
-      onClick={()=> 
-        {
-          ExercisesService.create({
-            name: "", 
-            description: "", 
-            ExerciseCategoryId: 0, 
-            isPrivate: false
-          })
-          TrainingService.create({
-          title: title,
-          description: description,
-          userId: 1, 
-          statusTrainingId: 1, 
-          sportTypeId: 1,
-        });
-       
-      
-      }
-      }
+        onClick={() => {
+
+          // TrainingService.create({
+          //   title: title,
+          //   description: description,
+          //   userId: 1,
+          //   statusTrainingId: 1,
+          //   sportTypeId: 1,
+          // });
+          TrainingService.getIdFirst().then(plan => {
+
+            arr.forEach(item => {
+
+
+              ExercisesService.getName(item.titleExercise).then(exercise => {
+                if (exercise.id === undefined) {
+                  // console.log('error');
+                  ExercisesService.create({
+                    name: item.titleExercise,
+                    description: "",
+                    ExerciseCategoryId: 40,
+                    isPrivate: false
+                  })
+                } else {
+                  console.log(exercise.id);
+
+                  PlanExerciseService.create({
+                    trainingPlanId: plan.id!,
+                    setTotal: 0,
+                    repTotal: 0,
+                    exerciseStatus: 0,
+                    exerciseId: exercise.id!,
+                  });
+                  PlanExerciseService.getIdFirst().then(planExercise => {
+                    ExerciseSetService.create(
+                      {
+                        planExerciseId: planExercise.id!,
+                        duration: item.alignment == 'time' ? BigInt(parseInt(item.countExercise)) : undefined,
+                        distance: item.alignment == 'distance' ? parseInt(item.countExercise) : undefined,
+                        weight: item.alignment == 'weight' ? parseInt(item.countExercise) : undefined,
+                        repetitions: item.alignment == 'count' ? parseInt(item.countExercise) : undefined,
+                        calories_burned: undefined,
+                        route_gpx: undefined,
+                        stringType: "",
+                      }
+                    );
+                  })
+                }
+              })
+            });
+          });
+
+
+
+
+          // // console.log(data1);
+          // ExercisesService.create({
+          //   name: "",
+          //   description: "",
+          //   ExerciseCategoryId: 1,
+          //   isPrivate: false
+          // })
+          // PlanExerciseService.create({
+          //   trainingPlanId: 0,
+          //   setTotal: 0,
+          //   repTotal: 0,
+          //   exerciseStatus: 0,
+          //   exerciseId: 0,
+          // });
+          // PlanExerciseService.getIdFirst().then(data => {
+          //   console.log(data.id);
+          // })
+
+
+          // ExerciseSetService.create(
+          //   {
+          //     planExerciseId: 0,
+          //     duration: undefined,
+          //     distance: undefined,
+          //     weight: undefined,
+          //     repetitions: undefined,
+          //     calories_burned: undefined,
+          //     route_gpx: undefined,
+          //     stringType: "",
+          //   }
+          // );
+
+
+        }
+        }
       >Сохранить</Button>
     </div >
   )

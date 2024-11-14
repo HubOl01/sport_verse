@@ -36,6 +36,12 @@ export class ExercisesController {
     return this.exercisesService.findAllPublic();
   }
 
+  @Get(':name')
+  @ApiOkResponse()
+  findOneExercise(@Param('name') name: string) {
+    return this.exercisesService.findOneExercise(name);
+  }
+
   @Get(':id')
   @ApiOkResponse()
   findOne(@Param('id') id: string) {
