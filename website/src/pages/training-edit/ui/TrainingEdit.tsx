@@ -270,13 +270,13 @@ export default function TrainingEdit() {
       }}
         onClick={() => {
 
-          // TrainingService.create({
-          //   title: title,
-          //   description: description,
-          //   userId: 1,
-          //   statusTrainingId: 1,
-          //   sportTypeId: 1,
-          // });
+          TrainingService.create({
+            title: title,
+            description: description,
+            userId: 1,
+            statusTrainingId: 1,
+            sportTypeId: 1,
+          });
           TrainingService.getIdFirst().then(plan => {
 
             arr.forEach(item => {
@@ -319,41 +319,6 @@ export default function TrainingEdit() {
               })
             });
           });
-
-
-
-
-          // // console.log(data1);
-          // ExercisesService.create({
-          //   name: "",
-          //   description: "",
-          //   ExerciseCategoryId: 1,
-          //   isPrivate: false
-          // })
-          // PlanExerciseService.create({
-          //   trainingPlanId: 0,
-          //   setTotal: 0,
-          //   repTotal: 0,
-          //   exerciseStatus: 0,
-          //   exerciseId: 0,
-          // });
-          // PlanExerciseService.getIdFirst().then(data => {
-          //   console.log(data.id);
-          // })
-
-
-          // ExerciseSetService.create(
-          //   {
-          //     planExerciseId: 0,
-          //     duration: undefined,
-          //     distance: undefined,
-          //     weight: undefined,
-          //     repetitions: undefined,
-          //     calories_burned: undefined,
-          //     route_gpx: undefined,
-          //     stringType: "",
-          //   }
-          // );
 
 
         }

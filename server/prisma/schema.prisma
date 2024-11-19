@@ -22,7 +22,6 @@ model User {
   id         Int        @id @default(autoincrement())
   email      String     @unique
   username   String?    @unique @default(dbgenerated("'user_' || floor(random())::text"))
-  isAuth     Boolean    @default(false)
   profile    Profile?
   createdAt  DateTime   @default(now())
   statusUser StatusUser @default(USER)
@@ -87,10 +86,10 @@ model TrainingPlan {
   title            String
   statusPublishId  Int            @default(1)
   description      String?
-  date_created     DateTime
+  date_created     DateTime?      @default(now())
   userId           Int
-  date_start       DateTime
-  date_end         DateTime
+  date_start       DateTime?      @default(now())
+  date_end         DateTime?      @default(now())
   statusTrainingId Int
   sportTypeId      Int
   statusPublish    StatusPublish? @relation(fields: [statusPublishId], references: [id])
@@ -133,7 +132,7 @@ model ExerciseSet {
   id Int @id @default(autoincrement())
 
   planExerciseId Int
-  date           DateTime
+  date           DateTime? @default(now())
 
   duration        BigInt?
   distance        Float?
