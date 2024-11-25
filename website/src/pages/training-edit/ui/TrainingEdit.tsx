@@ -9,8 +9,8 @@ import { TrainingService } from "../../../shared/api/training.service";
 import { ExercisesService } from "../../../shared/api/exercises.service";
 import { ExerciseSetService } from "../../../shared/api/exerciseSet.service";
 import { PlanExerciseService } from "../../../shared/api/planExercise.service";
-import { useQuery } from "react-query";
-import { ITraining } from "../../../shared/model/ITraining";
+
+
 interface ArrModel {
   titleExercise: string; countExercise: string, alignment: string
 }

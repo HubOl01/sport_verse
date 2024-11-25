@@ -32,11 +32,18 @@ export class PlanExercisesService {
   findOne(id: number) {
     return this.prisma.planExercise.findUnique({ where: { id: id } });
   }
+  
+  findAllPlan(id: number) {
+    return this.prisma.planExercise.findMany({ where: { trainingPlanId: id } });
+  }
 
   update(id: number, updatePlanExerciseDto: UpdatePlanExerciseDto) {
     return this.prisma.planExercise.update({
       data: updatePlanExerciseDto,
       where: { id: id },
+      include: {
+        exercise: true,
+      }
     });
   }
 
