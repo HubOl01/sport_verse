@@ -3,10 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./TrainingRead.module.scss";
 import { ITraining } from '../../../shared/model/ITraining';
-import { AppBar, Card, Chip, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Card, Chip, IconButton, Toolbar, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { PlanExerciseService } from "../../../shared/api/planExercise.service";
 import { ExercisesService } from "../../../shared/api/exercises.service";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -37,21 +38,34 @@ export default function TrainingDetail() {
 
   return (
     <>
-      <AppBar position="static" color="transparent" elevation={0}>
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={() => navigate(-1)}
-          >
-            <ArrowBackIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" color="transparent" elevation={0}>
+          <Toolbar>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={() => navigate(-1)}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <Box sx={{ flexGrow: 1 }}></Box>
+            <IconButton
+              // size="large"
+              edge="end"
+              // aria-label="menu"
+              sx={{ ml: 2, color: "red" }}
+              onClick={() => {
+                
+                navigate(-1);
+                }}>
+              <DeleteIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      </Box>
       <div className="mr-5 mt-5 ml-5">
         <Chip className="mb-2" label={trainingData.statusPublish!.title} />
         <h1>{trainingData.title}</h1>

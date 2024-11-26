@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { IExercise } from "../model/IExercise";
-import { apiExercises, apiExercisesPublish } from "../config";
+import { apiExercises, apiExercisesName, apiExercisesPublish } from "../config";
 import { api } from ".";
 
 export const ExercisesService = {
@@ -47,7 +47,7 @@ export const ExercisesService = {
 
   async getName(name: string): Promise<IExercise> {
     try {
-      const response = await api.get<IExercise>(`${apiExercises}/${name}`);
+      const response = await api.get<IExercise>(`${apiExercisesName}/${name}`);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -61,7 +61,7 @@ export const ExercisesService = {
 
   async create(exercise: IExercise): Promise<IExercise> {
     try {
-      const response = await api.post<IExercise>(apiExercisesPublish, exercise);
+      const response = await api.post<IExercise>(apiExercises, exercise);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -69,6 +69,19 @@ export const ExercisesService = {
         typeof err.response?.data === "string"
           ? err.response.data
           : "Произошла ошибка при создании опубликованного упражнения";
+      throw new Error(message);
+    }
+  },
+  async delete(id: string): Promise<IExercise> {
+    try {
+      const response = await api.delete<IExercise>(`${apiExercises}/${id}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при удалении упражнения из плана";
       throw new Error(message);
     }
   },

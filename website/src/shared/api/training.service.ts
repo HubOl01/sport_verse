@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { ITraining } from "../model/ITraining";
 import { api } from ".";
-import { apiTrainingGetIdFirst } from "../config";
+import { apiTraining, apiTrainingGetIdFirst } from "../config";
 
 export const TrainingService = {
   async getAll(): Promise<ITraining[]> {
@@ -54,6 +54,19 @@ export const TrainingService = {
         typeof err.response?.data === "string"
           ? err.response.data
           : `Произошла ошибка при создании нового тренировочного плана`;
+      throw new Error(message);
+    }
+  },
+  async delete(id: string): Promise<ITraining> {
+    try {
+      const response = await api.delete<ITraining>(`${apiTraining}/${id}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при удалении тренировочного плана";
       throw new Error(message);
     }
   },

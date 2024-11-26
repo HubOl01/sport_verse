@@ -289,7 +289,7 @@ export default function TrainingEdit() {
                     name: item.titleExercise,
                     description: "",
                     ExerciseCategoryId: 40,
-                    isPrivate: false
+                    isPrivate: true
                   })
                 } else {
                   console.log(exercise.id);
@@ -316,6 +316,27 @@ export default function TrainingEdit() {
                     );
                   })
                 }
+              }).catch(ex => {
+                ExercisesService.create({
+                  name: item.titleExercise,
+                  description: "",
+                  ExerciseCategoryId: 40,
+                  isPrivate: true
+                })
+                PlanExerciseService.getIdFirst().then(planExercise => {
+                  ExerciseSetService.create(
+                    {
+                      planExerciseId: planExercise.id!,
+                      duration: item.alignment == 'time' ? BigInt(parseInt(item.countExercise)) : undefined,
+                      distance: item.alignment == 'distance' ? parseInt(item.countExercise) : undefined,
+                      weight: item.alignment == 'weight' ? parseInt(item.countExercise) : undefined,
+                      repetitions: item.alignment == 'count' ? parseInt(item.countExercise) : undefined,
+                      calories_burned: undefined,
+                      route_gpx: undefined,
+                      stringType: "",
+                    }
+                  );
+                })
               })
             });
           });

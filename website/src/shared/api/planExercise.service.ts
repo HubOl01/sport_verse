@@ -68,4 +68,19 @@ export const PlanExerciseService = {
       throw new Error(message);
     }
   },
+  async delete(id: string): Promise<IPlanExercise> {
+    try {
+      const response = await api.delete<IPlanExercise>(
+        `${apiPlanExercise}/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при удалении упражнения из плана";
+      throw new Error(message);
+    }
+  },
 };
