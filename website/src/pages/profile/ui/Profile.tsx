@@ -1,8 +1,22 @@
 import { Avatar, Card } from '@mui/material'
 import styles from './Profile.module.scss'
 import ListTile from './ListTile'
+import { useState } from 'react';
+import { DialogStatus } from './dialog';
 
 export default function Profile() {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('Dione');
+  const handleClick = () => {
+    setOpen(true);
+  };
+  const handleClose = (newValue?: string) => {
+    setOpen(false);
+
+    if (newValue) {
+      setValue(newValue);
+    }
+  };
   return (
     <div>
       <div className={`${styles.background}`}>
@@ -17,9 +31,15 @@ export default function Profile() {
             <div className={`${styles.title_profile}`}>
               Jack
             </div>
-            <div className={`${styles.title_emoji}`}>
+            <div className={`${styles.title_emoji}`} onClick={handleClick}>
               😴
             </div>
+            <DialogStatus
+              keepMounted
+              open={open}
+              onClose={handleClose}
+              value={value}
+            />
           </div>
           <div className={`${styles.title_content}`}>
             Спортсмен
@@ -52,6 +72,7 @@ export default function Profile() {
         </Card>
 
       </div>
+
     </div >
   )
 }
