@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./TrainingRead.module.scss";
@@ -8,11 +8,15 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { PlanExerciseService } from "../../../shared/api/planExercise.service";
 import { ExercisesService } from "../../../shared/api/exercises.service";
 import DeleteIcon from '@mui/icons-material/Delete';
+import TrainingEdit from "../../training-edit/ui/TrainingEdit";
+import { useState } from "react";
+import EditIcon from '@mui/icons-material/Edit';
 
 export default function TrainingDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const queryClient = useQueryClient();
+  const [value, setValue] = useState(false);
   const { data: trainingData, isLoading, error } = useQuery<ITraining>(
     ['trainingDetail', id],
     () => TrainingService.get(id!)
@@ -36,6 +40,16 @@ export default function TrainingDetail() {
     minute: "2-digit"
   });
 
+  const handleDelete = async () => {
+    try {
+      await TrainingService.delete(id!);
+      queryClient.invalidateQueries('trainingPlans'); // Обновляем данные списка
+      navigate(-1);
+    } catch (error) {
+      console.error('Ошибка при удалении тренировочного плана:', error);
+      alert('Не удалось удалить тренировочный план.');
+    }
+  };
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -56,33 +70,43 @@ export default function TrainingDetail() {
               // size="large"
               edge="end"
               // aria-label="menu"
+              sx={{ ml: 2 }}
+              onClick={() => setValue(!value)}>
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              // size="large"
+              edge="end"
+              // aria-label="menu"
               sx={{ ml: 2, color: "red" }}
-              onClick={() => {
-                
-                navigate(-1);
-                }}>
+              onClick={handleDelete}>
               <DeleteIcon />
             </IconButton>
           </Toolbar>
         </AppBar>
       </Box>
-      <div className="mr-5 mt-5 ml-5">
-        <Chip className="mb-2" label={trainingData.statusPublish!.title} />
-        <h1>{trainingData.title}</h1>
-        <p>Вид спорта: {trainingData.sportType!.title}</p>
-        <p>Описание: {trainingData.description}</p>
-        <div className={`${styles.name} mb-5`}>Упражнения</div>
-        <div>
-          {planExercisesData && planExercisesData.length > 0 ? (
-            planExercisesData.map((exercise, i) => (
-              <ExerciseCard key={exercise.id} exerciseId={exercise.exerciseId} index={i + 1} />
-            ))
-          ) : (
-            <p>Упражнений пока нет.</p>
-          )}
+      {
+        value ? <TrainingEdit trainingPlanId={Number(id)} /> : <div className="mr-5 mt-5 ml-5">
+          <Chip className="mb-2" label={trainingData.statusPublish!.title} />
+          <h1>{trainingData.title}</h1>
+          <p>Вид спорта: {trainingData.sportType!.title}</p>
+          <p>Описание: {trainingData.description}</p>
+          <div className={`${styles.name} mb-5`}>Упражнения</div>
+          <div>
+            {planExercisesData && planExercisesData.length > 0 ? (
+              planExercisesData.map((exercise, i) => (
+                <ExerciseCard key={exercise.id} exerciseId={exercise.exerciseId} index={i + 1} />
+              ))
+            ) : (
+              <p>Упражнений пока нет.</p>
+            )}
+          </div>
+          <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>
         </div>
-        <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>
-      </div>
+
+      }
+
+
     </>
   );
 }

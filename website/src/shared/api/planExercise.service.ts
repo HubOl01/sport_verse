@@ -68,6 +68,25 @@ export const PlanExerciseService = {
       throw new Error(message);
     }
   },
+  async update(
+    id: number,
+    planExercise: IPlanExercise
+  ): Promise<IPlanExercise> {
+    try {
+      const response = await api.patch<IPlanExercise>(
+        `${apiPlanExercise}/${id}`,
+        planExercise
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке всех планов";
+      throw new Error(message);
+    }
+  },
   async delete(id: string): Promise<IPlanExercise> {
     try {
       const response = await api.delete<IPlanExercise>(

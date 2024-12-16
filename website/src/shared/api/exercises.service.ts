@@ -72,6 +72,19 @@ export const ExercisesService = {
       throw new Error(message);
     }
   },
+  async update(id: number, exercise: IExercise): Promise<IExercise> {
+    try {
+      const response = await api.patch<IExercise>(`${apiExercises}/${id}`, exercise);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при изменении опубликованного упражнения";
+      throw new Error(message);
+    }
+  },
   async delete(id: string): Promise<IExercise> {
     try {
       const response = await api.delete<IExercise>(`${apiExercises}/${id}`);

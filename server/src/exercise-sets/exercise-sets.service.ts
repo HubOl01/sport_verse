@@ -25,7 +25,18 @@ export class ExerciseSetsService {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.exerciseSet.delete({ where: { id: id } });
+  // remove(id: number) {
+  //   return this.prisma.exerciseSet.delete({ where: { id: id } });
+  // }
+  async remove(id: number) {
+    return await this.prisma.exerciseSet.deleteMany({
+      where: { id },
+    });
+  }
+
+  removePlanExercise(id: number) {
+    return this.prisma.exerciseSet.deleteMany({
+      where: { planExerciseId: id },
+    });
   }
 }

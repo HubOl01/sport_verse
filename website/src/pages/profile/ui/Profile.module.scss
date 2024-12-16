@@ -26,9 +26,46 @@
   transform: translate(45px, 45px);
   background-color: rgba(255, 255, 255);
 }
+.backgroundText {
+  transform: translate(-0px, -67.5px);
+}
 
-.title_profile {
-  margin-left: 180px;
+.title_emoji {
+  margin-left: 20px;
+  color: #fff;
   font-size: 30px;
+  align-self: center;
   font-weight: 600;
+}
+.title_profile {
+  color: #fff;
+  margin-left: 180px;
+  font-size: 40px;
+  font-weight: 600;
+}
+.title_content {
+  margin-left: 180px;
+  font-size: 20px;
+  // font-weight: 600;
+}
+.title_about {
+  // margin: 10px;
+  font-size: 16px;
+  // font-weight: 600;
+}
+.title_about_title {
+  // margin: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 200px;
+  font-size: 16px;
+  font-weight: 600;
+  // font-weight: 600;
+}
+.title_about_content {
+  // margin: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  // font-weight: 600;
 }

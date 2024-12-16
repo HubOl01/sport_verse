@@ -57,6 +57,19 @@ export const TrainingService = {
       throw new Error(message);
     }
   },
+  async update(trainingPlanId: number, training: ITraining): Promise<ITraining> {
+    try {
+      const response = await api.patch<ITraining>(`/training-plans/${trainingPlanId}`, training);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при изменении тренировочного плана`;
+      throw new Error(message);
+    }
+  },
   async delete(id: string): Promise<ITraining> {
     try {
       const response = await api.delete<ITraining>(`${apiTraining}/${id}`);

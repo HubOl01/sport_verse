@@ -1,9 +1,23 @@
 import { AxiosError } from "axios";
-import { apiExerciseSets } from "../config";
+import { apiExerciseSets, apiExerciseSetsRemovePlanExercise } from "../config";
 import { api } from ".";
 import { IExerciseSet } from "../model/IExerciseSet";
 
 export const ExerciseSetService = {
+  async get(id: string): Promise<IExerciseSet> {
+    try {
+      const response = await api.get<IExerciseSet>(`${apiExerciseSets}/${id}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке плана";
+      throw new Error(message);
+    }
+  },
+
   async getAll(): Promise<IExerciseSet[]> {
     try {
       const response = await api.get<IExerciseSet[]>(apiExerciseSets);
@@ -30,9 +44,27 @@ export const ExerciseSetService = {
       throw new Error(message);
     }
   },
+  async update(id: number, item: IExerciseSet): Promise<IExerciseSet> {
+    try {
+      const response = await api.patch<IExerciseSet>(
+        `${apiExerciseSets}/${id}`,
+        item
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при изменении всех планов";
+      throw new Error(message);
+    }
+  },
   async delete(id: string): Promise<IExerciseSet> {
     try {
-      const response = await api.delete<IExerciseSet>(`${apiExerciseSets}/${id}`);
+      const response = await api.delete<IExerciseSet>(
+        `${apiExerciseSets}/${id}`
+      );
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -42,5 +74,20 @@ export const ExerciseSetService = {
           : "Произошла ошибка при удалении упражнения из плана";
       throw new Error(message);
     }
-  }
+  },
+  async deletePlanExercise(id: string): Promise<IExerciseSet> {
+    try {
+      const response = await api.delete<IExerciseSet>(
+        `${apiExerciseSetsRemovePlanExercise}/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при удалении упражнения из плана";
+      throw new Error(message);
+    }
+  },
 };

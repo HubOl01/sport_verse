@@ -4,7 +4,7 @@ import Profile from '../../pages/profile/ui/Profile';
 import Settings from '../../pages/settings/ui/Settings';
 import Training from '../../pages/training/ui/Training';
 import TrainingDetail from '../../pages/training-detail/ui/TrainingRead';
-import TrainingEdit from '../../pages/training-edit/ui/TrainingEdit';
+import TrainingEdit from '../../pages/training-new/ui/TrainingNew';
 import Sign from '../../pages/sign-in/ui/Sign';
 
 export default function Routers() {

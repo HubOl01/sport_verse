@@ -44,4 +44,14 @@ export class ExerciseSetsController {
   remove(@Param('id') id: string) {
     return this.exerciseSetsService.remove(+id);
   }
+
+  @Delete('removePlanExercise/:id')
+  removePlanExercise(@Param('id') id: string) {
+    return this.exerciseSetsService.removePlanExercise(+id);
+  }
+  // removePlanExercise(id: number) {
+  //   return this.prisma.exerciseSet.deleteMany({
+  //     where: { planExerciseId: id },
+  //   });
+  // }
 }
