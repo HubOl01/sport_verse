@@ -15,11 +15,11 @@ export default function CardEvent() {
               Событие
             </Typography>
 
-            <Typography variant="body2" color="text.secondary">
-              {/* {quotes[index].quote} */}
+            <Typography variant="h6" color="textPrimary">
+              Кубок Первого канала 2024
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {/* {quotes[index].author} */}
+              Ежегодный турнир по хоккею с шайбой, который проходит с 12 по 15 декабря в Санкт-Петербурге на «СКА Арена»
             </Typography>
           </CardContent>
           {/* </CardActionArea> */}

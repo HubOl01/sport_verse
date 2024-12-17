@@ -19,8 +19,8 @@ export function DialogCustom(props: dialogProps) {
     const { data, isLoading, error } = useQuery(['exercises'], () => ExercisesService.getAll()
     )
 
-    if (isLoading) return <p>Загрузка...</p>;
-    if (error) return <p >Произошла ошибка при загрузке данных.</p>;
+    // if (isLoading) return <p>Загрузка...</p>;
+    // if (error) return <p >Произошла ошибка при загрузке данных.</p>;
     console.log(data, error)
 
     if (props.open) {

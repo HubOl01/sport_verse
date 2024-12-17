@@ -261,6 +261,7 @@ export default function TrainingEdit() {
       </div>
       <Button variant="contained" sx={{
         marginTop: "20px",
+        marginBottom: "20px",
         color: "#FFFFFFFF",
         background: "#4758d6",
         borderRadius: "20px",
