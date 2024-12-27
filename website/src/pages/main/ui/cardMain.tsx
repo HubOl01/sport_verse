@@ -11,7 +11,6 @@ export default function CardMain() {
             width: "100%",
 
           }}>
-          {/* <CardActionArea> */}
           <CardContent>
             <Typography gutterBottom variant="h5" fontWeight={500} component="div">
               Цитата дня
@@ -24,7 +23,6 @@ export default function CardMain() {
               {quotes[index].author}
             </Typography>
           </CardContent>
-          {/* </CardActionArea> */}
         </Card>
       </div >
     </div >

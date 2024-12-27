@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./TrainingRead.module.scss";
 import { ITraining } from '../../../shared/model/ITraining';
-import { AppBar, Box, Card, Chip, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Card, Chip, IconButton, Toolbar } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { PlanExerciseService } from "../../../shared/api/planExercise.service";
 import { ExercisesService } from "../../../shared/api/exercises.service";
@@ -22,7 +22,7 @@ export default function TrainingDetail() {
     () => TrainingService.get(id!)
   );
 
-  const { data: planExercisesData, isLoading: isPlanExercisesLoading, error: planExercisesError } = useQuery(
+  const { data: planExercisesData } = useQuery(
     ['planExercises', id],
     () => PlanExerciseService.getAllPlan(trainingData?.id!.toString() ?? ""),
     { enabled: !!trainingData }
@@ -43,7 +43,7 @@ export default function TrainingDetail() {
   const handleDelete = async () => {
     try {
       await TrainingService.delete(id!);
-      queryClient.invalidateQueries('trainingPlans'); // Обновляем данные списка
+      queryClient.invalidateQueries('trainingPlans');
       navigate(-1);
     } catch (error) {
       console.error('Ошибка при удалении тренировочного плана:', error);
@@ -67,17 +67,13 @@ export default function TrainingDetail() {
             </IconButton>
             <Box sx={{ flexGrow: 1 }}></Box>
             <IconButton
-              // size="large"
               edge="end"
-              // aria-label="menu"
               sx={{ ml: 2 }}
               onClick={() => setValue(!value)}>
               <EditIcon />
             </IconButton>
             <IconButton
-              // size="large"
               edge="end"
-              // aria-label="menu"
               sx={{ ml: 2, color: "red" }}
               onClick={handleDelete}>
               <DeleteIcon />
@@ -103,23 +99,17 @@ export default function TrainingDetail() {
           </div>
           <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>
         </div>
-
       }
-
-
     </>
   );
 }
 
 
 function ExerciseCard({ exerciseId, index }: { exerciseId: number; index: number }) {
-  const { data: exerciseData, isLoading, error } = useQuery(
+  const { data: exerciseData } = useQuery(
     ['exercise', exerciseId],
     () => ExercisesService.get(exerciseId.toString())
   );
-
-  // if (isLoading) return <Card variant="outlined" sx={{ marginBottom: '20px', borderRadius: '20px' }}>Загрузка...</Card>;
-  // if (error) return <Card variant="outlined" sx={{ marginBottom: '20px', borderRadius: '20px' }}>Ошибка загрузки.</Card>;
 
   return (
     <Card

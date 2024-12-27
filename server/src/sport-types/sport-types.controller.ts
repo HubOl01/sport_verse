@@ -16,30 +16,9 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('sport-types')
 export class SportTypesController {
   constructor(private readonly sportTypesService: SportTypesService) {}
-
-  // @Post()
-  // create(@Body() createSportTypeDto: CreateSportTypeDto) {
-  //   return this.sportTypesService.create(createSportTypeDto);
-  // }
-
   @Get()
   @ApiOkResponse()
   findAll() {
     return this.sportTypesService.findAll();
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.sportTypesService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateSportTypeDto: UpdateSportTypeDto) {
-  //   return this.sportTypesService.update(+id, updateSportTypeDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.sportTypesService.remove(+id);
-  // }
 }

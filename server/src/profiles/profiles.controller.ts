@@ -22,25 +22,21 @@ export class ProfilesController {
   create(@Body() createProfileDto: CreateProfileDto) {
     return this.profilesService.create(createProfileDto);
   }
-
   @Get()
   @ApiOkResponse()
   findAll() {
     return this.profilesService.findAll();
   }
-
   @Get(':id')
   @ApiOkResponse()
   findOne(@Param('id') id: string) {
     return this.profilesService.findOne(+id);
   }
-
   @Patch(':id')
   @ApiCreatedResponse()
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
     return this.profilesService.update(+id, updateProfileDto);
   }
-
   @Delete(':id')
   @ApiOkResponse()
   remove(@Param('id') id: string) {

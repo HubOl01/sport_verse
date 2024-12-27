@@ -32,7 +32,7 @@ export class PlanExercisesService {
   findOne(id: number) {
     return this.prisma.planExercise.findUnique({ where: { id: id } });
   }
-  
+
   findAllPlan(id: number) {
     return this.prisma.planExercise.findMany({ where: { trainingPlanId: id } });
   }
@@ -43,7 +43,7 @@ export class PlanExercisesService {
       where: { id: id },
       include: {
         exercise: true,
-      }
+      },
     });
   }
 

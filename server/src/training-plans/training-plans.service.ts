@@ -9,7 +9,6 @@ export class TrainingPlansService {
   create(createTrainingPlanDto: CreateTrainingPlanDto) {
     return this.prisma.trainingPlan.create({ data: createTrainingPlanDto });
   }
-
   findAll() {
     return this.prisma.trainingPlan.findMany({
       include: {
@@ -28,7 +27,6 @@ export class TrainingPlansService {
       },
     });
   }
-
   findOne(id: number) {
     return this.prisma.trainingPlan.findUnique({
       where: { id: id },
@@ -52,29 +50,18 @@ export class TrainingPlansService {
     });
   }
 
-  // remove(id: number) {
-  //   return this.prisma.trainingPlan.delete({ where: { id: id } });
-  // }
-
   async remove(id: number) {
-    // Шаг 1: Получаем все PlanExercises, связанные с TrainingPlan
     const planExercises = await this.prisma.planExercise.findMany({
       where: { trainingPlanId: id },
     });
-
-    // Шаг 2: Удаляем все ExerciseSet, связанные с PlanExercises
     for (const planExercise of planExercises) {
       await this.prisma.exerciseSet.deleteMany({
         where: { planExerciseId: planExercise.id },
       });
     }
-
-    // Шаг 3: Удаляем все PlanExercises
     await this.prisma.planExercise.deleteMany({
       where: { trainingPlanId: id },
     });
-
-    // Шаг 4: Удаляем TrainingPlan
     return this.prisma.trainingPlan.delete({
       where: { id: id },
     });

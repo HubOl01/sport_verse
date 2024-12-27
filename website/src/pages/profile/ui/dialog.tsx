@@ -8,25 +8,17 @@ export interface dialogProps {
     open: boolean;
     onClose: (value?: string) => void;
 }
-
 export function DialogStatus(props: dialogProps) {
     const { onClose, value: valueProp, open, ...other } = props;
     const [value, setValue] = useState(valueProp);
-
     if (props.open) {
         if (!open) {
             setValue(valueProp)
         }
     }
-
     const handleClose = () => {
         onClose(value);
     };
-
-    // const handleSelectExercise = (exercise: IExercise) => {
-    //     onSelectExercise(exercise);
-    //     handleClose();
-    // };
     return (
         <Dialog
             sx={{ '& .MuiDialog-paper': { width: '80%', } }}
@@ -48,11 +40,8 @@ export function DialogStatus(props: dialogProps) {
                 }}>
                     Отдыхаю
                 </div>
-
                 Перерыв между тренировками
             </DialogTitle>
-            {/* <DialogContent className="text-center" dividers sx={{ padding: 0 }}>
-            </DialogContent> */}
         </Dialog>
     );
 }

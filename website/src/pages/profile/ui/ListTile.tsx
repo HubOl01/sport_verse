@@ -1,9 +1,10 @@
+import styles from './Profile.module.scss'
+
+
 interface ListTileProps {
     title: string,
     content: string
 }
-import styles from './Profile.module.scss'
-
 export default function ListTile({ title, content }: ListTileProps) {
     return (
         <div className='flex'>

@@ -65,14 +65,9 @@ export default function Profile() {
             <ListTile title='Вид спорта:' content='Легкая атлетика' />
             <ListTile title='Спортивный стаж:' content='15 лет' />
             <ListTile title='Спортивный разряд:' content='КМС' />
-
           </div>
-
-
         </Card>
-
       </div>
-
-    </div >
+    </div>
   )
 }

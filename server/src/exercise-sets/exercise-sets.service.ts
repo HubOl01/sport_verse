@@ -24,10 +24,6 @@ export class ExerciseSetsService {
       where: { id: id },
     });
   }
-
-  // remove(id: number) {
-  //   return this.prisma.exerciseSet.delete({ where: { id: id } });
-  // }
   async remove(id: number) {
     return await this.prisma.exerciseSet.deleteMany({
       where: { id },

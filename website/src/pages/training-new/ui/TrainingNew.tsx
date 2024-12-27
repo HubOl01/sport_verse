@@ -59,23 +59,12 @@ export default function TrainingEdit() {
   };
 
   const handleCopyExercise = (index: number) => {
-    const copiedExercise = { ...arr[index] }; // Копируем выбранное упражнение
-    setArr([...arr, copiedExercise]); // Добавляем его в конец массива
+    const copiedExercise = { ...arr[index] };
+    setArr([...arr, copiedExercise]);
   };
 
   return (
-    <div className='mr-5 ml-5'><TextField
-      variant="standard"
-      margin="normal"
-      autoFocus
-      // onChange={handlePhoneNumberChange}
-      placeholder="Заголовок"
-
-      sx={{
-        width: "100%"
-      }}
-      value={title}
-      onChange={(e) => setTitle(e.target.value)}
+    <div className='mr-5 ml-5'><TextField variant="standard" margin="normal" autoFocus placeholder="Заголовок" sx={{ width: "100%" }} value={title} onChange={(e) => setTitle(e.target.value)}
       slotProps={{
         input: {
           style: {
@@ -84,20 +73,9 @@ export default function TrainingEdit() {
           },
           disableUnderline: true,
         }
-      }}
-    />
+      }} />
       <br />
-      <TextField
-        variant="standard"
-        multiline
-        margin="normal"
-        autoFocus
-        sx={{
-          width: "100%"
-        }}
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Описание"
+      <TextField variant="standard" multiline margin="normal" autoFocus sx={{ width: "100%" }} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Описание"
         slotProps={{
           input: {
             style: {
@@ -105,25 +83,14 @@ export default function TrainingEdit() {
             },
             disableUnderline: true,
           },
-        }}
-      />
+        }} />
       <br />
       <div className={`${styles.name} mb-5`}>Упражения</div>
       {arr.map((exercise, index) => (
-        <Card
-          className="justify-center content-center self-center"
-          key={index} variant="outlined" sx={{
-            marginBottom: '20px',
-            borderRadius: '20px',
-          }}>
+        <Card className="justify-center content-center self-center" key={index} variant="outlined" sx={{ marginBottom: '20px', borderRadius: '20px', }}>
           <div className="flex self-center p-2 pr-3 pl-3">
             <div style={{ fontSize: "16px", alignSelf: 'center', paddingRight: "10px" }}>{index + 1}. </div>
-            <TextField
-              className="w-full self-center"
-              placeholder="Название упражнения"
-              variant="standard"
-
-              value={exercise.titleExercise}
+            <TextField className="w-full self-center" placeholder="Название упражнения" variant="standard" value={exercise.titleExercise}
               onChange={(e) => handleExerciseChange(index, 'titleExercise', e.target.value)}
               slotProps={{
                 input: {
@@ -134,36 +101,16 @@ export default function TrainingEdit() {
                 }
               }}
             />
-            <IconButton
-              className="w-10 h-10 self-center"
-              sx={{ color: "" }}
-              onClick={() => handleCopyExercise(index)}
-
-            >
+            <IconButton className="w-10 h-10 self-center" sx={{ color: "" }} onClick={() => handleCopyExercise(index)}>
               <ContentCopyIcon />
             </IconButton>
-            <IconButton
-              className="w-10 h-10 self-center"
-              sx={{ color: "red" }}
-              onClick={() => handleDeleteExercise(index)}
-
-            >
+            <IconButton className="w-10 h-10 self-center" sx={{ color: "red" }} onClick={() => handleDeleteExercise(index)}>
               <DeleteIcon />
             </IconButton>
           </div>
-
           <>
-            <ToggleButtonGroup
-              size="small"
-              value={exercise.alignment}
-              exclusive
-              onChange={(_e, val) => handleExerciseChange(index, 'alignment', val)}
-              aria-label="stringType"
-              sx={{
-                paddingLeft: "10px",
-                height: "30px",
-              }}
-            >
+            <ToggleButtonGroup size="small" value={exercise.alignment} exclusive onChange={(_e, val) => handleExerciseChange(index, 'alignment', val)}
+              aria-label="stringType" sx={{ paddingLeft: "10px", height: "30px", }}>
               <ToggleButton value="Nan">Ничего</ToggleButton>
               <ToggleButton value="distance">Дистанция</ToggleButton>
               <ToggleButton value="weight">Вес</ToggleButton>
@@ -171,13 +118,8 @@ export default function TrainingEdit() {
               <ToggleButton value="count">Количество</ToggleButton>
             </ToggleButtonGroup>
             <div className="flex self-center p-2 pr-3 pl-3">
-
-              {exercise.alignment == 'distance' ? (<> <TextField
-                className="w-20 self-center"
-                placeholder="0"
-                variant="standard"
-                value={exercise.countExercise}
-                onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+              {exercise.alignment == 'distance' ? (<> <TextField className="w-20 self-center" placeholder="0" variant="standard"
+                value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
                 slotProps={{
                   input: {
                     style: {
@@ -186,12 +128,8 @@ export default function TrainingEdit() {
                     disableUnderline: true,
                   }
                 }}
-              /><div className="self-center">км.</div></>) : exercise.alignment == 'weight' ? (<><TextField
-                className="w-20 self-center"
-                placeholder="0"
-                variant="standard"
-                value={exercise.countExercise}
-                onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+              /><div className="self-center">км.</div></>) : exercise.alignment == 'weight' ? (<><TextField className="w-20 self-center"
+                placeholder="0" variant="standard" value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
                 slotProps={{
                   input: {
                     style: {
@@ -200,12 +138,8 @@ export default function TrainingEdit() {
                     disableUnderline: true,
                   }
                 }}
-              /><div className="self-center">кг.</div></>) : exercise.alignment == 'time' ? (<><TextField
-                className="w-20 self-center"
-                placeholder="0"
-                variant="standard"
-                value={exercise.countExercise}
-                onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+              /><div className="self-center">кг.</div></>) : exercise.alignment == 'time' ? (<><TextField className="w-20 self-center"
+                placeholder="0" variant="standard" value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
                 slotProps={{
                   input: {
                     style: {
@@ -214,12 +148,8 @@ export default function TrainingEdit() {
                     disableUnderline: true,
                   }
                 }}
-              /><div className="self-center">сек</div></>) : exercise.alignment == 'count' ? (<><TextField
-                className="w-20 self-center"
-                placeholder="0"
-                variant="standard"
-                value={exercise.countExercise}
-                onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+              /><div className="self-center">сек</div></>) : exercise.alignment == 'count' ? (<><TextField className="w-20 self-center" placeholder="0" variant="standard"
+                value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
                 slotProps={{
                   input: {
                     style: {
@@ -248,16 +178,8 @@ export default function TrainingEdit() {
           borderRadius: "20px",
           width: "300px",
           padding: "8px 15px",
-
         }} onClick={handleClick} >Добавить из базы</Button>
-        <DialogCustom
-          keepMounted
-          open={open}
-          onClose={handleClose}
-          onSelectExercise={handleAddSelectedExercise}
-          value={value}
-        />
-
+        <DialogCustom keepMounted open={open} onClose={handleClose} onSelectExercise={handleAddSelectedExercise} value={value}/>
       </div>
       <Button variant="contained" sx={{
         marginTop: "20px",
@@ -270,7 +192,6 @@ export default function TrainingEdit() {
         padding: "8px 15px"
       }}
         onClick={() => {
-
           TrainingService.create({
             title: title,
             description: description,
@@ -279,10 +200,7 @@ export default function TrainingEdit() {
             sportTypeId: 1,
           });
           TrainingService.getIdFirst().then(plan => {
-
             arr.forEach(item => {
-
-
               ExercisesService.getName(item.titleExercise).then(exercise => {
                 if (exercise.id === undefined) {
                   // console.log('error');
@@ -317,7 +235,7 @@ export default function TrainingEdit() {
                     );
                   })
                 }
-              }).catch(ex => {
+              }).catch(_ex => {
                 ExercisesService.create({
                   name: item.titleExercise,
                   description: "",

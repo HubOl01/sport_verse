@@ -9,7 +9,6 @@ export default function CardEvent() {
             width: "100%",
 
           }}>
-          {/* <CardActionArea> */}
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               Событие
@@ -22,7 +21,6 @@ export default function CardEvent() {
               Ежегодный турнир по хоккею с шайбой, который проходит с 12 по 15 декабря в Санкт-Петербурге на «СКА Арена»
             </Typography>
           </CardContent>
-          {/* </CardActionArea> */}
         </Card>
       </div >
     </div >
