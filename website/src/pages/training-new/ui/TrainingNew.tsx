@@ -179,7 +179,7 @@ export default function TrainingEdit() {
           width: "300px",
           padding: "8px 15px",
         }} onClick={handleClick} >Добавить из базы</Button>
-        <DialogCustom keepMounted open={open} onClose={handleClose} onSelectExercise={handleAddSelectedExercise} value={value}/>
+        <DialogCustom keepMounted open={open} onClose={handleClose} onSelectExercise={handleAddSelectedExercise} value={value} />
       </div>
       <Button variant="contained" sx={{
         marginTop: "20px",
@@ -192,76 +192,145 @@ export default function TrainingEdit() {
         padding: "8px 15px"
       }}
         onClick={() => {
-          TrainingService.create({
-            title: title,
-            description: description,
-            userId: 1,
-            statusTrainingId: 1,
-            sportTypeId: 1,
-          });
-          TrainingService.getIdFirst().then(plan => {
-            arr.forEach(item => {
-              ExercisesService.getName(item.titleExercise).then(exercise => {
-                if (exercise.id === undefined) {
-                  // console.log('error');
-                  ExercisesService.create({
-                    name: item.titleExercise,
-                    description: "",
-                    ExerciseCategoryId: 40,
-                    isPrivate: true
-                  })
-                } else {
-                  console.log(exercise.id);
+          createTrainingPlan(title, description, arr);
+          // TrainingService.create({
+          //   title: title,
+          //   description: description,
+          //   userId: 1,
+          //   statusTrainingId: 1,
+          //   sportTypeId: 1,
+          // });
+          // TrainingService.getIdFirst().then(plan => {
+          //   arr.forEach(item => {
+          //     ExercisesService.getName(item.titleExercise).then(exercise => {
+          //       if (exercise.id === undefined) {
+          //         // console.log('error');
+          //         ExercisesService.create({
+          //           name: item.titleExercise,
+          //           description: "",
+          //           ExerciseCategoryId: 40,
+          //           isPrivate: true
+          //         })
+          //       } else {
+          //         console.log(exercise.id);
 
-                  PlanExerciseService.create({
-                    trainingPlanId: plan.id!,
-                    setTotal: 0,
-                    repTotal: 0,
-                    exerciseStatus: 0,
-                    exerciseId: exercise.id!,
-                  });
-                  PlanExerciseService.getIdFirst().then(planExercise => {
-                    ExerciseSetService.create(
-                      {
-                        planExerciseId: planExercise.id!,
-                        duration: item.alignment == 'time' ? BigInt(parseInt(item.countExercise)) : undefined,
-                        distance: item.alignment == 'distance' ? parseInt(item.countExercise) : undefined,
-                        weight: item.alignment == 'weight' ? parseInt(item.countExercise) : undefined,
-                        repetitions: item.alignment == 'count' ? parseInt(item.countExercise) : undefined,
-                        calories_burned: undefined,
-                        route_gpx: undefined,
-                        stringType: "",
-                      }
-                    );
-                  })
-                }
-              }).catch(_ex => {
-                ExercisesService.create({
-                  name: item.titleExercise,
-                  description: "",
-                  ExerciseCategoryId: 40,
-                  isPrivate: true
-                })
-                PlanExerciseService.getIdFirst().then(planExercise => {
-                  ExerciseSetService.create(
-                    {
-                      planExerciseId: planExercise.id!,
-                      duration: item.alignment == 'time' ? BigInt(parseInt(item.countExercise)) : undefined,
-                      distance: item.alignment == 'distance' ? parseInt(item.countExercise) : undefined,
-                      weight: item.alignment == 'weight' ? parseInt(item.countExercise) : undefined,
-                      repetitions: item.alignment == 'count' ? parseInt(item.countExercise) : undefined,
-                      calories_burned: undefined,
-                      route_gpx: undefined,
-                      stringType: "",
-                    }
-                  );
-                })
-              })
-            });
-          });
+          //         PlanExerciseService.create({
+          //           trainingPlanId: plan.id!,
+          //           setTotal: 0,
+          //           repTotal: 0,
+          //           exerciseStatus: 0,
+          //           exerciseId: exercise.id!,
+          //         });
+          //         PlanExerciseService.getIdFirst().then(planExercise => {
+          //           ExerciseSetService.create(
+          //             {
+          //               planExerciseId: planExercise.id!,
+          //               duration: item.alignment == 'time' ? BigInt(parseInt(item.countExercise)) : undefined,
+          //               distance: item.alignment == 'distance' ? parseInt(item.countExercise) : undefined,
+          //               weight: item.alignment == 'weight' ? parseInt(item.countExercise) : undefined,
+          //               repetitions: item.alignment == 'count' ? parseInt(item.countExercise) : undefined,
+          //               calories_burned: undefined,
+          //               route_gpx: undefined,
+          //               stringType: "",
+          //             }
+          //           );
+          //         })
+          //       }
+          //     }).catch(_ex => {
+          //       ExercisesService.create({
+          //         name: item.titleExercise,
+          //         description: "",
+          //         ExerciseCategoryId: 40,
+          //         isPrivate: true
+          //       })
+          //       PlanExerciseService.getIdFirst().then(planExercise => {
+          //         ExerciseSetService.create(
+          //           {
+          //             planExerciseId: planExercise.id!,
+          //             duration: item.alignment == 'time' ? BigInt(parseInt(item.countExercise)) : undefined,
+          //             distance: item.alignment == 'distance' ? parseInt(item.countExercise) : undefined,
+          //             weight: item.alignment == 'weight' ? parseInt(item.countExercise) : undefined,
+          //             repetitions: item.alignment == 'count' ? parseInt(item.countExercise) : undefined,
+          //             calories_burned: undefined,
+          //             route_gpx: undefined,
+          //             stringType: "",
+          //           }
+          //         );
+          //       })
+          //     })
+          //   });
+          // });
         }
         }
       >Сохранить</Button>
     </div >
   )
+}
+
+async function createTrainingPlan(title: string, description: string, arr: any[]) {
+  try {
+    // Создаем тренировочный план
+    const trainingPlan = await TrainingService.create({
+      title: title,
+      description: description,
+      userId: 1,
+      statusTrainingId: 1,
+      sportTypeId: 1,
+    });
+
+    if (!trainingPlan.id) {
+      throw new Error("Failed to create training plan");
+    }
+
+    // Получаем созданный тренировочный план
+    const plan = await TrainingService.getIdFirst();
+
+    // Итерация по каждому элементу массива
+    for (const item of arr) {
+      try {
+        // Пытаемся получить упражнение по названию
+        const exercise = await ExercisesService.getName(item.titleExercise);
+
+        let exerciseId: number;
+
+        // Если упражнения нет, создаем его
+        if (!exercise || !exercise.id) {
+          const newExercise = await ExercisesService.create({
+            name: item.titleExercise,
+            description: "",
+            ExerciseCategoryId: 40,
+            isPrivate: true,
+          });
+          exerciseId = newExercise.id!;
+        } else {
+          exerciseId = exercise.id;
+        }
+
+        // Создаем связь с планом упражнений
+        const planExercise = await PlanExerciseService.create({
+          trainingPlanId: plan.id!,
+          setTotal: 0,
+          repTotal: 0,
+          exerciseStatus: 0,
+          exerciseId: exerciseId,
+        });
+
+        // Создаем набор упражнений
+        await ExerciseSetService.create({
+          planExerciseId: planExercise.id!,
+          duration: item.alignment === "time" ? BigInt(parseInt(item.countExercise)) : undefined,
+          distance: item.alignment === "distance" ? parseInt(item.countExercise) : undefined,
+          weight: item.alignment === "weight" ? parseInt(item.countExercise) : undefined,
+          repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
+          calories_burned: undefined,
+          route_gpx: undefined,
+          stringType: "",
+        });
+      } catch (exerciseError) {
+        console.error(`Error processing exercise: ${item.titleExercise}`, exerciseError);
+      }
+    }
+  } catch (error) {
+    console.error("Error creating training plan:", error);
+  }
 }
