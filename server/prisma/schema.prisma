@@ -27,10 +27,13 @@ model User {
   statusUser StatusUser @default(USER)
 
   // Связь с тренировочными группами (спортсмены)
-  athletesIn   TrainingGroup[] @relation("Athletes")
+  athletesIn      TrainingGroup[]   @relation("Athletes")
   // Связь с тренировочными группами (тренер)
-  trainersIn   TrainingGroup[] @relation("Trainers")
-  TrainingPlan TrainingPlan[]
+  trainersIn      TrainingGroup[]   @relation("Trainers")
+  TrainingPlan    TrainingPlan[]
+  LikeTraining    LikeTraining[]
+  CommentTraining CommentTraining[]
+  ViewsTraining   ViewsTraining[]
 }
 
 // Модель для профиля пользователя
@@ -82,21 +85,25 @@ model ProfileSportType {
 }
 
 model TrainingPlan {
-  id               Int            @id @default(autoincrement())
+  id               Int               @id @default(autoincrement())
   title            String
-  statusPublishId  Int            @default(1)
+  statusPublishId  Int               @default(1)
   description      String?
-  date_created     DateTime?      @default(now())
+  date_created     DateTime?         @default(now())
   userId           Int
-  date_start       DateTime?      @default(now())
-  date_end         DateTime?      @default(now())
+  date_start       DateTime?         @default(now())
+  date_end         DateTime?         @default(now())
   statusTrainingId Int
   sportTypeId      Int
-  statusPublish    StatusPublish? @relation(fields: [statusPublishId], references: [id])
-  sportType        SportType      @relation(fields: [sportTypeId], references: [id])
-  user             User           @relation(fields: [userId], references: [id])
+  statusPublish    StatusPublish?    @relation(fields: [statusPublishId], references: [id])
+  sportType        SportType         @relation(fields: [sportTypeId], references: [id])
+  user             User              @relation(fields: [userId], references: [id])
   PlanExercise     PlanExercise[]
-  StatusTraining   StatusTraining @relation(fields: [statusTrainingId], references: [id])
+  StatusTraining   StatusTraining    @relation(fields: [statusTrainingId], references: [id])
+  TrainingResult   TrainingResult[]
+  LikeTraining     LikeTraining[]
+  CommentTraining  CommentTraining[]
+  ViewsTraining    ViewsTraining[]
 }
 
 model PlanExercise {
@@ -146,11 +153,12 @@ model ExerciseSet {
 }
 
 model TrainingResult {
-  id             Int      @id @default(autoincrement())
+  id             Int          @id @default(autoincrement())
   trainingPlanId Int
   date_end       DateTime
   duration       BigInt?
-  difficulty     Int?     @default(0) // сложность тренировки от 0-10
+  difficulty     Int?         @default(0) // сложность тренировки от 0-10
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
 }
 
 // Модель для статуса тренировочного плано (Планирование, выполнение, внесение)
@@ -180,4 +188,36 @@ model StatusPublish {
   id           Int            @id @default(autoincrement())
   title        String         @unique
   TrainingPlan TrainingPlan[]
+}
+
+model LikeTraining {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  trainingPlanId Int
+  createdAt      DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id])
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
+}
+
+model CommentTraining {
+  id             Int          @id @default(autoincrement())
+  content        String
+  userId         Int
+  trainingPlanId Int
+  createdAt      DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id])
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
+
+  parentCommentId Int?
+  parentComment   CommentTraining?  @relation("Replies", fields: [parentCommentId], references: [id])
+  replies         CommentTraining[] @relation("Replies")
+}
+
+model ViewsTraining {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  trainingPlanId Int
+  createdAt      DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id])
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
 }

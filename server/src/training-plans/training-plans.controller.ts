@@ -10,7 +10,8 @@ import {
 import { TrainingPlansService } from './training-plans.service';
 import { CreateTrainingPlanDto } from './dto/create-training-plan.dto';
 import { UpdateTrainingPlanDto } from './dto/update-training-plan.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { TrainingPlanEntity } from './entities/training-plan.entity';
 
 @Controller('training-plans')
 @ApiTags('training-plans')
@@ -18,25 +19,32 @@ export class TrainingPlansController {
   constructor(private readonly trainingPlansService: TrainingPlansService) {}
 
   @Post()
+  @ApiCreatedResponse()
   create(@Body() createTrainingPlanDto: CreateTrainingPlanDto) {
     return this.trainingPlansService.create(createTrainingPlanDto);
   }
 
   @Get()
+  @ApiOkResponse({ type: TrainingPlanEntity, isArray: true })
   findAll() {
     return this.trainingPlansService.findAll();
   }
   @Get('getIdFirst')
+  @ApiOkResponse()
+  @ApiOkResponse({ type: TrainingPlanEntity, isArray: false })
   getIdFirst() {
     return this.trainingPlansService.getIdFirst();
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: TrainingPlanEntity, isArray: false })
+  @ApiOkResponse()
   findOne(@Param('id') id: string) {
     return this.trainingPlansService.findOne(+id);
   }
 
   @Patch(':id')
+  @ApiCreatedResponse()
   update(
     @Param('id') id: string,
     @Body() updateTrainingPlanDto: UpdateTrainingPlanDto,
@@ -45,6 +53,7 @@ export class TrainingPlansController {
   }
 
   @Delete(':id')
+  @ApiOkResponse()
   remove(@Param('id') id: string) {
     return this.trainingPlansService.remove(+id);
   }
