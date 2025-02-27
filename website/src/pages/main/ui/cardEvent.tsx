@@ -10,13 +10,13 @@ export default function CardEvent() {
 
           }}>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
+            <Typography variant="caption" sx={{ color: 'gray', fontStyle: "italic", display: 'block', height: "18px", textAlign: "right", }} >
               Событие
             </Typography>
-
             <Typography variant="h6" color="textPrimary">
               Кубок Первого канала 2024
             </Typography>
+
             <Typography variant="body2" color="text.secondary">
               Ежегодный турнир по хоккею с шайбой, который проходит с 12 по 15 декабря в Санкт-Петербурге на «СКА Арена»
             </Typography>

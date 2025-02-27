@@ -2,7 +2,6 @@ import { Card, CardActionArea, CardActions, CardContent, Chip, IconButton, Typog
 import { ITraining } from "../../../shared/model/ITraining";
 import { useNavigate } from "react-router-dom";
 import { BiCommentDetail } from "react-icons/bi";
-import MessageTwoToneIcon from '@mui/icons-material/MessageTwoTone';
 import ThumbUpOn from '@mui/icons-material/ThumbUpAlt';
 import ThumbUpOff from '@mui/icons-material/ThumbUpOffAlt';
 import { useState } from "react";

@@ -13,11 +13,11 @@ export default function CardNew({ newModel }: NewProps) {
                         width: "100%",
                     }}>
                     <CardContent>
-                        <Typography gutterBottom variant="h6" fontWeight={600} component="div">
+                        <Typography variant="h6" gutterBottom fontWeight={600} component="div" lineHeight={1.3}>
                             {newModel.title}
                         </Typography>
 
-                        <Typography variant="subtitle1" color="text.secondary">
+                        <Typography variant="body1" gutterBottom color="text.secondary" lineHeight={1.3}>
                             {newModel.description}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" textAlign={'end'}>
