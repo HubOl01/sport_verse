@@ -6,7 +6,12 @@ export class CreateUserDto {
   //   @ApiProperty({ required: false })
   @IsNumber()
   id: number;
-
+  @ApiProperty({ required: true })
+  @IsString()
+  password: string;
+  @ApiProperty({ required: false })
+  @IsString()
+  VKID: string;
   @ApiProperty({ required: true })
   @IsString()
   email: string;

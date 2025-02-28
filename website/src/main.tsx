@@ -8,6 +8,7 @@ import Header from './shared/ui/Header/Header'
 import './tailwind.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import LeftBar from './shared/ui/LeftBar/LeftBar'
+import { isAuthenticated } from './shared/api/authService'
 
 const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -19,7 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
           {location.pathname !== '/login' && (<Header />)}
           <div className='block sm:flex h-fit min-h-screen'>
-            {location.pathname !== '/login' && (
+            {location.pathname !== '/login' || isAuthenticated() && (
               <div className='w-full sm:w-1/5 bg-gray-900' style={{ width: "350px" }}>
                 <LeftBar />
               </div>

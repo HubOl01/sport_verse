@@ -54,7 +54,7 @@ export default function CardTraining({ training }: CardTrainingProps) {
                     </CardContent>
 
                 </CardActionArea>
-                <CardActions
+                {/* <CardActions
                     sx={{
                         justifyContent: "space-around",
                         alignItems: "center",
@@ -70,7 +70,7 @@ export default function CardTraining({ training }: CardTrainingProps) {
                     <IconButton aria-label="share" onClick={handleShareClick}>
                         <PiShareFat />
                     </IconButton>
-                </CardActions>
+                </CardActions> */}
             </Card>
         </div>
     )
