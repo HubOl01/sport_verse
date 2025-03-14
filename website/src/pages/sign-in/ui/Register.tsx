@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ColorBackground } from "../../../shared/styles/colors";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -48,16 +49,70 @@ export default function Register() {
                 </svg>
 
                 <TextField
-                    sx={{ width: "300px" }}
+                    sx={{
+                        width: '300px',
+                        "& .MuiOutlinedInput-root": {
+                            color: "#000",
+                            fontFamily: "Arial",
+                            fontWeight: "bold",
+                            "& .MuiOutlinedInput-notchedOutline": {
+                            },
+                            "&.Mui-focused": {
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                    color: ColorBackground,
+                                    borderColor: ColorBackground,
+                                },
+                            },
+                            "&:hover:not(.Mui-focused)": {
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                    color: ColorBackground,
+                                    borderColor: ColorBackground,
+                                },
+                            },
+                        },
+                        "& .MuiInputLabel-outlined": {
+                            "&.Mui-focused": {
+                                color: ColorBackground,
+                                borderColor: ColorBackground,
+                            },
+                        }
+                    }}
                     id="login"
-                    label="Login"
+                    label="Логин"
                     variant="outlined"
                     value={login}
                     onChange={(e) => setLogin(e.target.value)}
                 />
 
-                <FormControl sx={{ width: "300px" }} variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                <FormControl sx={{
+                    width: '300px',
+                    "& .MuiOutlinedInput-root": {
+                        color: "#000",
+                        fontFamily: "Arial",
+                        fontWeight: "bold",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                        },
+                        "&.Mui-focused": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                                color: ColorBackground,
+                                borderColor: ColorBackground,
+                            },
+                        },
+                        "&:hover:not(.Mui-focused)": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                                color: ColorBackground,
+                                borderColor: ColorBackground,
+                            },
+                        },
+                    },
+                    "& .MuiInputLabel-outlined": {
+                        "&.Mui-focused": {
+                            color: ColorBackground,
+                            borderColor: ColorBackground,
+                        },
+                    }
+                }} variant="outlined">
+                    <InputLabel htmlFor="outlined-adornment-password">Пароль</InputLabel>
                     <OutlinedInput
                         id="outlined-adornment-password"
                         type={showPassword ? "text" : "password"}
@@ -74,13 +129,40 @@ export default function Register() {
                                 </IconButton>
                             </InputAdornment>
                         }
-                        label="Password"
+                        label="Пароль"
                     />
                 </FormControl>
 
-                <FormControl sx={{ width: "300px" }} variant="outlined">
+                <FormControl sx={{
+                    width: '300px',
+                    "& .MuiOutlinedInput-root": {
+                        color: "#000",
+                        fontFamily: "Arial",
+                        fontWeight: "bold",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                        },
+                        "&.Mui-focused": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                                color: ColorBackground,
+                                borderColor: ColorBackground,
+                            },
+                        },
+                        "&:hover:not(.Mui-focused)": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                                color: ColorBackground,
+                                borderColor: ColorBackground,
+                            },
+                        },
+                    },
+                    "& .MuiInputLabel-outlined": {
+                        "&.Mui-focused": {
+                            color: ColorBackground,
+                            borderColor: ColorBackground,
+                        },
+                    }
+                }} variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-confirm-password">
-                        Confirm Password
+                        Подтвердите пароль
                     </InputLabel>
                     <OutlinedInput
                         id="outlined-adornment-confirm-password"
@@ -98,7 +180,7 @@ export default function Register() {
                                 </IconButton>
                             </InputAdornment>
                         }
-                        label="Confirm Password"
+                        label="Подтвердите пароль"
                     />
                 </FormControl>
 

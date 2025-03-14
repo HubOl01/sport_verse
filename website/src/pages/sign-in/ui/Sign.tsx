@@ -2,6 +2,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ColorBackground } from '../../../shared/styles/colors';
 
 // export default function Sign() {
 //   const [showPassword, setShowPassword] = React.useState(false);
@@ -79,10 +80,10 @@ export default function Sign() {
   const handleLogin = async () => {
     setError(null);
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('http://localhost:3000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ login, password: pass }),
+        body: JSON.stringify({ email: login, password: pass }),
       });
 
       if (!response.ok) {
@@ -110,19 +111,77 @@ export default function Sign() {
         {error && <div className="text-red-500">{error}</div>}
 
         <TextField
-          sx={{ width: '300px' }}
+          sx={{
+            width: '300px',
+            "& .MuiOutlinedInput-root": {
+              color: "#000",
+              fontFamily: "Arial",
+              fontWeight: "bold",
+              "& .MuiOutlinedInput-notchedOutline": {
+              },
+              "&.Mui-focused": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  color: ColorBackground,
+                  borderColor: ColorBackground,
+                },
+              },
+              "&:hover:not(.Mui-focused)": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  color: ColorBackground,
+                  borderColor: ColorBackground,
+                },
+              },
+            },
+            "& .MuiInputLabel-outlined": {
+              "&.Mui-focused": {
+                color: ColorBackground,
+                borderColor: ColorBackground,
+              },
+            }
+          }}
           id="login"
-          label="Login"
+          label="Логин"
           variant="outlined"
           value={login}
           onChange={(e) => setLogin(e.target.value)}
         />
-        <FormControl sx={{ width: '300px' }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+        <FormControl sx={{
+          width: '300px',
+          "& .MuiOutlinedInput-root": {
+            color: "#000",
+            fontFamily: "Arial",
+            fontWeight: "bold",
+            "& .MuiOutlinedInput-notchedOutline": {
+            },
+            "&.Mui-focused": {
+              "& .MuiOutlinedInput-notchedOutline": {
+                color: ColorBackground,
+                borderColor: ColorBackground,
+              },
+            },
+            "&:hover:not(.Mui-focused)": {
+              "& .MuiOutlinedInput-notchedOutline": {
+                color: ColorBackground,
+                borderColor: ColorBackground,
+              },
+            },
+          },
+          "& .MuiInputLabel-outlined": {
+            "&.Mui-focused": {
+              color: ColorBackground,
+              borderColor: ColorBackground,
+            },
+          }
+        }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">Пароль</InputLabel>
           <OutlinedInput
             id="outlined-adornment-password"
             type={showPassword ? 'text' : 'password'}
             value={pass}
+            sx={{
+              color: ColorBackground,
+              borderColor: ColorBackground
+            }}
             onChange={(e) => setPass(e.target.value)}
             endAdornment={
               <InputAdornment position="end">
@@ -131,13 +190,13 @@ export default function Sign() {
                 </IconButton>
               </InputAdornment>
             }
-            label="Password"
+            label="Пароль"
           />
         </FormControl>
         <Button sx={{ width: '300px', background: "#4758d6" }} variant="contained" onClick={handleLogin}>
           Вход
         </Button>
-        <Button sx={{ width: '300px', color: "#4758d6",  }} variant="text" onClick={handleRegistration}>
+        <Button sx={{ width: '300px', color: "#4758d6", }} variant="text" onClick={handleRegistration}>
           Регистрация
         </Button>
       </div>

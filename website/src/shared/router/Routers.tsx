@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom'
-import Main from '../../pages/main/ui/Main';
 import Profile from '../../pages/profile/ui/Profile';
 import Settings from '../../pages/settings/ui/Settings';
 import Training from '../../pages/training/ui/Training';

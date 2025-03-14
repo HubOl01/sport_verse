@@ -13,6 +13,8 @@ async function bootstrap() {
     .setTitle('Sport Sphere')
     .setDescription('The Sport Sphere API description')
     .setVersion('0.1')
+    .addTag('auth')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

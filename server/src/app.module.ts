@@ -19,9 +19,11 @@ import { StatusesTrainingModule } from './statuses-training/statuses-training.mo
 import { СommentTrainingModule } from './сomment-training/сomment-training.module';
 import { ViewsTrainingModule } from './views-training/views-training.module';
 import { LikeTrainingModule } from './like-training/like-training.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     PrismaModule,
     UsersModule,
     ProfilesModule,
