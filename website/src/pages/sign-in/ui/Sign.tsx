@@ -3,6 +3,7 @@ import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedIn
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ColorBackground } from '../../../shared/styles/colors';
+import { loginAuth } from '../../../shared/api/authService';
 
 // export default function Sign() {
 //   const [showPassword, setShowPassword] = React.useState(false);
@@ -77,26 +78,37 @@ export default function Sign() {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();
   const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();
 
+  // const handleLogin = async () => {
+  //   setError(null);
+  //   try {
+  //     const response = await fetch('', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ email: login, password: pass }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Ошибка входа. Проверьте логин и пароль.');
+  //     }
+
+  //     const data = await response.json();
+  //     localStorage.setItem('token', data.token);
+  //     window.location.href = '/dashboard'; // Перенаправление после входа
+  //   } catch (err) {
+  //     setError((err as Error).message);
+  //   }
+  // };
   const handleLogin = async () => {
     setError(null);
     try {
-      const response = await fetch('http://localhost:3000/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: login, password: pass }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Ошибка входа. Проверьте логин и пароль.');
-      }
-
-      const data = await response.json();
-      localStorage.setItem('token', data.token);
-      window.location.href = '/dashboard'; // Перенаправление после входа
+      const data = await loginAuth(login, pass);
+      localStorage.setItem('token', data.access_token);
+      navigate('/');
     } catch (err) {
       setError((err as Error).message);
     }
   };
+
   const handleRegistration = () => {
     navigate('/register');
   };

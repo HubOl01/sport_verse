@@ -12,7 +12,7 @@ import { PlanExerciseService } from "../../../shared/api/planExercise.service";
 
 
 interface ArrModel {
-  titleExercise: string; countExercise: string, alignment: string
+  titleExercise: string; countExercise: string, alignment: string, alignmentTime: string, alignmentDistance: string;
 }
 export default function TrainingEdit() {
   const [arr, setArr] = useState<ArrModel[]>([]);
@@ -20,7 +20,9 @@ export default function TrainingEdit() {
   const [description, setDescription] = useState('');
   const [titleExercise, setTitleExercise] = useState('');
   const [countExercise, setCountExercise] = useState('');
-  const [alignment, setAlignment] = useState('Nan');
+  const [alignmentView, setAlignmentView] = useState('Nan');
+  const [alignmentTime, setAlignmentTime] = useState('hour');
+  const [alignmentDistance, setAlignmentDistance] = useState('km');
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('Dione');
@@ -37,17 +39,17 @@ export default function TrainingEdit() {
     }
   };
   const handleAddSelectedExercise = (exercise: IExercise) => {
-    setArr([...arr, { titleExercise: exercise.name, countExercise: '', alignment: 'Nan' }]);
+    setArr([...arr, { titleExercise: exercise.name, countExercise: '', alignment: 'Nan', alignmentTime: 'alignmentTime', alignmentDistance: 'alignmentDistance' }]);
   };
 
   const handleAddExercise = () => {
-    setArr([...arr, { titleExercise, countExercise, alignment }]);
+    setArr([...arr, { titleExercise, countExercise, alignment: alignmentView, alignmentTime, alignmentDistance }]);
     setTitleExercise('');
     setCountExercise('');
-    setAlignment('');
+    setAlignmentView('');
   };
 
-  const handleExerciseChange = (index: number, field: 'titleExercise' | 'countExercise' | 'alignment', value: string) => {
+  const handleExerciseChange = (index: number, field: 'titleExercise' | 'countExercise' | 'alignment' | 'alignmentTime' | 'alignmentDistance', value: string) => {
     const newArr = [...arr];
     newArr[index][field] = value;
     setArr(newArr);
@@ -117,6 +119,26 @@ export default function TrainingEdit() {
               <ToggleButton value="time">Время</ToggleButton>
               <ToggleButton value="count">Количество</ToggleButton>
             </ToggleButtonGroup>
+            {
+              exercise.alignment == 'time' ?
+                <div className="flex self-center pt-2">
+                  <ToggleButtonGroup size="small" value={exercise.alignmentTime} exclusive onChange={(_e, val) => handleExerciseChange(0, 'alignmentTime', val)}
+                    aria-label="stringType" sx={{ paddingLeft: "10px", height: "30px", }}>
+                    <ToggleButton value="hour">часы</ToggleButton>
+                    <ToggleButton value="minute">минуты</ToggleButton>
+                    <ToggleButton value="second">секунды</ToggleButton>
+                  </ToggleButtonGroup>
+                </div>
+                : exercise.alignment == 'distance' ?
+                  <div className="flex self-center pt-2">
+                    <ToggleButtonGroup size="small" value={exercise.alignmentDistance} exclusive onChange={(_e, val) => handleExerciseChange(0, 'alignmentDistance', val)}
+                      aria-label="stringType" sx={{ paddingLeft: "10px", height: "30px", }}>
+                      <ToggleButton value="km">километры</ToggleButton>
+                      <ToggleButton value="m">метры</ToggleButton>
+                    </ToggleButtonGroup>
+                  </div>
+                  : <></>
+            }
             <div className="flex self-center p-2 pr-3 pl-3">
               {exercise.alignment == 'distance' ? (<> <TextField className="w-20 self-center" placeholder="0" variant="standard"
                 value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
@@ -128,41 +150,53 @@ export default function TrainingEdit() {
                     disableUnderline: true,
                   }
                 }}
-              /><div className="self-center">км.</div></>) : exercise.alignment == 'weight' ? (<><TextField className="w-20 self-center"
-                placeholder="0" variant="standard" value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
-                slotProps={{
-                  input: {
-                    style: {
-                      fontSize: "16px",
-                    },
-                    disableUnderline: true,
+              /><div className="self-center">
+                  {
+                    exercise.alignmentDistance == 'km' ? 'км' : 'м'
                   }
-                }}
-              /><div className="self-center">кг.</div></>) : exercise.alignment == 'time' ? (<><TextField className="w-20 self-center"
-                placeholder="0" variant="standard" value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
-                slotProps={{
-                  input: {
-                    style: {
-                      fontSize: "16px",
-                    },
-                    disableUnderline: true,
-                  }
-                }}
-              /><div className="self-center">сек</div></>) : exercise.alignment == 'count' ? (<><TextField className="w-20 self-center" placeholder="0" variant="standard"
-                value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
-                slotProps={{
-                  input: {
-                    style: {
-                      fontSize: "16px",
-                    },
-                    disableUnderline: true,
-                  }
-                }}
-              /><div className="self-center">раз.</div></>) : (<></>)}
+                </div></>) : exercise.alignment == 'weight' ? (<><TextField className="w-20 self-center"
+                  placeholder="0" variant="standard" value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                  slotProps={{
+                    input: {
+                      style: {
+                        fontSize: "16px",
+                      },
+                      disableUnderline: true,
+                    }
+                  }}
+                /><div className="self-center">кг.</div></>) : exercise.alignment == 'time' ? (<><TextField className="w-20 self-center"
+                  placeholder="0" variant="standard" value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                  slotProps={{
+                    input: {
+                      style: {
+                        fontSize: "16px",
+                      },
+                      disableUnderline: true,
+                    }
+                  }}
+                /><div className="self-center">
+                    {
+                      exercise.alignmentTime == 'hour' ? 'ч.' : exercise.alignmentTime == 'minute' ? 'мин.' : 'сек.'
+                    }
+                  </div></>) : exercise.alignment == 'count' ? (<><TextField className="w-20 self-center" placeholder="0" variant="standard"
+                    value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                    slotProps={{
+                      input: {
+                        style: {
+                          fontSize: "16px",
+                        },
+                        disableUnderline: true,
+                      }
+                    }}
+                  /><div className="self-center">раз.</div></>) : (<></>)}
+
             </div>
+
           </>
+
         </Card>
       ))}
+
       <div className="flex gap-2">
         <Button variant="contained" sx={{
           color: "#FFFFFF",
@@ -318,9 +352,14 @@ async function createTrainingPlan(title: string, description: string, arr: any[]
         // Создаем набор упражнений
         await ExerciseSetService.create({
           planExerciseId: planExercise.id!,
-          duration: item.alignment === "time" ? BigInt(parseInt(item.countExercise)) : undefined,
-          distance: item.alignment === "distance" ? parseInt(item.countExercise) : undefined,
-          weight: item.alignment === "weight" ? parseInt(item.countExercise) : undefined,
+          duration: item.alignment === "time" ?
+            item.alignmentTime == 'hour' ? BigInt(item.countExercise * 60 * 60) : item.alignmentTime == 'minute' ? BigInt(item.countExercise * 60) : BigInt(item.countExercise)
+            : undefined,
+          distance: item.alignment === "distance" ?
+            parseInt(item.countExercise) : undefined,
+          weight: item.alignment === "weight" ?
+            item.alignmentDistance == 'km' ? item.countExercise * 1000 : item.countExercise
+            : undefined,
           repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
           calories_burned: undefined,
           route_gpx: undefined,

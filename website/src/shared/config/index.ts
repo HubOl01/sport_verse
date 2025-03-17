@@ -19,3 +19,5 @@ export var apiExerciseSetsRemovePlanExercise = "/exercise-sets/removePlanExercis
 export var apiTrainingResults = "/training-results";
 export var apiPublishStatuses = "/publish-statuses";
 export var apiStatusesTraining = "/statuses-training";
+export var apiAuthLogin = "/auth/login";
+export var apiAuthRegister = "/auth/login";

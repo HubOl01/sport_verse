@@ -1,33 +1,62 @@
-export async function login(email: string, password: string) {
-    const response = await fetch('http://localhost:3000/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+import { apiAuthLogin, apiAuthRegister, apiHost } from "../config";
+
+export async function loginAuth(email: string, password: string) {
+  try {
+    const response = await fetch(`${apiHost}${apiAuthLogin}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
+
     const data = await response.json();
-    if (response.ok) {
-      localStorage.setItem('token', data.access_token);
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Ошибка входа. Проверьте логин и пароль."
+      );
     }
+
+    localStorage.setItem("token", data.access_token);
     return data;
+  } catch (error) {
+    console.error("Ошибка при входе:", error);
+    throw error;
   }
-  
-  export async function register(email: string, password: string) {
-    return fetch('http://localhost:3000/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    }).then(res => res.json());
+}
+
+export async function registerAuth(
+  email: string,
+  username: string,
+  password: string
+) {
+  try {
+    const response = await fetch(`${apiHost}${apiAuthRegister}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, username, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Ошибка регистрации.");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Ошибка при регистрации:", error);
+    throw error;
   }
-  
-  export function logout() {
-    localStorage.removeItem('token');
-  }
-  
-  export function getToken() {
-    return localStorage.getItem('token');
-  }
-  
-  export function isAuthenticated() {
-    return !!getToken();
-  }
-  
+}
+
+export function logout() {
+  localStorage.removeItem("token");
+}
+
+export function getToken() {
+  return localStorage.getItem("token");
+}
+
+export function isAuthenticated() {
+  return !!getToken();
+}

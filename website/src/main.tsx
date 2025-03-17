@@ -20,11 +20,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
           {location.pathname !== '/login' && location.pathname !== '/register' ? (<Header />) : <></>}
           <div className='block sm:flex h-fit min-h-screen'>
-            {location.pathname !== '/login' || isAuthenticated() && (
+            {location.pathname !== '/login' && location.pathname !== '/register' ? (
               <div className='w-full sm:w-1/5 bg-gray-900' style={{ width: "350px" }}>
                 <LeftBar />
               </div>
-            )}
+            ) : <></>}
             <div className={`w-full ${location.pathname !== '/login' && ('sm:w-4/5')}`}>
 
               <Routers></Routers>
