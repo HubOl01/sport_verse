@@ -33,7 +33,6 @@ export class AuthService {
     return this.usersService.create({
       email,
       password: hashedPassword,
-      id: 0,
       VKID: '',
       username: username,
       statusUser: 'USER',

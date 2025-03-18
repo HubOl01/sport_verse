@@ -4,8 +4,6 @@ import { IsEnum, IsNumber, IsString } from 'class-validator';
 
 export class CreateUserDto {
   //   @ApiProperty({ required: false })
-  @IsNumber()
-  id: number;
   @ApiProperty({ required: true })
   @IsString()
   password: string;
