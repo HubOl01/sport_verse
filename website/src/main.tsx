@@ -18,14 +18,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <div className=' min-h-screen'>
 
-          {location.pathname !== '/login' && location.pathname !== '/register' ? (<Header />) : <></>}
+          {location.pathname !== '/login' && location.pathname !== '/register' && isAuthenticated() ? <Header /> : <></>}
           <div className='block sm:flex h-fit min-h-screen'>
-            {location.pathname !== '/login' && location.pathname !== '/register' ? (
+            {location.pathname !== '/login' && location.pathname !== '/register' && isAuthenticated() ? (
               <div className='w-full sm:w-1/5 bg-gray-900' style={{ width: "350px" }}>
                 <LeftBar />
               </div>
             ) : <></>}
-            <div className={`w-full ${location.pathname !== '/login' && ('sm:w-4/5')}`}>
+            <div className={`w-full ${location.pathname !== '/login' && isAuthenticated() && ('sm:w-4/5')}`}>
 
               <Routers></Routers>
             </div>
