@@ -1,6 +1,6 @@
 import { LineChart } from '@mui/x-charts/LineChart';
 
-export default function Feed() {
+export default function StatPage() {
     return (
         <div><LineChart
         xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}

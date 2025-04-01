@@ -16,7 +16,7 @@ import { ExerciseSetsModule } from './exercise-sets/exercise-sets.module';
 import { TrainingResultsModule } from './training-results/training-results.module';
 import { PublishStatusesModule } from './publish-statuses/publish-statuses.module';
 import { StatusesTrainingModule } from './statuses-training/statuses-training.module';
-import { СommentTrainingModule } from './сomment-training/сomment-training.module';
+import { СommentTrainingModule } from './сomment-training/comment-training.module';
 import { ViewsTrainingModule } from './views-training/views-training.module';
 import { LikeTrainingModule } from './like-training/like-training.module';
 import { AuthModule } from './auth/auth.module';

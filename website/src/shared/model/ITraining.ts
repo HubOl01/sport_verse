@@ -1,4 +1,4 @@
-import { SportType } from "./ISportType";
+import { ISportType } from "./ISportType";
 import { StatusPublish } from "./IStatusPublish";
 
 export interface ITraining {
@@ -13,5 +13,5 @@ export interface ITraining {
   statusTrainingId: number;
   sportTypeId: number;
   statusPublish?: StatusPublish;
-  sportType?: SportType;
+  sportType?: ISportType;
 }

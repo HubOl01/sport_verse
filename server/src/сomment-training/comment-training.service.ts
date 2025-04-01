@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { CreateСommentTrainingDto } from './dto/create-сomment-training.dto';
-import { UpdateСommentTrainingDto } from './dto/update-сomment-training.dto';
+import { CreateCommentTrainingDto } from './dto/create-comment-training.dto';
+import { UpdateCommentTrainingDto } from './dto/update-comment-training.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class СommentTrainingService {
+export class CommentTrainingService {
   constructor(private prisma: PrismaService) {}
-  create(createСommentTrainingDto: CreateСommentTrainingDto) {
+  create(createCommentTrainingDto: CreateCommentTrainingDto) {
     return this.prisma.commentTraining.create({
-      data: createСommentTrainingDto,
+      data: createCommentTrainingDto,
     });
   }
 
@@ -31,10 +31,10 @@ export class СommentTrainingService {
     });
   }
 
-  update(id: number, updateСommentTrainingDto: UpdateСommentTrainingDto) {
+  update(id: number, updateCommentTrainingDto: UpdateCommentTrainingDto) {
     return this.prisma.commentTraining.update({
       where: { id },
-      data: updateСommentTrainingDto,
+      data: updateCommentTrainingDto,
     });
   }
 

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsInt, IsString } from 'class-validator';
 
-export class CreateСommentTrainingDto {
+export class CreateCommentTrainingDto {
   @ApiProperty({ required: true })
   @IsString()
   content: string;
@@ -14,7 +14,6 @@ export class CreateСommentTrainingDto {
   @ApiProperty({ required: true })
   @IsDate()
   createdAt: Date;
-  @ApiProperty({ required: false })
   @IsInt()
   parentCommentId: number;
 }

@@ -13,6 +13,7 @@ export const newsList: NewModel[] = [
     title: "Чемпионат Европы по футболу стартовал!",
     description:
       "Не пропустите матчи сборной — следите за расписанием и результатами через наш сервис.",
+      image: "https://pic.rutubelist.ru/playlist/5107f0e5-71fa-11ef-8266-02420a000208.jpg",
     date: "05.10.2024",
   },
   {

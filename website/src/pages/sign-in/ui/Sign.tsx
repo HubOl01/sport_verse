@@ -104,6 +104,7 @@ export default function Sign() {
       const data = await loginAuth(login, pass);
       localStorage.setItem('token', data.access_token);
       navigate('/');
+      window.location.reload();
     } catch (err) {
       setError((err as Error).message);
     }

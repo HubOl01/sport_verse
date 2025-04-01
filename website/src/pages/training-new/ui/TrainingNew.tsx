@@ -9,11 +9,18 @@ import { TrainingService } from "../../../shared/api/training.service";
 import { ExercisesService } from "../../../shared/api/exercises.service";
 import { ExerciseSetService } from "../../../shared/api/exerciseSet.service";
 import { PlanExerciseService } from "../../../shared/api/planExercise.service";
+import { DialogSportType } from "./dialogTypeSport";
+import { ISportType } from '../../../shared/model/ISportType';
+import { useNavigate } from "react-router-dom";
 
 
 interface ArrModel {
   titleExercise: string; countExercise: string, alignment: string, alignmentTime: string, alignmentDistance: string;
 }
+// interface SportTypeModel {
+
+//   title: string; 
+// }
 export default function TrainingEdit() {
   const [arr, setArr] = useState<ArrModel[]>([]);
   const [title, setTitle] = useState('');
@@ -25,11 +32,14 @@ export default function TrainingEdit() {
   const [alignmentDistance, setAlignmentDistance] = useState('km');
 
   const [open, setOpen] = useState(false);
+  const [openSportType, setOpenSportType] = useState(false);
   const [value, setValue] = useState('Dione');
+  const [valueSportType, setValueSportType] = useState<ISportType>({ id: 0, title: '', image: null });
 
   const handleClick = () => {
     setOpen(true);
   };
+
 
   const handleClose = (newValue?: string) => {
     setOpen(false);
@@ -38,15 +48,30 @@ export default function TrainingEdit() {
       setValue(newValue);
     }
   };
+  const handleClickSportType = () => {
+    setOpenSportType(true);
+  };
+
+
+  const handleCloseSportType = (newValue?: string) => {
+    setOpenSportType(false);
+
+    if (newValue) {
+      setValue(newValue);
+    }
+  };
   const handleAddSelectedExercise = (exercise: IExercise) => {
-    setArr([...arr, { titleExercise: exercise.name, countExercise: '', alignment: 'Nan', alignmentTime: 'alignmentTime', alignmentDistance: 'alignmentDistance' }]);
+    setArr([...arr, { titleExercise: exercise.name, countExercise: '', alignment: 'alignment', alignmentTime: 'alignmentTime', alignmentDistance: 'alignmentDistance' }]);
+  };
+  const handleAddSelectedSportType = (sportType: ISportType) => {
+    setValueSportType(sportType);
   };
 
   const handleAddExercise = () => {
     setArr([...arr, { titleExercise, countExercise, alignment: alignmentView, alignmentTime, alignmentDistance }]);
     setTitleExercise('');
     setCountExercise('');
-    setAlignmentView('');
+    setAlignmentView('Nan');
   };
 
   const handleExerciseChange = (index: number, field: 'titleExercise' | 'countExercise' | 'alignment' | 'alignmentTime' | 'alignmentDistance', value: string) => {
@@ -87,6 +112,16 @@ export default function TrainingEdit() {
           },
         }} />
       <br />
+      <Button sx={{
+        color: "black",
+        // borderRadius: "30px",
+        justifyContent: "start",
+        textTransform: 'none',
+        width: "100%",
+        fontSize: "18px",
+        padding: "5px 8px 5px 0px",
+      }} onClick={handleClickSportType}>Вид спорта: {valueSportType?.title}</Button>
+      <DialogSportType keepMounted open={openSportType} onClose={handleCloseSportType} onSelectExercise={handleAddSelectedSportType} value={valueSportType!} />
       <div className={`${styles.name} mb-5`}>Упражения</div>
       {arr.map((exercise, index) => (
         <Card className="justify-center content-center self-center" key={index} variant="outlined" sx={{ marginBottom: '20px', borderRadius: '20px', }}>
@@ -198,14 +233,15 @@ export default function TrainingEdit() {
       ))}
 
       <div className="flex gap-2">
-        <Button variant="contained" sx={{
-          color: "#FFFFFF",
-          backgroundColor: "rgba(0,0,0,.5)",
-          borderRadius: "20px",
-          width: "100%",
-          padding: "8px 15px",
+        <Button variant="contained"
+          sx={{
+            color: "#FFFFFF",
+            backgroundColor: "rgba(0, 0, 0, 0.298)",
+            borderRadius: "20px",
+            width: "100%",
+            padding: "8px 15px",
 
-        }} onClick={handleAddExercise}>Добавить упражение</Button>
+          }} onClick={handleAddExercise}>Добавить упражение</Button>
         <Button variant="contained" sx={{
           color: "#FFFFFF",
           backgroundColor: "rgba(61, 78, 206, 1)",
@@ -225,83 +261,22 @@ export default function TrainingEdit() {
         fontWeight: "700",
         padding: "8px 15px"
       }}
-        onClick={() => {
-          createTrainingPlan(title, description, arr);
-          // TrainingService.create({
-          //   title: title,
-          //   description: description,
-          //   userId: 1,
-          //   statusTrainingId: 1,
-          //   sportTypeId: 1,
-          // });
-          // TrainingService.getIdFirst().then(plan => {
-          //   arr.forEach(item => {
-          //     ExercisesService.getName(item.titleExercise).then(exercise => {
-          //       if (exercise.id === undefined) {
-          //         // console.log('error');
-          //         ExercisesService.create({
-          //           name: item.titleExercise,
-          //           description: "",
-          //           ExerciseCategoryId: 40,
-          //           isPrivate: true
-          //         })
-          //       } else {
-          //         console.log(exercise.id);
-
-          //         PlanExerciseService.create({
-          //           trainingPlanId: plan.id!,
-          //           setTotal: 0,
-          //           repTotal: 0,
-          //           exerciseStatus: 0,
-          //           exerciseId: exercise.id!,
-          //         });
-          //         PlanExerciseService.getIdFirst().then(planExercise => {
-          //           ExerciseSetService.create(
-          //             {
-          //               planExerciseId: planExercise.id!,
-          //               duration: item.alignment == 'time' ? BigInt(parseInt(item.countExercise)) : undefined,
-          //               distance: item.alignment == 'distance' ? parseInt(item.countExercise) : undefined,
-          //               weight: item.alignment == 'weight' ? parseInt(item.countExercise) : undefined,
-          //               repetitions: item.alignment == 'count' ? parseInt(item.countExercise) : undefined,
-          //               calories_burned: undefined,
-          //               route_gpx: undefined,
-          //               stringType: "",
-          //             }
-          //           );
-          //         })
-          //       }
-          //     }).catch(_ex => {
-          //       ExercisesService.create({
-          //         name: item.titleExercise,
-          //         description: "",
-          //         ExerciseCategoryId: 40,
-          //         isPrivate: true
-          //       })
-          //       PlanExerciseService.getIdFirst().then(planExercise => {
-          //         ExerciseSetService.create(
-          //           {
-          //             planExerciseId: planExercise.id!,
-          //             duration: item.alignment == 'time' ? BigInt(parseInt(item.countExercise)) : undefined,
-          //             distance: item.alignment == 'distance' ? parseInt(item.countExercise) : undefined,
-          //             weight: item.alignment == 'weight' ? parseInt(item.countExercise) : undefined,
-          //             repetitions: item.alignment == 'count' ? parseInt(item.countExercise) : undefined,
-          //             calories_burned: undefined,
-          //             route_gpx: undefined,
-          //             stringType: "",
-          //           }
-          //         );
-          //       })
-          //     })
-          //   });
-          // });
-        }
+        onClick={
+          () => {
+            if (title === '' && description === '' && arr.length === 0 && valueSportType.id === 0) {
+              alert('Заполните все поля');
+            } else {
+              createTrainingPlan(title, description, arr, valueSportType);
+            }
+          }
         }
       >Сохранить</Button>
     </div >
   )
 }
 
-async function createTrainingPlan(title: string, description: string, arr: any[]) {
+async function createTrainingPlan(title: string, description: string, arr: any[], valueSportType: ISportType) {
+  const navigate = useNavigate();
   try {
     // Создаем тренировочный план
     const trainingPlan = await TrainingService.create({
@@ -309,7 +284,7 @@ async function createTrainingPlan(title: string, description: string, arr: any[]
       description: description,
       userId: 1,
       statusTrainingId: 1,
-      sportTypeId: 1,
+      sportTypeId: valueSportType.id,
     });
 
     if (!trainingPlan.id) {
@@ -365,6 +340,8 @@ async function createTrainingPlan(title: string, description: string, arr: any[]
           route_gpx: undefined,
           stringType: "",
         });
+        console.log("Plan created:", plan);
+        navigate('/training');
       } catch (exerciseError) {
         console.error(`Error processing exercise: ${item.titleExercise}`, exerciseError);
       }

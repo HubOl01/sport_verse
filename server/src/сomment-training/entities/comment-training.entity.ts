@@ -1,6 +1,6 @@
-import { CommentTraining } from "@prisma/client";
+import { CommentTraining } from '@prisma/client';
 
-export class СommentTrainingEntity implements CommentTraining {
+export class CommentTrainingEntity implements CommentTraining {
   id: number;
   content: string;
   userId: number;
