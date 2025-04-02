@@ -338,7 +338,7 @@ async function createTrainingPlan(title: string, description: string, arr: any[]
           repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
           calories_burned: undefined,
           route_gpx: undefined,
-          stringType: "",
+          stringType: item.alignment,
         });
         console.log("Plan created:", plan);
         navigate('/training');
