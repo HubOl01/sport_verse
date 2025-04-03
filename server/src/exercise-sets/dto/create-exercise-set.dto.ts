@@ -30,4 +30,7 @@ export class CreateExerciseSetDto {
   @ApiProperty({ required: true })
   @IsString()
   stringType: string;
+  @ApiProperty({ required: true })
+  @IsString()
+  stringUnit: string;
 }

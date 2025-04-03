@@ -11,4 +11,5 @@ export class ExerciseSetEntity implements ExerciseSet {
   calories_burned: number;
   route_gpx: string;
   stringType: string;
+  stringUnit: string;
 }
