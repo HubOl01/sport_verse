@@ -6,6 +6,7 @@ export var apiExercises = "/exercises";
 export var apiExercisesPublish = "/exercises/findAllPublic";
 export var apiExercisesName = "/exercises/findAll";
 export var apiPlanExercise = "/plan-exercises";
+export var apiPlanExerciseDeleteAll = "/plan-exercises/deleteAllExercises";
 export var apiPlanExerciseAllPlan = "/plan-exercises/findAllPlan";
 export var apiPlanExercisesGetIdFirst = "/plan-exercises/getIdFirst";
 export var apiProfileSportTypes = "/profile-sport-types";

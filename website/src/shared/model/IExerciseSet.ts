@@ -10,4 +10,5 @@ export interface IExerciseSet{
     calories_burned?: number;
     route_gpx?: string;
     stringType?: string;
+    stringUnit?: string;
 }

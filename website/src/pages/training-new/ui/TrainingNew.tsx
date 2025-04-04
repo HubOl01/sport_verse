@@ -339,6 +339,9 @@ async function createTrainingPlan(title: string, description: string, arr: any[]
           calories_burned: undefined,
           route_gpx: undefined,
           stringType: item.alignment,
+          stringUnit: item.alignment === 'distance' ?
+            item.alignmentDistance === 'km' ? 'км' : 'м' : item.alignment === 'time' ?
+              item.alignmentTime === 'hour' ? 'ч.' : item.alignmentTime == 'minute' ? 'мин.' : 'сек.' : '',
         });
         console.log("Plan created:", plan);
         navigate('/training');

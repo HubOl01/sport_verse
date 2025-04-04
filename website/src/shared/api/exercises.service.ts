@@ -1,6 +1,10 @@
 import { AxiosError } from "axios";
 import { IExercise } from "../model/IExercise";
-import { apiExercises, apiExercisesName, apiExercisesPublish } from "../config";
+import {
+  apiExercises,
+  apiExercisesName,
+  apiExercisesPublish,
+} from "../config";
 import { api } from ".";
 
 export const ExercisesService = {
@@ -74,7 +78,10 @@ export const ExercisesService = {
   },
   async update(id: number, exercise: IExercise): Promise<IExercise> {
     try {
-      const response = await api.patch<IExercise>(`${apiExercises}/${id}`, exercise);
+      const response = await api.patch<IExercise>(
+        `${apiExercises}/${id}`,
+        exercise
+      );
       return response.data;
     } catch (error) {
       const err = error as AxiosError;

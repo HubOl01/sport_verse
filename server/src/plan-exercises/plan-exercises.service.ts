@@ -50,4 +50,11 @@ export class PlanExercisesService {
   remove(id: number) {
     return this.prisma.planExercise.delete({ where: { id: id } });
   }
+
+  deleteAllExercises(id: number) {
+    // return this.prisma.planExercise.delete({ where: { id: id } });
+    return this.prisma.planExercise.deleteMany({
+      where: { trainingPlanId: id },
+    });
+  }
 }

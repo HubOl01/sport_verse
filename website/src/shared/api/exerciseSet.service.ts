@@ -75,10 +75,10 @@ export const ExerciseSetService = {
       throw new Error(message);
     }
   },
-  async deletePlanExercise(id: string): Promise<IExerciseSet> {
+  async deletePlanExercise(planExerciseId: string): Promise<IExerciseSet> {
     try {
       const response = await api.delete<IExerciseSet>(
-        `${apiExerciseSetsRemovePlanExercise}/${id}`
+        `${apiExerciseSetsRemovePlanExercise}/${planExerciseId}`
       );
       return response.data;
     } catch (error) {
@@ -86,7 +86,7 @@ export const ExerciseSetService = {
       const message =
         typeof err.response?.data === "string"
           ? err.response.data
-          : "Произошла ошибка при удалении упражнения из плана";
+          : "Произошла ошибка при удалении упражнения из плана по id из упражнения плана";
       throw new Error(message);
     }
   },

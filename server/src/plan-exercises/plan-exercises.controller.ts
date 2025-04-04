@@ -53,4 +53,9 @@ export class PlanExercisesController {
   remove(@Param('id') id: string) {
     return this.planExercisesService.remove(+id);
   }
+
+  @Delete('deleteAllExercises/:id')
+  removePlanExercise(@Param('id') id: string) {
+    return this.planExercisesService.deleteAllExercises(+id);
+  }
 }
