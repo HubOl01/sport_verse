@@ -1,12 +1,7 @@
-import { Card, CardActionArea, CardActions, CardContent, Chip, IconButton, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, Chip, Typography } from "@mui/material";
 import { ITraining } from "../../../shared/model/ITraining";
 import { useNavigate } from "react-router-dom";
-import { BiCommentDetail } from "react-icons/bi";
-import ThumbUpOn from '@mui/icons-material/ThumbUpAlt';
-import ThumbUpOff from '@mui/icons-material/ThumbUpOffAlt';
 import { useState } from "react";
-import { PiShareFat } from "react-icons/pi";
-import { ColorBackground } from "../../../shared/styles/colors";
 
 interface CardTrainingProps {
     training: ITraining

@@ -80,6 +80,8 @@ export const ExerciseSetService = {
       const response = await api.delete<IExerciseSet>(
         `${apiExerciseSetsRemovePlanExercise}/${planExerciseId}`
       );
+      console.log("Response:", response);
+      console.log(`id=${planExerciseId}`);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;

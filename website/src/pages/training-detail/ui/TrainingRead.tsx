@@ -232,7 +232,10 @@ export default function TrainingDetail() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              navigate(-1);
+              navigate(`/training`);
+            }}
           >
             <ArrowBackIcon />
           </IconButton>
@@ -257,7 +260,10 @@ export default function TrainingDetail() {
       {/* Основной контент */}
       <Box sx={{ padding: '1rem', paddingBottom: '80px' /* чтобы не закрывал футер */ }}>
         {edit ? (
-          <TrainingEdit trainingPlanId={Number(id)} />
+          <TrainingEdit trainingPlanId={Number(id)} onClickExit={() => {
+            setEdit(!edit);
+            queryClient.invalidateQueries(['trainingDetail', id]);
+          }} />
         ) : (
           <div className="mr-5 mt-5 ml-5">
             <Chip className="mb-2" label={trainingData.statusPublish!.title} />
@@ -278,7 +284,6 @@ export default function TrainingDetail() {
             {comment ?
               <div>
                 <h2>Комментарии: </h2>
-                
               </div>
               : <></>
             }

@@ -111,7 +111,7 @@ export const PlanExerciseService = {
       );
 
       for (const item of arrExersises) {
-        await ExerciseSetService.deletePlanExercise(item.exerciseId.toString());
+        await ExerciseSetService.deletePlanExercise(item.id!.toString());
       }
 
       const response = await api.delete<IPlanExercise>(

@@ -1,7 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { IExercise } from "../../../shared/model/IExercise";
 import CloseIcon from '@mui/icons-material/Close';
 import { apiSportTypes } from "../../../shared/config";
 import { TypeSportService } from "../../../shared/api/typeSport.service";

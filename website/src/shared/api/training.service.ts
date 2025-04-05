@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { ITraining } from "../model/ITraining";
 import { api } from ".";
 import { apiTraining, apiTrainingGetIdFirst } from "../config";
+import { PlanExerciseService } from "./planExercise.service";
 
 export const TrainingService = {
   async getAll(): Promise<ITraining[]> {
@@ -57,9 +58,15 @@ export const TrainingService = {
       throw new Error(message);
     }
   },
-  async update(trainingPlanId: number, training: ITraining): Promise<ITraining> {
+  async update(
+    trainingPlanId: number,
+    training: ITraining
+  ): Promise<ITraining> {
     try {
-      const response = await api.patch<ITraining>(`/training-plans/${trainingPlanId}`, training);
+      const response = await api.patch<ITraining>(
+        `/training-plans/${trainingPlanId}`,
+        training
+      );
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -72,6 +79,7 @@ export const TrainingService = {
   },
   async delete(id: string): Promise<ITraining> {
     try {
+      await PlanExerciseService.deleteAll(id);
       const response = await api.delete<ITraining>(`${apiTraining}/${id}`);
       return response.data;
     } catch (error) {
