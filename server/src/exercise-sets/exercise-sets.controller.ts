@@ -27,6 +27,11 @@ export class ExerciseSetsController {
     return this.exerciseSetsService.findAll();
   }
 
+  @Get('findAllPlanExercises/:planExerciseId')
+  findOnePlanExercise(@Param('planExerciseId') planExerciseId: string) {
+    return this.exerciseSetsService.findOnePlanExercise(+planExerciseId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.exerciseSetsService.findOne(+id);

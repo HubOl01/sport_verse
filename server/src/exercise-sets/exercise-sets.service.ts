@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateExerciseSetDto } from './dto/create-exercise-set.dto';
 import { UpdateExerciseSetDto } from './dto/update-exercise-set.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { exercises } from '../prisma/data/exercises';
 
 @Injectable()
 export class ExerciseSetsService {
@@ -12,6 +13,10 @@ export class ExerciseSetsService {
 
   findAll() {
     return this.prisma.exerciseSet.findMany();
+  }
+
+  findOnePlanExercise(planExerciseId: number) {
+    return this.prisma.exerciseSet.findFirst({ where: { planExerciseId: planExerciseId }});
   }
 
   findOne(id: number) {

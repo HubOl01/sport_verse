@@ -19,104 +19,16 @@ import ThumbUpOn from '@mui/icons-material/ThumbUpAlt';
 import ThumbUpOff from '@mui/icons-material/ThumbUpOffAlt';
 import { ColorBackground } from "../../../shared/styles/colors";
 import { DialogShare } from "./dialogShare";
+import { ExerciseSetService } from "../../../shared/api/exerciseSet.service";
 
-// export default function TrainingDetail() {
-//   const { id } = useParams();
-//   const navigate = useNavigate();
-//   const queryClient = useQueryClient();
-//   const [value, setValue] = useState(false);
-//   const { data: trainingData, isLoading, error } = useQuery<ITraining>(
-//     ['trainingDetail', id],
-//     () => TrainingService.get(id!)
-//   );
-
-//   const { data: planExercisesData } = useQuery(
-//     ['planExercises', id],
-//     () => PlanExerciseService.getAllPlan(trainingData?.id!.toString() ?? ""),
-//     { enabled: !!trainingData }
-//   );
-
-//   if (isLoading) return <p className={styles.text}>Загрузка...</p>;
-//   if (error) return <p className={styles.text}>Произошла ошибка при загрузке данных.</p>;
-//   if (!trainingData) return <p className={styles.text}>Нет плана</p>;
-
-//   const formattedDateCreated = new Date(trainingData.date_created!).toLocaleString("ru-RU", {
-//     day: "2-digit",
-//     month: "2-digit",
-//     year: "numeric",
-//     hour: "2-digit",
-//     minute: "2-digit"
-//   });
-
-//   const handleDelete = async () => {
-//     try {
-//       await TrainingService.delete(id!);
-//       queryClient.invalidateQueries('trainingPlans');
-//       navigate(-1);
-//     } catch (error) {
-//       console.error('Ошибка при удалении тренировочного плана:', error);
-//       alert('Не удалось удалить тренировочный план.');
-//     }
-//   };
-//   return (
-//     <>
-//       <Box sx={{ flexGrow: 1 }}>
-//         <AppBar position="static" color="transparent" elevation={0}>
-//           <Toolbar>
-//             <IconButton
-//               size="large"
-//               edge="start"
-//               color="inherit"
-//               aria-label="menu"
-//               sx={{ mr: 2 }}
-//               onClick={() => navigate(-1)}
-//             >
-//               <ArrowBackIcon />
-//             </IconButton>
-//             <Box sx={{ flexGrow: 1 }}></Box>
-//             <IconButton
-//               edge="end"
-//               sx={{ ml: 2 }}
-//               onClick={() => setValue(!value)}>
-//               <EditIcon />
-//             </IconButton>
-//             <IconButton
-//               edge="end"
-//               sx={{ ml: 2, color: "red" }}
-//               onClick={handleDelete}>
-//               <DeleteIcon />
-//             </IconButton>
-//           </Toolbar>
-//         </AppBar>
-//       </Box>
-//       {
-//         value ? <TrainingEdit trainingPlanId={Number(id)} /> : <div className="mr-5 mt-5 ml-5">
-//           <Chip className="mb-2" label={trainingData.statusPublish!.title} />
-//           <h1>{trainingData.title}</h1>
-//           <p>Вид спорта: {trainingData.sportType!.title}</p>
-//           <p>Описание: {trainingData.description}</p>
-//           <div className={`${styles.name} mb-5`}>Упражнения</div>
-//           <div>
-//             {planExercisesData && planExercisesData.length > 0 ? (
-//               planExercisesData.map((exercise, i) => (
-//                 <ExerciseCard key={exercise.id} exerciseId={exercise.exerciseId} index={i + 1} />
-//               ))
-//             ) : (
-//               <p>Упражнений пока нет.</p>
-//             )}
-//           </div>
-//           <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>
-//         </div>
-//       }
-//     </>
-//   );
-// }
-
-
-function ExerciseCard({ exerciseId, index }: { exerciseId: number; index: number }) {
+function ExerciseCard({ exerciseId, index, planExerciseId }: { exerciseId: number; index: number; planExerciseId: number }) {
   const { data: exerciseData } = useQuery(
     ['exercise', exerciseId],
     () => ExercisesService.get(exerciseId.toString())
+  );
+  const { data: exerciseSetData } = useQuery(
+    ['exerciseSet', exerciseId],
+    () => ExerciseSetService.getOnePlanExercises(planExerciseId),
   );
 
   return (
@@ -128,12 +40,19 @@ function ExerciseCard({ exerciseId, index }: { exerciseId: number; index: number
         borderRadius: '20px',
       }}
     >
-      <div className="flex self-center p-2 pr-3 pl-3">
-        <div style={{ fontSize: "16px", alignSelf: 'center', paddingRight: "10px" }}>{index}. </div>
+      <div className="flex self-center p-2 pr-3 pl-3 justify-between">
+        <div className="flex">
+          <div style={{ fontSize: "16px", alignSelf: 'center', paddingRight: "10px" }}>{index}. </div>
+          <div style={{ fontSize: "16px" }}>
+            {exerciseData?.name}
+          </div>
+
+        </div>
         <div style={{ fontSize: "16px" }}>
-          {exerciseData?.name}
+          {exerciseSetData?.repetitions} раз.
         </div>
       </div>
+
     </Card>
   );
 }
@@ -274,7 +193,7 @@ export default function TrainingDetail() {
             <div>
               {planExercisesData && planExercisesData.length > 0 ? (
                 planExercisesData.map((exercise, i) => (
-                  <ExerciseCard key={exercise.id} exerciseId={exercise.exerciseId} index={i + 1} />
+                  <ExerciseCard key={exercise.id} exerciseId={exercise.exerciseId} index={i + 1} planExerciseId={exercise.id!} />
                 ))
               ) : (
                 <p>Упражнений пока нет.</p>

@@ -1,5 +1,9 @@
 import { AxiosError } from "axios";
-import { apiExerciseSets, apiExerciseSetsRemovePlanExercise } from "../config";
+import {
+  apiExerciseSets,
+  apiExerciseSetsFindAllPlanExercises,
+  apiExerciseSetsRemovePlanExercise,
+} from "../config";
 import { api } from ".";
 import { IExerciseSet } from "../model/IExerciseSet";
 
@@ -31,6 +35,22 @@ export const ExerciseSetService = {
       throw new Error(message);
     }
   },
+  async getOnePlanExercises(planExerciseId: number): Promise<IExerciseSet> {
+    try {
+      const response = await api.get<IExerciseSet>(
+        `${apiExerciseSetsFindAllPlanExercises}/${planExerciseId}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке плана для упражнения";
+      throw new Error(message);
+    }
+  },
+
   async create(item: IExerciseSet): Promise<IExerciseSet> {
     try {
       const response = await api.post<IExerciseSet>(apiExerciseSets, item);
