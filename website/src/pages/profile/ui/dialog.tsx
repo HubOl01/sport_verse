@@ -1,6 +1,5 @@
-import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { Dialog, DialogTitle } from "@mui/material";
 import { useState } from "react";
-import CloseIcon from '@mui/icons-material/Close';
 
 export interface dialogProps {
     keepMounted: boolean;

@@ -8,6 +8,11 @@ import Sign from '../../pages/sign-in/ui/Sign';
 import Register from '../../pages/sign-in/ui/Register';
 import { PrivateRoute } from './privateRoute';
 import StatPage from '../../pages/stat/ui/StatPage';
+import { CurrentRole, Roles } from '../data/roles';
+import Admin from '../../pages/admin/ui/Admin';
+import NewsRead from '../../pages/admin/ui/news/NewsRead';
+import NewsAdd from '../../pages/admin/ui/news/NewsAdd';
+import NewsDetail from '../../pages/admin/ui/news/NewsDetail';
 
 export default function Routers() {
   return (
@@ -15,6 +20,10 @@ export default function Routers() {
       <Route path="/" element={<PrivateRoute />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/login" element={<Sign />} />
+      {CurrentRole === Roles.ADMIN && (<Route path="/admin" element={<Admin />} />)}
+      {CurrentRole === Roles.ADMIN && (<Route path="/admin/news" element={<NewsRead />} />)}
+      {CurrentRole === Roles.ADMIN && (<Route path="/admin/news/add" element={<NewsAdd />} />)}
+      {CurrentRole === Roles.ADMIN && (<Route path="/admin/news/:id" element={<NewsDetail />} />)}
       <Route path="/register" element={<Register />} />
       <Route path="/training" element={<Training />} />
       <Route path="/stat" element={<StatPage />} />

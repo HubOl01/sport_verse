@@ -1,4 +1,3 @@
-
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
@@ -9,6 +8,8 @@ import './tailwind.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import LeftBar from './shared/ui/LeftBar/LeftBar'
 import { isAuthenticated } from './shared/api/authService'
+import LeftBarAdmin from './shared/ui/LeftBar/LeftBarAdmin'
+import { CurrentRole, Roles } from './shared/data/roles'
 
 const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -16,16 +17,16 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <div className=' min-h-screen'>
+        <div className='w-full min-h-screen'>
 
           {location.pathname !== '/login' && location.pathname !== '/register' && isAuthenticated() ? <Header /> : <></>}
           <div className='block sm:flex h-fit min-h-screen'>
             {location.pathname !== '/login' && location.pathname !== '/register' && isAuthenticated() ? (
-              <div className='w-full sm:w-1/5 bg-gray-900' style={{ width: "350px" }}>
-                <LeftBar />
+              <div className='w-full sm:w-1/5 bg-gray-900' style={{ minWidth: "350px" }}>
+                {CurrentRole === Roles.ADMIN ? <LeftBarAdmin /> : <LeftBar />}
               </div>
             ) : <></>}
-            <div className={`w-full ${location.pathname !== '/login' && isAuthenticated() && ('sm:w-4/5')}`}>
+            <div className={`w-full  ${location.pathname !== '/login' && isAuthenticated()}`}>
 
               <Routers></Routers>
             </div>

@@ -11,7 +11,7 @@ export class NewsService {
   }
 
   findAll() {
-    return this.prisma.news.findMany();
+    return this.prisma.news.findMany({ orderBy: { date: 'desc' } });
   }
 
   findOne(id: number) {

@@ -5,7 +5,7 @@ import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./Training.module.scss";
 
 export default function Training() {
-  const { data, isLoading, error } = useQuery(['training'], () => TrainingService.getAll()
+  const { data, isLoading, error } = useQuery(['trainingPlans'], () => TrainingService.getAll()
   )
 
   if (isLoading) return <p className={styles.text}>Загрузка...</p>;

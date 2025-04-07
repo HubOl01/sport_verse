@@ -11,7 +11,7 @@ export class CreateNewsDto {
   @ApiProperty({ required: false })
   @IsString()
   image?: string;
-  @ApiProperty({ required: false, default: Date.now() })
+  @ApiProperty({ required: false })
   @IsDate()
   date?: Date;
 }
