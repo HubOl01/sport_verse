@@ -19,484 +19,7 @@ import { DialogSportType } from "../../training-new/ui/dialogTypeSport";
 import { ISportType } from "../../../shared/model/ISportType";
 import { useNavigate } from "react-router-dom";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-//   import {
-//     TrainingService,
-//     ExercisesService,
-//     ExerciseSetService,
-//     PlanExerciseService,
-//   } from "../../../shared/api"; // Путь к сервисам
 
-// interface ArrModel {
-//     titleExercise: string;
-//     countExercise: string;
-//     alignment: string;
-// }
-
-// export default function TrainingEdit({ trainingPlanId }: { trainingPlanId: number }) {
-//     const [arr, setArr] = useState<ArrModel[]>([]);
-//     const [title, setTitle] = useState("");
-//     const [description, setDescription] = useState("");
-//     const [open, setOpen] = useState(false);
-//     const [value, setValue] = useState('Dione');
-//     const handleClick = () => {
-//         setOpen(true);
-//     };
-
-//     const handleClose = (newValue?: string) => {
-//         setOpen(false);
-
-//         if (newValue) {
-//             setValue(newValue);
-//         }
-//     };
-//     const handleAddSelectedExercise = (exercise: IExercise) => {
-//         setArr([...arr, { titleExercise: exercise.name, countExercise: '', alignment: 'Nan' }]);
-//     };
-
-//     useEffect(() => {
-//         // Загрузка данных для редактирования
-//         TrainingService.get(trainingPlanId.toString()).then((plan) => {
-//             setTitle(plan.title);
-//             setDescription(plan.description);
-
-//             // Загрузка связанных упражнений
-//             PlanExerciseService.getAllPlan(plan.id!.toString()).then((planExercises) => {
-//                 const exercisesPromises = planExercises.map((exercise) =>
-//                     ExerciseSetService.get(exercise.id!.toString()).then(async (sets) => {
-//                         const alignment = sets.duration
-//                             ? "time"
-//                             : sets.distance
-//                                 ? "distance"
-//                                 : sets.weight
-//                                     ? "weight"
-//                                     : "count";
-
-//                         const exerciseDetails = await ExercisesService.get(exercise.exerciseId.toString());
-//                         return {
-//                             titleExercise: exerciseDetails.name, // Название упражнения
-//                             countExercise: (sets.repetitions || sets.weight || sets.distance || sets.duration)?.toString() || "", // Приводим к string
-//                             alignment: alignment,
-//                         };
-//                     })
-//                 );
-
-//                 Promise.all(exercisesPromises).then((exercises) => setArr(exercises));
-//             });
-//         });
-//     }, [trainingPlanId]);
-
-//     const handleSave = async () => {
-//         // Обновление тренировочного плана
-//         const updatedPlan = await TrainingService.update(trainingPlanId, {
-//             title,
-//             description,
-//             userId: 1,
-//             statusTrainingId: 1,
-//             sportTypeId: 1,
-//         });
-
-//         // Удаление старых упражнений и их данных
-//         const oldPlanExercises = await PlanExerciseService.getAllPlan(trainingPlanId.toString());
-//         await Promise.all(oldPlanExercises.map((ex) => PlanExerciseService.delete(ex.id!.toString())));
-
-//         // Добавление новых упражнений
-//         for (const item of arr) {
-//             const exercise = await ExercisesService.getName(item.titleExercise).catch(() =>
-//                 ExercisesService.create({
-//                     name: item.titleExercise,
-//                     description: "",
-//                     ExerciseCategoryId: 40,
-//                     isPrivate: true,
-//                 })
-//             );
-
-//             const planExercise = await PlanExerciseService.create({
-//                 trainingPlanId: updatedPlan.id!,
-//                 setTotal: 0,
-//                 repTotal: 0,
-//                 exerciseStatus: 0,
-//                 exerciseId: exercise.id!,
-//             });
-
-//             await ExerciseSetService.create({
-//                 planExerciseId: planExercise.id!,
-//                 duration: item.alignment === "time" ? BigInt(item.countExercise) : undefined,
-//                 distance: item.alignment === "distance" ? parseInt(item.countExercise) : undefined,
-//                 weight: item.alignment === "weight" ? parseInt(item.countExercise) : undefined,
-//                 repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
-//             });
-//         }
-//         alert("Тренировочный план успешно обновлен!");
-//     };
-
-//     const handleAddExercise = () => {
-//         setArr([...arr, { titleExercise: "", countExercise: "", alignment: "" }]);
-//     };
-
-//     return (
-//         <div className="mr-5 ml-5">
-//             <TextField
-//                 variant="standard"
-//                 margin="normal"
-//                 placeholder="Заголовок"
-//                 sx={{ width: "100%" }}
-//                 value={title}
-//                 onChange={(e) => setTitle(e.target.value)}
-//                 slotProps={{
-//                     input: { style: { fontSize: "30px", fontWeight: 700 }, disableUnderline: true },
-//                 }}
-//             />
-//             <TextField
-//                 variant="standard"
-//                 multiline
-//                 margin="normal"
-//                 placeholder="Описание"
-//                 sx={{ width: "100%" }}
-//                 value={description}
-//                 onChange={(e) => setDescription(e.target.value)}
-//                 slotProps={{ input: { style: { fontSize: "20px" }, disableUnderline: true } }}
-
-//             />
-
-//             <div className={`${styles.name} mb-5`}>Упражнения</div>
-//             {arr.map((exercise, index) => (
-//                 <Card key={index} variant="outlined" sx={{ marginBottom: "20px", borderRadius: "20px" }}>
-//                     <div className="flex self-center p-2">
-//                         <TextField
-//                             placeholder="Название упражнения"
-//                             variant="standard"
-//                             value={exercise.titleExercise}
-//                             onChange={(e) => {
-//                                 const updated = [...arr];
-//                                 updated[index].titleExercise = e.target.value;
-//                                 setArr(updated);
-//                             }}
-//                             sx={{ flex: 1 }}
-//                             slotProps={{
-//                                 input: {
-//                                     style: {
-//                                         fontSize: "16px",
-//                                     },
-//                                     disableUnderline: true,
-//                                 }
-//                             }}
-//                         />
-//                         <IconButton onClick={() => setArr(arr.filter((_, i) => i !== index))}>
-//                             <DeleteIcon />
-//                         </IconButton>
-//                     </div>
-//                 </Card>
-//             ))}
-
-//             {/* <Button variant="contained" onClick={handleAddExercise} sx={{ marginBottom: "10px" }}>
-//                 Добавить упражнение
-//             </Button> */}
-//             <div className="flex gap-2">
-//                 <Button variant="contained" sx={{
-//                     color: "#FFFFFF",
-//                     backgroundColor: "rgba(0,0,0,.5)",
-//                     borderRadius: "20px",
-//                     width: "100%",
-//                     padding: "8px 15px",
-
-//                 }} onClick={handleAddExercise}>Добавить упражение</Button>
-//                 <Button variant="contained" sx={{
-//                     color: "#FFFFFF",
-//                     backgroundColor: "rgba(61, 78, 206, 1)",
-//                     borderRadius: "20px",
-//                     width: "300px",
-//                     padding: "8px 15px",
-
-//                 }} onClick={handleClick} >Добавить из базы</Button>
-//                 <DialogCustom
-//                     keepMounted
-//                     open={open}
-//                     onClose={handleClose}
-//                     onSelectExercise={handleAddSelectedExercise}
-//                     value={value}
-//                 />
-
-//             </div>
-
-//             <Button variant="contained" sx={{
-//                 marginTop: "20px",
-//                 marginBottom: "20px",
-//                 color: "#FFFFFFFF",
-//                 background: "#4758d6",
-//                 borderRadius: "20px",
-//                 width: "100%",
-//                 fontWeight: "700",
-//                 padding: "8px 15px"
-
-//             }}
-//                 onClick={() => { handleSave }}>
-//                 Сохранить изменения
-//             </Button>
-//         </div>
-//     );
-// }
-
-// -----------------------
-// interface ArrModel {
-//     titleExercise: string;
-//     countExercise: string;
-//     alignment: string;
-// }
-
-// export default function TrainingEdit({ trainingPlanId }: { trainingPlanId: number }) {
-//     const [arr, setArr] = useState<ArrModel[]>([]);
-//     const [title, setTitle] = useState("");
-//     const [description, setDescription] = useState("");
-//     const [open, setOpen] = useState(false);
-//     const [value, setValue] = useState("Dione");
-
-//     // Загрузка данных для редактирования
-//     useEffect(() => {
-//         TrainingService.get(trainingPlanId.toString()).then((plan) => {
-//             setTitle(plan.title);
-//             setDescription(plan.description);
-
-//             // Загрузка связанных упражнений
-//             PlanExerciseService.getAllPlan(plan.id!.toString()).then((planExercises) => {
-//                 const exercisesPromises = planExercises.map((exercise) =>
-//                     ExerciseSetService.get(exercise.id!.toString()).then(async (sets) => {
-//                         const alignment = sets.duration
-//                             ? "time"
-//                             : sets.distance
-//                                 ? "distance"
-//                                 : sets.weight
-//                                     ? "weight"
-//                                     : "count";
-
-//                         const exerciseDetails = await ExercisesService.get(exercise.exerciseId.toString());
-//                         return {
-//                             titleExercise: exerciseDetails.name, // Название упражнения
-//                             countExercise: (
-//                                 sets.repetitions || sets.weight || sets.distance || sets.duration
-//                             )?.toString() || "", // Приводим к string
-//                             alignment: alignment,
-//                         };
-//                     })
-//                 );
-
-//                 Promise.all(exercisesPromises).then((exercises) => setArr(exercises));
-//             });
-//         });
-//     }, [trainingPlanId]);
-
-//     // Обработчик изменения упражнения
-//     const handleExerciseChange = (
-//         index: number,
-//         field: "titleExercise" | "countExercise" | "alignment",
-//         value: string
-//     ) => {
-//         const newArr = [...arr];
-//         newArr[index][field] = value;
-//         setArr(newArr);
-//     };
-
-//     // Добавление нового упражнения
-//     const handleAddExercise = () => {
-//         setArr([...arr, { titleExercise: "", countExercise: "", alignment: "" }]);
-//     };
-
-//     // Удаление упражнения
-//     const handleDeleteExercise = (index: number) => {
-//         const newArr = arr.filter((_, i) => i !== index);
-//         setArr(newArr);
-//     };
-
-//     // Сохранение изменений
-//     const handleSave = async () => {
-//         try {
-//             // Обновление тренировочного плана
-//             const updatedPlan = await TrainingService.update(trainingPlanId, {
-//                 title,
-//                 description,
-//                 userId: 1,
-//                 statusTrainingId: 1,
-//                 sportTypeId: 1,
-//             });
-
-//             // Удаление старых упражнений
-//             const oldPlanExercises = await PlanExerciseService.getAllPlan(trainingPlanId.toString());
-//             await Promise.all(oldPlanExercises.map((ex) => PlanExerciseService.delete(ex.id!.toString())));
-
-//             // Добавление новых упражнений
-//             for (const item of arr) {
-//                 const exercise = await ExercisesService.getName(item.titleExercise).catch(() =>
-//                     ExercisesService.create({
-//                         name: item.titleExercise,
-//                         description: "",
-//                         ExerciseCategoryId: 40,
-//                         isPrivate: true,
-//                     })
-//                 );
-
-//                 const planExercise = await PlanExerciseService.create({
-//                     trainingPlanId: updatedPlan.id!,
-//                     setTotal: 0,
-//                     repTotal: 0,
-//                     exerciseStatus: 0,
-//                     exerciseId: exercise.id!,
-//                 });
-
-//                 await ExerciseSetService.create({
-//                     planExerciseId: planExercise.id!,
-//                     duration: item.alignment === "time" ? BigInt(item.countExercise) : undefined,
-//                     distance: item.alignment === "distance" ? parseInt(item.countExercise) : undefined,
-//                     weight: item.alignment === "weight" ? parseInt(item.countExercise) : undefined,
-//                     repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
-//                 });
-//             }
-
-//             alert("Тренировочный план успешно обновлен!");
-//         } catch (error) {
-//             console.error("Ошибка при сохранении:", error);
-//             alert("Произошла ошибка при сохранении изменений.");
-//         }
-//     };
-
-//     return (
-//         <div className="mr-5 ml-5">
-//             {/* Заголовок */}
-//             <TextField
-//                 variant="standard"
-//                 margin="normal"
-//                 placeholder="Заголовок"
-//                 sx={{ width: "100%" }}
-//                 value={title}
-//                 onChange={(e) => setTitle(e.target.value)}
-//                 slotProps={{
-//                     input: { style: { fontSize: "30px", fontWeight: 700 }, disableUnderline: true },
-//                 }}
-//             />
-
-//             {/* Описание */}
-//             <TextField
-//                 variant="standard"
-//                 multiline
-//                 margin="normal"
-//                 placeholder="Описание"
-//                 sx={{ width: "100%" }}
-//                 value={description}
-//                 onChange={(e) => setDescription(e.target.value)}
-//                 slotProps={{ input: { style: { fontSize: "20px" }, disableUnderline: true } }}
-//             />
-
-//             {/* Упражнения */}
-//             <div className={`${styles.name} mb-5`}>Упражнения</div>
-//             {arr.map((exercise, index) => (
-//                 <Card key={index} variant="outlined" sx={{ marginBottom: "20px", borderRadius: "20px" }}>
-//                     <div className="flex self-center p-2">
-//                         {/* Название упражнения */}
-//                         <TextField
-//                             placeholder="Название упражнения"
-//                             variant="standard"
-//                             value={exercise.titleExercise}
-//                             onChange={(e) =>
-//                                 handleExerciseChange(index, "titleExercise", e.target.value)
-//                             }
-//                             sx={{ flex: 1 }}
-//                             slotProps={{
-//                                 input: {
-//                                     style: { fontSize: "16px" },
-//                                     disableUnderline: true,
-//                                 },
-//                             }}
-//                         />
-
-//                         {/* Кнопка удаления */}
-//                         <IconButton onClick={() => handleDeleteExercise(index)}>
-//                             <DeleteIcon />
-//                         </IconButton>
-//                     </div>
-//                     {/* Выбор типа выравнивания */}
-//                     <ToggleButtonGroup
-//                             size="small"
-//                             value={exercise.alignment}
-//                             exclusive
-//                             onChange={(_e, val) => handleExerciseChange(index, "alignment", val)}
-//                             aria-label="alignment"
-//                             sx={{ marginLeft: "10px" }}
-//                         >
-//                             <ToggleButton value="time">Время</ToggleButton>
-//                             <ToggleButton value="distance">Дистанция</ToggleButton>
-//                             <ToggleButton value="weight">Вес</ToggleButton>
-//                             <ToggleButton value="count">Количество</ToggleButton>
-//                         </ToggleButtonGroup>
-
-//                         {/* Значение параметра */}
-//                         <TextField
-//                             placeholder="Значение"
-//                             variant="standard"
-//                             value={exercise.countExercise}
-//                             onChange={(e) =>
-//                                 handleExerciseChange(index, "countExercise", e.target.value)
-//                             }
-//                             sx={{ marginLeft: "10px", width: "80px" }}
-//                             slotProps={{
-//                                 input: {
-//                                     style: { fontSize: "16px" },
-//                                     disableUnderline: true,
-//                                 },
-//                             }}
-//                         />
-//                 </Card>
-//             ))}
-
-//             {/* Кнопки управления */}
-//             <div className="flex gap-2">
-//                 <Button
-//                     variant="contained"
-//                     sx={{
-//                         color: "#FFFFFF",
-//                         backgroundColor: "rgba(0,0,0,.5)",
-//                         borderRadius: "20px",
-//                         width: "100%",
-//                         padding: "8px 15px",
-//                     }}
-//                     onClick={handleAddExercise}
-//                 >
-//                     Добавить упражнение
-//                 </Button>
-//                 <Button
-//                     variant="contained"
-//                     sx={{
-//                         color: "#FFFFFF",
-//                         backgroundColor: "rgba(61, 78, 206, 1)",
-//                         borderRadius: "20px",
-//                         width: "300px",
-//                         padding: "8px 15px",
-//                     }}
-//                     onClick={() => setOpen(true)}
-//                 >
-//                     Добавить из базы
-//                 </Button>
-//             </div>
-
-//             {/* Кнопка сохранения */}
-//             <Button
-//                 variant="contained"
-//                 sx={{
-//                     marginTop: "20px",
-//                     marginBottom: "20px",
-//                     color: "#FFFFFFFF",
-//                     background: "#4758d6",
-//                     borderRadius: "20px",
-//                     width: "100%",
-//                     fontWeight: "700",
-//                     padding: "8px 15px",
-//                 }}
-//                 onClick={handleSave}
-//             >
-//                 Сохранить изменения
-//             </Button>
-//         </div>
-//     );
-// }
-
-// ------------------------------------------------
 interface ArrModel {
     titleExercise: string; countExercise: string, alignment: string, alignmentTime: string, alignmentDistance: string;
 }
@@ -527,7 +50,7 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
 
             PlanExerciseService.getAllPlan(plan.id!.toString()).then((planExercises) => {
                 const exercisesPromises = planExercises.map((exercise) =>
-                    ExerciseSetService.get(exercise.id!.toString()).then(async (sets) => {
+                    ExerciseSetService.getOnePlanExercises((exercise.id!)).then(async (sets) => {
                         const alignment = sets.duration
                             ? "time"
                             : sets.distance
@@ -535,7 +58,6 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
                                 : sets.weight
                                     ? "weight"
                                     : "count";
-
                         const exerciseDetails = await ExercisesService.get(exercise.exerciseId.toString());
                         return {
                             titleExercise: exerciseDetails.name,
@@ -694,32 +216,9 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
                                     : <></>
                         }
                         <div className="flex self-center p-2 pr-3 pl-3">
-                            {exercise.alignment == 'distance' ? (<> <TextField className="w-20 self-center" placeholder="0" variant="standard"
-                                value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
-                                slotProps={{
-                                    input: {
-                                        style: {
-                                            fontSize: "16px",
-                                        },
-                                        disableUnderline: true,
-                                    }
-                                }}
-                            /><div className="self-center">
-                                    {
-                                        exercise.alignmentDistance == 'km' ? 'км' : 'м'
-                                    }
-                                </div></>) : exercise.alignment == 'weight' ? (<><TextField className="w-20 self-center"
-                                    placeholder="0" variant="standard" value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
-                                    slotProps={{
-                                        input: {
-                                            style: {
-                                                fontSize: "16px",
-                                            },
-                                            disableUnderline: true,
-                                        }
-                                    }}
-                                /><div className="self-center">кг.</div></>) : exercise.alignment == 'time' ? (<><TextField className="w-20 self-center"
-                                    placeholder="0" variant="standard" value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                            {exercise.alignment == 'distance' ? (
+                                <> <TextField className="w-20 self-center" placeholder="0" variant="standard"
+                                    value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
                                     slotProps={{
                                         input: {
                                             style: {
@@ -730,10 +229,10 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
                                     }}
                                 /><div className="self-center">
                                         {
-                                            exercise.alignmentTime == 'hour' ? 'ч.' : exercise.alignmentTime == 'minute' ? 'мин.' : 'сек.'
+                                            exercise.alignmentDistance == 'km' ? 'км' : 'м'
                                         }
-                                    </div></>) : exercise.alignment == 'count' ? (<><TextField className="w-20 self-center" placeholder="0" variant="standard"
-                                        value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                                    </div></>) : exercise.alignment == 'weight' ? (<><TextField className="w-20 self-center"
+                                        placeholder="0" variant="standard" value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
                                         slotProps={{
                                             input: {
                                                 style: {
@@ -742,7 +241,31 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
                                                 disableUnderline: true,
                                             }
                                         }}
-                                    /><div className="self-center">раз.</div></>) : (<></>)}
+                                    /><div className="self-center">кг.</div></>) : exercise.alignment == 'time' ? (<><TextField className="w-20 self-center"
+                                        placeholder="0" variant="standard" value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                                        slotProps={{
+                                            input: {
+                                                style: {
+                                                    fontSize: "16px",
+                                                },
+                                                disableUnderline: true,
+                                            }
+                                        }}
+                                    /><div className="self-center">
+                                            {
+                                                exercise.alignmentTime == 'hour' ? 'ч.' : exercise.alignmentTime == 'minute' ? 'мин.' : 'сек.'
+                                            }
+                                        </div></>) : exercise.alignment == 'count' ? (<><TextField className="w-20 self-center" placeholder="0" variant="standard"
+                                            value={exercise.countExercise} onChange={(e) => handleExerciseChange(index, 'countExercise', e.target.value)}
+                                            slotProps={{
+                                                input: {
+                                                    style: {
+                                                        fontSize: "16px",
+                                                    },
+                                                    disableUnderline: true,
+                                                }
+                                            }}
+                                        /><div className="self-center">раз.</div></>) : (<></>)}
 
                         </div>
 
@@ -865,15 +388,17 @@ async function updateTrainingPlan(
                     stringUnit:
                         item.alignment === "distance"
                             ? item.alignmentDistance === "km"
-                                ? "км"
-                                : "м"
+                                ? "км."
+                                : "м."
                             : item.alignment === "time"
                                 ? item.alignmentTime === "hour"
                                     ? "ч."
                                     : item.alignmentTime === "minute"
                                         ? "мин."
                                         : "сек."
-                                : "",
+                                : item.alignment === "weight" ?
+                                    "кг."
+                                    : "раз.",
                 });
 
                 console.log("Plan created:", trainingPlan);

@@ -10,7 +10,6 @@ export default function Training() {
 
   if (isLoading) return <p className={styles.text}>Загрузка...</p>;
   if (error) return <p className={styles.text}>Произошла ошибка при загрузке данных.</p>;
-  console.log(data, error)
   return (
     <div>
 

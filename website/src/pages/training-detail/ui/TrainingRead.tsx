@@ -3,10 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./TrainingRead.module.scss";
 import { ITraining } from '../../../shared/model/ITraining';
-import { AppBar, Box, Card, CardActions, Chip, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Box, CardActions, Chip, IconButton, Toolbar } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { PlanExerciseService } from "../../../shared/api/planExercise.service";
-import { ExercisesService } from "../../../shared/api/exercises.service";
 import DeleteIcon from '@mui/icons-material/Delete';
 import TrainingEdit from "../../training-edit/ui/TrainingEdit";
 import { useState } from "react";
@@ -19,45 +18,7 @@ import ThumbUpOn from '@mui/icons-material/ThumbUpAlt';
 import ThumbUpOff from '@mui/icons-material/ThumbUpOffAlt';
 import { ColorBackground } from "../../../shared/styles/colors";
 import { DialogShare } from "./dialogShare";
-import { ExerciseSetService } from "../../../shared/api/exerciseSet.service";
-
-function ExerciseCard({ exerciseId, index, planExerciseId }: { exerciseId: number; index: number; planExerciseId: number }) {
-  const { data: exerciseData } = useQuery(
-    ['exercise', exerciseId],
-    () => ExercisesService.get(exerciseId.toString())
-  );
-  const { data: exerciseSetData } = useQuery(
-    ['exerciseSet', exerciseId],
-    () => ExerciseSetService.getOnePlanExercises(planExerciseId),
-  );
-
-  return (
-    <Card
-      className="justify-center content-center self-center"
-      variant="outlined"
-      sx={{
-        marginBottom: '20px',
-        borderRadius: '20px',
-      }}
-    >
-      <div className="flex self-center p-2 pr-3 pl-3 justify-between">
-        <div className="flex">
-          <div style={{ fontSize: "16px", alignSelf: 'center', paddingRight: "10px" }}>{index}. </div>
-          <div style={{ fontSize: "16px" }}>
-            {exerciseData?.name}
-          </div>
-
-        </div>
-        <div style={{ fontSize: "16px" }}>
-          {exerciseSetData?.repetitions} раз.
-        </div>
-      </div>
-
-    </Card>
-  );
-}
-
-
+import { ExerciseCard } from "./ExerciseCard";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -182,6 +143,7 @@ export default function TrainingDetail() {
           <TrainingEdit trainingPlanId={Number(id)} onClickExit={() => {
             setEdit(!edit);
             queryClient.invalidateQueries(['trainingDetail', id]);
+            window.location.reload();
           }} />
         ) : (
           <div className="mr-5 mt-5 ml-5">

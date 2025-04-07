@@ -21,7 +21,7 @@ export function DialogCustom(props: dialogProps) {
 
     // if (isLoading) return <p>Загрузка...</p>;
     // if (error) return <p >Произошла ошибка при загрузке данных.</p>;
-    console.log(data, error)
+    // console.log(data, error)
 
     if (props.open) {
         if (!open) {
