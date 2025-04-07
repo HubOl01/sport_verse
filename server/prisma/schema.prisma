@@ -217,3 +217,11 @@ model ViewsTraining {
   user           User         @relation(fields: [userId], references: [id])
   trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
 }
+
+model News {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  image       String?
+  date        DateTime @default(now())
+}

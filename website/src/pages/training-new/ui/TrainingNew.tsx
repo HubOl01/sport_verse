@@ -68,10 +68,12 @@ export default function TrainingEdit() {
   };
 
   const handleAddExercise = () => {
-    setArr([...arr, { titleExercise, countExercise, alignment: alignmentView, alignmentTime, alignmentDistance }]);
+    setArr([...arr, { titleExercise, countExercise, alignment: alignmentView, alignmentTime: alignmentTime, alignmentDistance: alignmentDistance }]);
     setTitleExercise('');
     setCountExercise('');
     setAlignmentView('Nan');
+    setAlignmentTime('hour');
+    setAlignmentDistance('km');
   };
 
   const handleExerciseChange = (index: number, field: 'titleExercise' | 'countExercise' | 'alignment' | 'alignmentTime' | 'alignmentDistance', value: string) => {
@@ -157,7 +159,7 @@ export default function TrainingEdit() {
             {
               exercise.alignment == 'time' ?
                 <div className="flex self-center pt-2">
-                  <ToggleButtonGroup size="small" value={exercise.alignmentTime} exclusive onChange={(_e, val) => handleExerciseChange(0, 'alignmentTime', val)}
+                  <ToggleButtonGroup size="small" value={exercise.alignmentTime} exclusive onChange={(_e, val) => handleExerciseChange(index, 'alignmentTime', val)}
                     aria-label="stringType" sx={{ paddingLeft: "10px", height: "30px", }}>
                     <ToggleButton value="hour">часы</ToggleButton>
                     <ToggleButton value="minute">минуты</ToggleButton>
@@ -166,7 +168,7 @@ export default function TrainingEdit() {
                 </div>
                 : exercise.alignment == 'distance' ?
                   <div className="flex self-center pt-2">
-                    <ToggleButtonGroup size="small" value={exercise.alignmentDistance} exclusive onChange={(_e, val) => handleExerciseChange(0, 'alignmentDistance', val)}
+                    <ToggleButtonGroup size="small" value={exercise.alignmentDistance} exclusive onChange={(_e, val) => handleExerciseChange(index, 'alignmentDistance', val)}
                       aria-label="stringType" sx={{ paddingLeft: "10px", height: "30px", }}>
                       <ToggleButton value="km">километры</ToggleButton>
                       <ToggleButton value="m">метры</ToggleButton>

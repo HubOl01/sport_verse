@@ -20,6 +20,7 @@ import { СommentTrainingModule } from './сomment-training/comment-training.mod
 import { ViewsTrainingModule } from './views-training/views-training.module';
 import { LikeTrainingModule } from './like-training/like-training.module';
 import { AuthModule } from './auth/auth.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AuthModule } from './auth/auth.module';
     СommentTrainingModule,
     ViewsTrainingModule,
     LikeTrainingModule,
+    NewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
