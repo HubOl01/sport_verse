@@ -13,6 +13,7 @@ import Admin from '../../pages/admin/ui/Admin';
 import NewsRead from '../../pages/admin/ui/news/NewsRead';
 import NewsAdd from '../../pages/admin/ui/news/NewsAdd';
 import NewsDetail from '../../pages/admin/ui/news/NewsDetail';
+import NewsEdit from '../../pages/admin/ui/news/NewsEdit';
 
 export default function Routers() {
   return (
@@ -23,7 +24,8 @@ export default function Routers() {
       {CurrentRole === Roles.ADMIN && (<Route path="/admin" element={<Admin />} />)}
       {CurrentRole === Roles.ADMIN && (<Route path="/admin/news" element={<NewsRead />} />)}
       {CurrentRole === Roles.ADMIN && (<Route path="/admin/news/add" element={<NewsAdd />} />)}
-      {CurrentRole === Roles.ADMIN && (<Route path="/admin/news/:id" element={<NewsDetail />} />)}
+      <Route path="/news/:id" element={<NewsDetail />} />
+      {CurrentRole === Roles.ADMIN && (<Route path="/admin/news/:id" element={<NewsEdit />} />)}
       <Route path="/register" element={<Register />} />
       <Route path="/training" element={<Training />} />
       <Route path="/stat" element={<StatPage />} />
