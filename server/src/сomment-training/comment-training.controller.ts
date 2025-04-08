@@ -31,6 +31,11 @@ export class CommentTrainingController {
   findAll() {
     return this.commentTrainingService.findAll();
   }
+  @Get('/training/:idTraining')
+  @ApiOkResponse({ type: CommentTrainingEntity, isArray: true })
+  findTrainingAll(@Param('idTraining') idTraining: string) {
+    return this.commentTrainingService.findTrainingAll(+idTraining);
+  }
 
   @Get(':id')
   @ApiOkResponse({ type: CommentTrainingEntity, isArray: false })

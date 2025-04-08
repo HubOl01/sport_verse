@@ -35,6 +35,16 @@ export class UsersController {
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
+  @Get('/email/:email')
+  @ApiOkResponse({ type: UserEntity })
+  findByEmail(@Param('email') email: string) {
+    return this.usersService.findByEmail(email);
+  }
+  @Get('/username/:username')
+  @ApiOkResponse({ type: UserEntity })
+  findByUsername(@Param('username') username: string) {
+    return this.usersService.findByUsername(username);
+  }
   @Patch(':id')
   @ApiCreatedResponse({ type: UserEntity })
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {

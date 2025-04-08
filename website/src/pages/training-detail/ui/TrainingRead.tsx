@@ -19,6 +19,7 @@ import ThumbUpOff from '@mui/icons-material/ThumbUpOffAlt';
 import { ColorBackground } from "../../../shared/styles/colors";
 import { DialogShare } from "./dialogShare";
 import { ExerciseCard } from "./ExerciseCard";
+import Comments from "./comments/comments";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -27,7 +28,7 @@ export default function TrainingDetail() {
 
   const [edit, setEdit] = useState(false); // переключатель между режимом редактирования и просмотра
   const [like, setLike] = useState(false);   // для иконки лайка
-  const [comment, setComment] = useState(false);   // для иконки лайка
+  const [comment, setComment] = useState(true);   // для иконки лайка
   const [share, setShare] = useState(false);   // для иконки лайка
   const [value, setValue] = useState(() => window.location.href);
 
@@ -165,6 +166,7 @@ export default function TrainingDetail() {
             {comment ?
               <div>
                 <h2>Комментарии: </h2>
+                <Comments idTraining={id!} />
               </div>
               : <></>
             }
@@ -173,11 +175,13 @@ export default function TrainingDetail() {
       </Box>
 
       <Box
+        className="w-full"
         sx={{
           position: 'fixed',
           bottom: 0,
           right: 0,
-          width: `calc(100% - 340px)`,
+          // maxWidth: `calc(100% - 300px)`,
+          maxWidth: { xs: '100%', sm: 'calc(100% - 300px)' },
           backgroundColor: '#fff',
           boxShadow: '0 -1px 5px rgba(0,0,0,0.1)',
         }}

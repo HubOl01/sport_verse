@@ -191,8 +191,8 @@ model LikeTraining {
   userId         Int
   trainingPlanId Int
   createdAt      DateTime     @default(now())
-  user           User         @relation(fields: [userId], references: [id])
-  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id], onDelete: Cascade)
 }
 
 model CommentTraining {
@@ -201,11 +201,11 @@ model CommentTraining {
   userId         Int
   trainingPlanId Int
   createdAt      DateTime     @default(now())
-  user           User         @relation(fields: [userId], references: [id])
-  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id], onDelete: Cascade)
 
   parentCommentId Int?
-  parentComment   CommentTraining?  @relation("Replies", fields: [parentCommentId], references: [id])
+  parentComment   CommentTraining?  @relation("Replies", fields: [parentCommentId], references: [id], onDelete: Cascade)
   replies         CommentTraining[] @relation("Replies")
 }
 
@@ -214,8 +214,8 @@ model ViewsTraining {
   userId         Int
   trainingPlanId Int
   createdAt      DateTime     @default(now())
-  user           User         @relation(fields: [userId], references: [id])
-  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id], onDelete: Cascade)
 }
 
 model News {

@@ -31,6 +31,39 @@ export class CommentTrainingService {
     });
   }
 
+  // findTrainingAll(id: number) {
+  //   return this.prisma.commentTraining.findMany({
+  //     where: { trainingPlanId: id },
+  //     include: {
+  //       user: true,
+  //       replies: true,
+  //     },
+  //     orderBy: {
+  //       createdAt: 'desc',
+  //     },
+  //   });
+  // }
+
+  findTrainingAll(id: number) {
+    return this.prisma.commentTraining.findMany({
+      where: {
+        trainingPlanId: id,
+        parentCommentId: null,
+      },
+      include: {
+        user: true,
+        replies: {
+          include: {
+            user: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
   update(id: number, updateCommentTrainingDto: UpdateCommentTrainingDto) {
     return this.prisma.commentTraining.update({
       where: { id },

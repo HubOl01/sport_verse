@@ -5,6 +5,7 @@ interface Props {
     label: string,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
     value: string
+    isLines?: boolean
 }
 
 export default function MyTextField(props: Props) {
@@ -26,6 +27,7 @@ export default function MyTextField(props: Props) {
                 },
             },
         }} onChange={props.onChange} value={props.value}
+            multiline={props.isLines}
         />
     )
 }

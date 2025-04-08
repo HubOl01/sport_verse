@@ -22,7 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           {location.pathname !== '/login' && location.pathname !== '/register' && isAuthenticated() ? <Header /> : <></>}
           <div className='block sm:flex h-fit min-h-screen'>
             {location.pathname !== '/login' && location.pathname !== '/register' && isAuthenticated() ? (
-              <div className='w-full sm:w-1/5 bg-gray-900' style={{ minWidth: "350px" }}>
+              <div className='w-full sm:w-1/6 bg-gray-900' style={{ minWidth: "300px" }}>
                 {CurrentRole === Roles.ADMIN ? <LeftBarAdmin /> : <LeftBar />}
               </div>
             ) : <></>}

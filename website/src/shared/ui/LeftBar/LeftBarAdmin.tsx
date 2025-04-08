@@ -2,6 +2,8 @@ import { Box, List, ListItemButton, ListItemText } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { itemsBarAdmin } from '../../data/itemsBarAdmin';
+import Divider from '@mui/material/Divider';
+
 
 
 function indexBarAdmin() {
@@ -26,19 +28,32 @@ export default function LeftBarAdmin() {
 
     return (
         <Box sx={{ width: '100%', }}>
-            <List component="nav" aria-label="main mailbox folder">
+            <List component="nav" aria-label="main mailbox folder"
+            >
                 {itemsBarAdmin.map((item) =>
-                    <div key={item.id}>
-                        <ListItemButton
-                            selected={selectedIndex === item.id}
-                            onClick={() => handleListItemClick(item.id)}
-                        >
-                            <ListItemText sx={{
-                                color: "white"
-                            }} primary={item.title} />
-                        </ListItemButton>
+                    <>
+                        {item.id === 4 && (
+                            <Divider
+                                component="li"
+                                sx={{
+                                    backgroundColor: "#ffffff54",
+                                    margin: "8px 0",
+                                }}
+                            />
+                        )}
+                        <div key={item.id}>
+                            <ListItemButton
+                                selected={selectedIndex === item.id}
+                                onClick={() => handleListItemClick(item.id)}
+                            >
+                                <ListItemText sx={{
+                                    color: "white"
+                                }} primary={item.title} />
+                            </ListItemButton>
 
-                    </div>
+                        </div>
+
+                    </>
                 )}
 
             </List>
