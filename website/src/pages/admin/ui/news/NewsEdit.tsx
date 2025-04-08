@@ -12,6 +12,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/L
 import { de } from "date-fns/locale";
 import MyTextField from "../../../../components/MyTextField";
 import MyDateTimePicker from "../../../../components/MyDateTimePicker";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../../../../shared/config/firebaseConfig";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 
 export default function NewsEdit() {
@@ -30,6 +33,7 @@ export default function NewsEdit() {
   const [title, setTitle] = useState(newsData?.title || "");
   const [description, setDescription] = useState(newsData?.description || "");
   const [image, setImage] = useState(newsData?.image || "");
+  const [file, setFile] = useState<File | null>(null);
   const [createdAt, setCreatedAt] = useState<Date | null>(
     newsData?.date ? new Date(newsData.date) : null
   );
@@ -64,6 +68,25 @@ export default function NewsEdit() {
     });
     navigate(`/admin/news`);
   };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (!selectedFile) return;
+
+    setFile(selectedFile); // Сохраняем файл в состоянии
+
+    try {
+      const storageRef = ref(storage, `images/${selectedFile.name}`);
+      await uploadBytes(storageRef, selectedFile); // Загружаем файл в Firebase
+      const downloadURL = await getDownloadURL(storageRef); // Получаем URL загруженного файла
+      setImage(downloadURL); // Устанавливаем URL в состояние
+      alert("Изображение успешно загружено!");
+    } catch (error) {
+      console.error("Ошибка при загрузке файла:", error);
+      alert("Не удалось загрузить изображение.");
+    }
+  };
+
   return (
     <Box >
       <AppBar position="static" color="transparent" elevation={0}>
@@ -171,9 +194,31 @@ export default function NewsEdit() {
               </CardContent>
             </Card>
           </div >
-          <div className="mt-4 w-full">
+          <div className="mt-4 w-ful flex">
             <MyTextField label="Изображение из интернета" onChange={(e) => setImage(e.target.value)} value={image} />
+            <Button
+              variant="contained"
+              component="label"
+              sx={{
+                backgroundColor: "#4758d6",
+                color: "#FFFFFF",
+                borderRadius: "10px",
+                marginLeft: "10px",
+                // width: "100%",
+              }}
+            >
+              <FileUploadIcon />
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={handleFileUpload}
+              />
+            </Button>
           </div>
+          {/* <div className="mt-4 w-full">
+           
+          </div> */}
           <div className="mt-4 w-full">
             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
               <MyDateTimePicker label="Дата публикации"

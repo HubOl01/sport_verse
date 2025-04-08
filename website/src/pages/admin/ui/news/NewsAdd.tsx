@@ -8,6 +8,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/L
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { ru } from "date-fns/locale";
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../../../../shared/config/firebaseConfig";
 
 export default function NewsAdd() {
   const navigate = useNavigate();
@@ -20,6 +23,7 @@ export default function NewsAdd() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
+  const [file, setFile] = useState<File | null>(null);
   const [createdAt, setCreatedAt] = useState<Date | null>(
     null
   );
@@ -34,6 +38,25 @@ export default function NewsAdd() {
       date: createdAt! ?? Date.now(),
     });
     navigate(`/admin/news`);
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (!selectedFile) return;
+
+    setFile(selectedFile); // Сохраняем файл в состоянии
+
+
+    try {
+      const storageRef = ref(storage, `images/${selectedFile.name}`);
+      await uploadBytes(storageRef, selectedFile); // Загружаем файл в Firebase
+      const downloadURL = await getDownloadURL(storageRef); // Получаем URL загруженного файла
+      setImage(downloadURL); // Устанавливаем URL в состояние
+      alert("Изображение успешно загружено!");
+    } catch (error) {
+      console.error("Ошибка при загрузке файла:", error);
+      alert("Не удалось загрузить изображение.");
+    }
   };
   return (
     <Box >
@@ -135,8 +158,27 @@ export default function NewsAdd() {
               </CardContent>
             </Card>
           </div >
-          <div className="mt-4 w-full">
+          <div className="mt-4 w-full flex">
             <TextField label="Изображение из интернета" variant="outlined" sx={{ width: '100%' }} onChange={(e) => setImage(e.target.value)} value={image} />
+            <Button
+              variant="contained"
+              component="label"
+              sx={{
+                backgroundColor: "#4758d6",
+                color: "#FFFFFF",
+                borderRadius: "10px",
+                marginLeft: "10px",
+                // width: "100%",
+              }}
+            >
+              <FileUploadIcon />
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={handleFileUpload}
+              />
+            </Button>
           </div>
           <div className="mt-4 w-full">
             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>

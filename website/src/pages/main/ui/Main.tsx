@@ -5,9 +5,9 @@ import CardMain from "./cardMain";
 import styles from './Main.module.scss';
 import { NewsService } from "../../../shared/api/news.service";
 import CardNew from "./cardNew";
-import Grid from '@mui/material/Grid2';
+import { Masonry } from "@mui/lab";
 export default function Main() {
-  const { data, isLoading, error } = useQuery(['news'], () => NewsService.getAll()
+  const { data } = useQuery(['news'], () => NewsService.getAll()
   )
   return (
     <div className='mr-5 ml-5 mt-5'>
@@ -16,17 +16,20 @@ export default function Main() {
         <CardEvent />
       </div>
       <div className={styles.text_head}>Новости</div>
-      <Grid container spacing={2}
+      <Masonry
+        columns={{ xs: 1, sm: 1, md: 2 }}
+        spacing={3}
       >
-        {Array.isArray(data) && data.length > 0 ? (data!.map((item, index) => (
-          <Grid size={6}>
-            <CardNew key={index} newModel={item} grid={true} />
-          </Grid>
-        ))) : (
-          <p>Нет новости</p>
-        )
-        }
-      </Grid>
+        {Array.isArray(data) && data.length > 0 ? (
+          data.map((item, index) => (
+            <div key={index}>
+              <CardNew newModel={item} grid={true} />
+            </div>
+          ))
+        ) : (
+          <p>Нет новостей</p>
+        )}
+      </Masonry>
     </div >
   )
 }
