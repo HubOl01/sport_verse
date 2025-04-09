@@ -1,8 +1,9 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { ICommentModel } from "../../../../shared/model/ICommentModel";
 import CommentReply from "./CommentReply";
 import { QueryClient } from "react-query";
+import { ColorBackground } from "../../../../shared/styles/colors";
 
 interface CommentProps {
     comment: ICommentModel;
@@ -22,12 +23,15 @@ const CommentItem: React.FC<CommentProps> = ({ comment, idTraining, queryClient,
             {/* Отображение содержимого комментария */}
             <Typography variant="body1">{comment.content}</Typography>
 
-            {isReply ? <CommentReply
+            <CommentReply
                 idTraining={idTraining}
                 idComment={comment.id!}
                 queryClient={queryClient}
-            /> : <></>
-            }
+                isDelete={true}
+                content={comment.content}
+                isEdit={true}
+                isReply={isReply}
+            />
 
 
             {/* Рекурсивное отображение replies */}

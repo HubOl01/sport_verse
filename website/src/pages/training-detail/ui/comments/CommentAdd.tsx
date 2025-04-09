@@ -6,13 +6,14 @@ interface Props {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     sentComment: () => void;
     sentCancel?: () => void;
+    isEdit?: boolean;
 }
 
-export default function CommentAdd({ content, onChange, sentComment, sentCancel }: Props,) {
+export default function CommentAdd({ content, onChange, sentComment, sentCancel, isEdit = false }: Props,) {
     return (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
             <MyTextField
-                label="Комментарий"
+                label="Напишите комментарий"
                 onChange={onChange}
                 value={content}
                 isLines={true}
@@ -29,7 +30,7 @@ export default function CommentAdd({ content, onChange, sentComment, sentCancel 
                         /> : <></>}
                 <MyButton
                     onClick={sentComment}
-                    label={"Отправить комментарий"}
+                    label={isEdit ? "Изменить комментарий" : "Отправить комментарий"}
                     style={{ alignSelf: "flex-end", marginTop: "10px" }}
                 />
             </div>
