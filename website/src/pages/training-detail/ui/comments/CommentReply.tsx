@@ -20,13 +20,13 @@ export default function CommentReply(props: CommentReplyProps) {
         setReply(false)
     }
     const sentReply = async () => {
-          try {
+        try {
             // Создаем новый комментарий
             await CommentPlanService.create({
-              content: contentReply,
-              userId: 1,
-              trainingPlanId: props.idTraining,
-              parentCommentId: props.idComment,
+                content: contentReply,
+                userId: 1,
+                trainingPlanId: props.idTraining,
+                parentCommentId: props.idComment,
             });
 
             // Инвалидируем запрос для обновления данных
@@ -34,10 +34,11 @@ export default function CommentReply(props: CommentReplyProps) {
 
             // Очищаем поле ввода (если необходимо)
             setContentReply("");
-          } catch (error) {
+            clickCancel();
+        } catch (error) {
             console.error("Ошибка при отправке ответа на комментарий:", error);
             alert("Не удалось отправить ответ на комментарий.");
-          }
+        }
     }
     return (
         !isReply ? <Button size="small" sx={{

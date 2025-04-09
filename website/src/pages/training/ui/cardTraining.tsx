@@ -34,7 +34,8 @@ export default function CardTraining({ training }: CardTrainingProps) {
             }}>
             <Card onClick={() => navigate(`/training/${training.id}`)}
                 sx={{
-                    width: "800px",
+                    // width: "800px",
+                    width: "100%",
                     borderRadius: "30px"
                 }}>
                 <CardActionArea>

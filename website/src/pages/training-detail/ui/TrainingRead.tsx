@@ -19,7 +19,7 @@ import ThumbUpOff from '@mui/icons-material/ThumbUpOffAlt';
 import { ColorBackground } from "../../../shared/styles/colors";
 import { DialogShare } from "./dialogShare";
 import { ExerciseCard } from "./ExerciseCard";
-import Comments from "./comments/comments";
+import Comments from "./comments/Comments";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -139,7 +139,15 @@ export default function TrainingDetail() {
       </AppBar>
 
       {/* Основной контент */}
-      <Box sx={{ padding: '1rem', paddingBottom: '80px' /* чтобы не закрывал футер */ }}>
+      <Box sx={{
+        padding: '1rem', paddingBottom: '80px',
+
+        maxHeight: "75vh",
+        overflowY: "auto",
+
+
+
+      }}>
         {edit ? (
           <TrainingEdit trainingPlanId={Number(id)} onClickExit={() => {
             setEdit(!edit);

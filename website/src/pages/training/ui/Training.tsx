@@ -11,7 +11,10 @@ export default function Training() {
   if (isLoading) return <p className={styles.text}>Загрузка...</p>;
   if (error) return <p className={styles.text}>Произошла ошибка при загрузке данных.</p>;
   return (
-    <div>
+    <div style={{
+      maxHeight: "75vh",
+      overflowY: "auto",
+    }}>
 
       {Array.isArray(data) && data.length > 0 ? (
         data.map((plan: ITraining) => (

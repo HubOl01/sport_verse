@@ -4,7 +4,7 @@ import { quotes } from "../../../shared/data/quotes";
 export default function CardMain() {
   const index = 0 + Math.round(Math.random() * (quotes.length - 0));
   return (
-    <div className='mr-2 ml-2 w-1/2'>
+    <div className='mr-2 w-1/2'>
       <div>
         <Card
           sx={{

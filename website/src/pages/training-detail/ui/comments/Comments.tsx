@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "react-query"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CommentPlanService } from "../../../../shared/api/commentPlan.service";
 import { ICommentModel } from "../../../../shared/model/ICommentModel";
 import { Typography } from "@mui/material";
@@ -46,62 +46,12 @@ export default function Comments({ idTraining }: CommentsProps) {
   }
 
 
-  // useEffect(() => {
-  //   if (data) {
-  //      data = useQuery<ICommentModel[]>(['comments', idTraining], async () => await CommentPlanService.getAllPlanId(idTraining));
-  //     // console.log(data);
-  //   }
-  // });
-  // return (
-  //   <div>
-  //     <CommentAdd content={content} onChange={(e) => setContent(e.target.value)} sentComment={sentComment} />
-  //     <>
-  //       {data && data.length > 0 ? (
-  //         data.map((el) => (
-  //           <div style={{
-  //             marginBottom: "10px",
-  //             width: "100%",
-  //           }}>
-  //             <Typography sx={{
-  //               // marginBottom: "3px",
-  //             }} variant="body2" fontWeight={600}>
-  //               @{el.user!.username}
+  useEffect(() => {
+    if (data) {
+      queryClient.invalidateQueries(['comments', idTraining]);
+    }
+  });
 
-  //             </Typography>
-  //             <Typography variant="body1">
-  //               {el.content}
-  //             </Typography>
-  //             <CommentReply idTraining={Number(idTraining)} idComment={el.id!} queryClient={queryClient} />
-  //             {el.replies &&
-  //               el.replies!.length > 0 ? (
-  //               el.replies!.map((el1) => (
-  //                 <div style={{
-  //                   marginBottom: "10px",
-  //                   width: "100%",
-  //                 }}>
-  //                   <Typography sx={{
-  //                     // marginBottom: "3px",
-  //                   }} variant="body2" fontWeight={600}>
-  //                     @{el1.user!.username}
-
-  //                   </Typography>
-  //                   <Typography variant="body1">
-  //                     {el1.content}
-  //                   </Typography>
-  //                   <CommentReply idTraining={Number(idTraining)} idComment={el1.id!} queryClient={queryClient} />
-  //                 </div>
-  //               )))
-  //               : <></>
-  //             }
-  //           </div>
-  //         ))
-  //       ) : (
-  //         <p>Комментариев пока нет, но вы можете написать первыми</p>
-  //       )}
-
-  //     </>
-  //   </div>
-  // )
   return (
     <div>
       {/* Форма для добавления нового комментария */}
@@ -114,7 +64,6 @@ export default function Comments({ idTraining }: CommentsProps) {
       {/* Отображение списка комментариев */}
       <div>
         {isLoading && <p>Загрузка комментариев...</p>}
-        {/* {error && <p>Ошибка загрузки комментариев</p>} */}
         {data && data.length > 0 ? (
           data.map((comment) => (
             <CommentItem

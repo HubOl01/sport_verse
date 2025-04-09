@@ -2,7 +2,7 @@ import { Card, CardContent, Typography } from "@mui/material";
 
 export default function CardEvent() {
   return (
-    <div className='mr-2 ml-2 w-1/2'>
+    <div className='ml-2 w-1/2'>
       <div>
         <Card
           sx={{

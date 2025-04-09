@@ -6,9 +6,10 @@ import CardNew from "../../../main/ui/cardNew";
 import { Box, Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 export default function NewsRead() {
   const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const { data, isLoading, error } = useQuery(['news'], () => NewsService.getAll()
   )
@@ -19,28 +20,42 @@ export default function NewsRead() {
     window.location.href = '/admin/news/add';
   }
   const handleScroll = () => {
-    const isScrolled = window.scrollY > 0; // Проверяем, прокручен ли документ
-    setIsVisible(isScrolled);
+    if (containerRef.current) {
+      const isScrolled = containerRef.current.scrollTop > 0;
+      setIsVisible(isScrolled);
+    }
   };
 
-  // Добавляем слушатель события прокрутки при монтировании компонента
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+    }
     return () => {
-      window.removeEventListener("scroll", handleScroll); // Удаляем слушатель при размонтировании
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
     };
   }, []);
+
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth", // Плавная прокрутка
-    });
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   };
 
 
 
   return (
-    <Box sx={{ position: 'relative', minHeight: '100vh', justifyContent: 'center', justifyItems: 'center' }}>
+    <Box
+      ref={containerRef}
+      sx={{
+        position: 'relative', minHeight: '100vh', justifyContent: 'center', justifyItems: 'center', maxHeight: "80vh",
+        overflowY: "auto",
+      }}>
       <div className='mt-5'>
         {isLoading && <p className={styles.text}>Загрузка...</p>}
         {/* {error && <p className={styles.text}>Произошла ошибка при загрузке данных.</p>} */}
@@ -51,7 +66,7 @@ export default function NewsRead() {
                 <CardNew key={item.id} newModel={item} />
               ))
             ) : (
-              <p>Нет планов</p>
+              <p>Нет новостей</p>
             )}
           </>
         )}
