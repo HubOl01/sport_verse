@@ -1,27 +1,31 @@
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import styles from "./TrainingRead.module.scss";
-import { AppBar, Box,  Chip, IconButton, Toolbar } from "@mui/material";
+import styles from "./CommentsRead.module.scss";
+import { AppBar, Box, Chip, IconButton, Toolbar } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useState } from "react";
+import { useEffect } from "react";
 import { TrainingService } from "../../../../shared/api/training.service";
 import { ITraining } from "../../../../shared/model/ITraining";
+import { CommentPlanService } from "../../../../shared/api/commentPlan.service";
+import Comments from "../../../training-detail/ui/comments/Comments";
 
 export default function CommentsDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [like, setLike] = useState(false);   // для иконки лайка
-  const [comment, setComment] = useState(true);   // для иконки лайка
-
+  const queryClient = useQueryClient();
   // Обработчик клика по иконке "Поделиться"
-
+  const { data: commentsData } = useQuery(["commentsCount", id], () => CommentPlanService.getAllPlanIdCount(id!.toString()))
   const {
     data: trainingData,
     isLoading,
     error
   } = useQuery<ITraining>(['trainingDetailComment', id], () => TrainingService.get(id!));
 
-
+  useEffect(() => {
+    if (commentsData) {
+      queryClient.invalidateQueries(['commentsCount', id]);
+    }
+  });
   if (isLoading) return <p className={styles.text}>Загрузка...</p>;
   if (error) return <p className={styles.text}>Произошла ошибка при загрузке данных.</p>;
   if (!trainingData) return <p className={styles.text}>Нет плана</p>;
@@ -35,7 +39,7 @@ export default function CommentsDetail() {
     minute: "2-digit"
   });
 
- 
+
   return (
     <Box sx={{ position: 'relative', minHeight: '100vh' }}>
       {/* Шапка (AppBar) */}
@@ -66,13 +70,12 @@ export default function CommentsDetail() {
           <p>Вид спорта: {trainingData.sportType!.title}</p>
           <p>Описание: {trainingData.description}</p>
           <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>
-          {comment ?
-            <div>
-              <h2>Комментарии: </h2>
-              <Comments idTraining={id!}/>
-            </div>
-            : <></>
-          }
+
+          <div>
+            <h2>Комментарии ({commentsData}): </h2>
+            <Comments idTraining={id!} isAdmin={true} />
+          </div>
+
         </div>
       </Box>
 

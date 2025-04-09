@@ -20,6 +20,84 @@ export class TrainingPlansService {
       },
     });
   }
+  findAllFrontPublic() {
+    return this.prisma.trainingPlan.findMany({
+      where: { isPrivate: 0, statusPublishId: 2 },
+      include: {
+        statusPublish: true,
+        sportType: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+  findAllSuccessPublic() {
+    return this.prisma.trainingPlan.findMany({
+      where: { isPrivate: 0, statusPublishId: 3 },
+      include: {
+        statusPublish: true,
+        sportType: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+  findAllFailedPublic() {
+    return this.prisma.trainingPlan.findMany({
+      where: { isPrivate: 0, statusPublishId: 4 },
+      include: {
+        statusPublish: true,
+        sportType: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+  findAllPublic() {
+    return this.prisma.trainingPlan.findMany({
+      where: { isPrivate: 0 },
+      include: {
+        user: {
+          select: {
+            email: true,
+            username: true,
+            profile: {
+              select: {
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
+        statusPublish: true,
+        sportType: true,
+        PlanExercise: {
+          include: {
+            exercise: true,
+          },
+        },
+        StatusTraining: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+  findAllPrivate() {
+    return this.prisma.trainingPlan.findMany({
+      where: { isPrivate: 1 },
+      include: {
+        statusPublish: true,
+        sportType: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
   getIdFirst() {
     return this.prisma.trainingPlan.findFirst({
       orderBy: {
@@ -31,6 +109,18 @@ export class TrainingPlansService {
     return this.prisma.trainingPlan.findUnique({
       where: { id: id },
       include: {
+        user: {
+          select: {
+            email: true,
+            username: true,
+            profile: {
+              select: {
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
         statusPublish: true,
         sportType: true,
         PlanExercise: {

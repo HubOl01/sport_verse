@@ -5,6 +5,7 @@ export class TrainingPlanEntity implements TrainingPlan {
   id: number;
   title: string;
   statusPublish: number;
+  isPrivate: number;
   description: string;
   date_created: Date;
   userId: number;

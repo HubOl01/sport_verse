@@ -7,4 +7,5 @@ export var itemsBarAdmin: ItemModelBar[] = [
   { id: 3, title: "Мой профиль", link: "/profile" },
   { id: 4, title: "Hовости", link: "/admin/news" },
   { id: 5, title: "Комментарии", link: "/admin/comments" },
+  { id: 6, title: "Все тренировки", link: "/admin/training" },
 ];

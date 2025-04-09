@@ -8,6 +8,9 @@ export class CreateTrainingPlanDto {
   @ApiProperty({ required: true, default: 1 })
   @IsInt()
   statusPublishId: number;
+  @ApiProperty({ required: false, default: 1 })
+  @IsInt()
+  isPrivate: number;
   @ApiProperty({ required: true })
   @IsString()
   description: string;

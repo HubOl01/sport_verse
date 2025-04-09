@@ -20,6 +20,7 @@ import { ColorBackground } from "../../../shared/styles/colors";
 import { DialogShare } from "./dialogShare";
 import { ExerciseCard } from "./ExerciseCard";
 import Comments from "./comments/Comments";
+import LockOutlineIcon from '@mui/icons-material/LockOutlined';
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -155,8 +156,15 @@ export default function TrainingDetail() {
             window.location.reload();
           }} />
         ) : (
-          <div className="mr-5 mt-5 ml-5">
-            <Chip className="mb-2" label={trainingData.statusPublish!.title} />
+          <div className="mr-5 ml-5">
+            {trainingData.isPrivate === 1 ?
+              <LockOutlineIcon sx={{
+                marginRight: '0.5rem',
+                padding: '0px',
+                margin: '0px',
+              }} /> :
+              <Chip label={trainingData.statusPublish!.title} />
+            }
             <h1>{trainingData.title}</h1>
             <p>Вид спорта: {trainingData.sportType!.title}</p>
             <p>Описание: {trainingData.description}</p>

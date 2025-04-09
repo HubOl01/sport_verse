@@ -1,13 +1,39 @@
 import { AxiosError } from "axios";
 import { ITraining } from "../model/ITraining";
 import { api } from ".";
-import { apiTraining, apiTrainingGetIdFirst } from "../config";
+import { apiTraining, apiTrainingGetIdFirst, apiTrainingPrivate, apiTrainingPublic } from "../config";
 import { PlanExerciseService } from "./planExercise.service";
 
 export const TrainingService = {
   async getAll(): Promise<ITraining[]> {
     try {
-      const response = await api.get<ITraining[]>("/training-plans");
+      const response = await api.get<ITraining[]>(apiTraining);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке всех планов";
+      throw new Error(message);
+    }
+  },
+  async getAllPrivate(): Promise<ITraining[]> {
+    try {
+      const response = await api.get<ITraining[]>(apiTrainingPrivate);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке всех планов";
+      throw new Error(message);
+    }
+  },
+  async getAllPublic(): Promise<ITraining[]> {
+    try {
+      const response = await api.get<ITraining[]>(apiTrainingPublic);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;

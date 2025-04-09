@@ -1,5 +1,7 @@
 export var apiHost = "http://localhost:3000";
 export var apiTraining = "/training-plans";
+export var apiTrainingPrivate = "/training-plans/findAllPrivate";
+export var apiTrainingPublic = "/training-plans/findAllPublic";
 export var apiTrainingGetIdFirst = "/training-plans/getIdFirst";
 export var apiProfile = "/profiles";
 export var apiExercises = "/exercises";
@@ -16,8 +18,10 @@ export var apiRoles = "/roles";
 export var apiUsers = "/users";
 export var apiExerciseCategories = "/exercise-categories";
 export var apiExerciseSets = "/exercise-sets";
-export var apiExerciseSetsFindAllPlanExercises = "/exercise-sets/findAllPlanExercises";
-export var apiExerciseSetsRemovePlanExercise = "/exercise-sets/removePlanExercise";
+export var apiExerciseSetsFindAllPlanExercises =
+  "/exercise-sets/findAllPlanExercises";
+export var apiExerciseSetsRemovePlanExercise =
+  "/exercise-sets/removePlanExercise";
 export var apiTrainingResults = "/training-results";
 export var apiPublishStatuses = "/publish-statuses";
 export var apiStatusesTraining = "/statuses-training";
@@ -26,3 +30,4 @@ export var apiAuthRegister = "/auth/login";
 export var apiNews = "/news";
 export var apiComment = "/comment-training";
 export var apiCommentTraining = "/comment-training/training";
+export var apiCommentTrainingCount = "/comment-training/training/count";

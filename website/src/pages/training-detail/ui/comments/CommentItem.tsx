@@ -1,18 +1,18 @@
 import React from "react";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { ICommentModel } from "../../../../shared/model/ICommentModel";
 import CommentReply from "./CommentReply";
 import { QueryClient } from "react-query";
-import { ColorBackground } from "../../../../shared/styles/colors";
 
 interface CommentProps {
     comment: ICommentModel;
     idTraining: number;
-    queryClient: QueryClient; // Замените на правильный тип, если есть
+    queryClient: QueryClient;
     isReply?: boolean;
+    isAdmin?: boolean;
 }
 
-const CommentItem: React.FC<CommentProps> = ({ comment, idTraining, queryClient, isReply = true }) => {
+const CommentItem: React.FC<CommentProps> = ({ comment, idTraining, queryClient, isReply = true, isAdmin = false }) => {
     return (
         <div style={{ marginBottom: "10px", marginLeft: "20px" }}>
             {/* Отображение имени пользователя */}
@@ -29,7 +29,7 @@ const CommentItem: React.FC<CommentProps> = ({ comment, idTraining, queryClient,
                 queryClient={queryClient}
                 isDelete={true}
                 content={comment.content}
-                isEdit={true}
+                isEdit={isAdmin ? false : true}
                 isReply={isReply}
             />
 
@@ -44,6 +44,7 @@ const CommentItem: React.FC<CommentProps> = ({ comment, idTraining, queryClient,
                             idTraining={idTraining}
                             queryClient={queryClient}
                             isReply={false}
+                            isAdmin={isAdmin}
                         />
                     ))}
                 </div>

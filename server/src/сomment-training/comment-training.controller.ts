@@ -36,6 +36,11 @@ export class CommentTrainingController {
   findTrainingAll(@Param('idTraining') idTraining: string) {
     return this.commentTrainingService.findTrainingAll(+idTraining);
   }
+  @Get('/training/count/:idTraining')
+  @ApiOkResponse({ type: CommentTrainingEntity, isArray: true })
+  findTrainingAllCount(@Param('idTraining') idTraining: string) {
+    return this.commentTrainingService.findTrainingAllCount(+idTraining);
+  }
 
   @Get(':id')
   @ApiOkResponse({ type: CommentTrainingEntity, isArray: false })
@@ -56,5 +61,12 @@ export class CommentTrainingController {
   @ApiOkResponse()
   remove(@Param('id') id: string) {
     return this.commentTrainingService.remove(+id);
+  }
+  @Delete('/training/:idTraining')
+  @ApiOkResponse()
+  deleteAllCommentsByTrainingId(@Param('idTraining') idTraining: string) {
+    return this.commentTrainingService.deleteAllCommentsByTrainingId(
+      +idTraining,
+    );
   }
 }

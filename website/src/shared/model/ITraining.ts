@@ -5,6 +5,7 @@ export interface ITraining {
   id?: number;
   title: string;
   statusPublishId?: number;
+  isPrivate?: number;
   description: string;
   date_created?: Date;
   userId: number;

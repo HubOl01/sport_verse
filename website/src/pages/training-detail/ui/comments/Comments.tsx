@@ -2,17 +2,16 @@ import { useQuery, useQueryClient } from "react-query"
 import { useEffect, useState } from "react";
 import { CommentPlanService } from "../../../../shared/api/commentPlan.service";
 import { ICommentModel } from "../../../../shared/model/ICommentModel";
-import { Typography } from "@mui/material";
 import CommentAdd from "./CommentAdd";
-import CommentReply from "./CommentReply";
 import CommentItem from "./CommentItem";
 
 interface CommentsProps {
   idTraining: string
+  isAdmin?: boolean
 }
 
-export default function Comments({ idTraining }: CommentsProps) {
-  const { data, isLoading, error } = useQuery<ICommentModel[]>(['comments', idTraining], async () => await CommentPlanService.getAllPlanId(idTraining));
+export default function Comments({ idTraining, isAdmin = false }: CommentsProps) {
+  const { data, isLoading } = useQuery<ICommentModel[]>(['comments', idTraining], async () => await CommentPlanService.getAllPlanId(idTraining));
   // const {
   //   data: trainingData,
   //   isLoading,
@@ -54,14 +53,15 @@ export default function Comments({ idTraining }: CommentsProps) {
 
   return (
     <div>
-      {/* Форма для добавления нового комментария */}
-      <CommentAdd
-        content={content}
-        onChange={(e) => setContent(e.target.value)}
-        sentComment={sentComment}
-      />
+      {
+        isAdmin ? <></> :
+          <CommentAdd
+            content={content}
+            onChange={(e) => setContent(e.target.value)}
+            sentComment={sentComment}
+          />
+      }
 
-      {/* Отображение списка комментариев */}
       <div>
         {isLoading && <p>Загрузка комментариев...</p>}
         {data && data.length > 0 ? (
@@ -71,6 +71,8 @@ export default function Comments({ idTraining }: CommentsProps) {
               comment={comment}
               idTraining={Number(idTraining)}
               queryClient={queryClient}
+              isReply={!isAdmin}
+              isAdmin={isAdmin}
             />
           ))
         ) : (

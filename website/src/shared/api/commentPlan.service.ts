@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from ".";
-import { apiCommentTraining } from "../config";
+import { apiCommentTraining, apiCommentTrainingCount } from "../config";
 import { PlanExerciseService } from "./planExercise.service";
 import { ICommentModel } from "../model/ICommentModel";
 import { apiComment } from '../config/index';
@@ -30,6 +30,19 @@ export const CommentPlanService = {
         typeof err.response?.data === "string"
           ? err.response.data
           : "Произошла ошибка при загрузке всех комментарий для одного плана";
+      throw new Error(message);
+    }
+  },
+  async getAllPlanIdCount(id: string): Promise<number> {
+    try {
+      const response = await api.get<number>(`${apiCommentTrainingCount}/${id}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при подсчете комментариев";
       throw new Error(message);
     }
   },

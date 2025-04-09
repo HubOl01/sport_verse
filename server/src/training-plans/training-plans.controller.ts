@@ -29,6 +29,17 @@ export class TrainingPlansController {
   findAll() {
     return this.trainingPlansService.findAll();
   }
+  @Get('findAllPublic')
+  @ApiOkResponse({ type: TrainingPlanEntity, isArray: true })
+  findAllPublic() {
+    return this.trainingPlansService.findAllPublic();
+  }
+  @Get('findAllPrivate')
+  @ApiOkResponse({ type: TrainingPlanEntity, isArray: true })
+  findAllPrivate() {
+    return this.trainingPlansService.findAllPrivate();
+  }
+
   @Get('getIdFirst')
   @ApiOkResponse()
   @ApiOkResponse({ type: TrainingPlanEntity, isArray: false })

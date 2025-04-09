@@ -63,6 +63,14 @@ export class CommentTrainingService {
       },
     });
   }
+  findTrainingAllCount(id: number) {
+    return this.prisma.commentTraining.count({
+      where: {
+        trainingPlanId: id,
+        // parentCommentId: null,
+      },
+    });
+  }
 
   update(id: number, updateCommentTrainingDto: UpdateCommentTrainingDto) {
     return this.prisma.commentTraining.update({
@@ -73,5 +81,13 @@ export class CommentTrainingService {
 
   remove(id: number) {
     return this.prisma.commentTraining.delete({ where: { id } });
+  }
+  deleteAllCommentsByTrainingId(id: number) {
+    return this.prisma.commentTraining.deleteMany({
+      where: {
+        trainingPlanId: id,
+        // parentCommentId: null,
+      },
+    });
   }
 }
