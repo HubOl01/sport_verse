@@ -1,7 +1,12 @@
 import { AxiosError } from "axios";
 import { ITraining } from "../model/ITraining";
 import { api } from ".";
-import { apiTraining, apiTrainingGetIdFirst, apiTrainingPrivate, apiTrainingPublic } from "../config";
+import {
+  apiTraining,
+  apiTrainingGetIdFirst,
+  apiTrainingPrivate,
+  apiTrainingPublic,
+} from "../config";
 import { PlanExerciseService } from "./planExercise.service";
 
 export const TrainingService = {
@@ -18,9 +23,11 @@ export const TrainingService = {
       throw new Error(message);
     }
   },
-  async getAllPrivate(): Promise<ITraining[]> {
+  async getAllPrivate(idUser: number): Promise<ITraining[]> {
     try {
-      const response = await api.get<ITraining[]>(apiTrainingPrivate);
+      const response = await api.get<ITraining[]>(
+        `${apiTrainingPrivate}/${idUser}`
+      );
       return response.data;
     } catch (error) {
       const err = error as AxiosError;

@@ -86,9 +86,9 @@ export class TrainingPlansService {
       },
     });
   }
-  findAllPrivate() {
+  findAllPrivate(idUser: number) {
     return this.prisma.trainingPlan.findMany({
-      where: { isPrivate: 1 },
+      where: { isPrivate: 1, userId: idUser },
       include: {
         statusPublish: true,
         sportType: true,

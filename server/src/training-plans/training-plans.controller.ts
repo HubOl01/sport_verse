@@ -34,10 +34,10 @@ export class TrainingPlansController {
   findAllPublic() {
     return this.trainingPlansService.findAllPublic();
   }
-  @Get('findAllPrivate')
+  @Get('findAllPrivate/:idUser')
   @ApiOkResponse({ type: TrainingPlanEntity, isArray: true })
-  findAllPrivate() {
-    return this.trainingPlansService.findAllPrivate();
+  findAllPrivate(@Param('idUser') idUser: string) {
+    return this.trainingPlansService.findAllPrivate(+idUser);
   }
 
   @Get('getIdFirst')

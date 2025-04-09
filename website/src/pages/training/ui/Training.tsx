@@ -9,7 +9,7 @@ import ToggleTraining from "../../../components/ToggleTraining";
 export default function Training() {
   const { data: trainingPlansPublicData } = useQuery(['trainingPlansPublic'], () => TrainingService.getAllPublic()
   )
-  const { data: trainingPlansPrivateData } = useQuery(['trainingPlansPrivate'], () => TrainingService.getAllPrivate()
+  const { data: trainingPlansPrivateData } = useQuery(['trainingPlansPrivate'], () => TrainingService.getAllPrivate(1)
   )
   const [alignment, setAlignment] = useState('public');
 
