@@ -5,6 +5,7 @@ import {
     TextField,
     ToggleButton,
     ToggleButtonGroup,
+    Typography,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,6 +20,7 @@ import { DialogSportType } from "../../training-new/ui/dialogTypeSport";
 import { ISportType } from "../../../shared/model/ISportType";
 import { useNavigate } from "react-router-dom";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import MyButton from "../../../components/MyButton";
 
 interface ArrModel {
     titleExercise: string; countExercise: string, alignment: string, alignmentTime: string, alignmentDistance: string;
@@ -26,8 +28,10 @@ interface ArrModel {
 
 export default function TrainingEdit({ trainingPlanId, onClickExit }: { trainingPlanId: number, onClickExit: () => void }) {
     const [arr, setArr] = useState<ArrModel[]>([]);
+    const [arrFirst, setArrFirst] = useState<ArrModel[]>([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [isPrivate, setIsPrivate] = useState(true);
     const [valueSportType, setValueSportType] = useState<ISportType>({ id: 0, title: "", image: null });
 
 
@@ -40,13 +44,14 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
     const [open, setOpen] = useState(false);
     const [openSportType, setOpenSportType] = useState(false);
     const [value, setValue] = useState('Dione');
-    const navigate = useNavigate(); // Вызываем хук здесь
+    const navigate = useNavigate();
 
     useEffect(() => {
         TrainingService.get(trainingPlanId.toString()).then((plan) => {
             setTitle(plan.title);
             setDescription(plan.description);
             setValueSportType(plan.sportType!);
+            setIsPrivate(plan.isPrivate === 1 ? true : false);
 
             PlanExerciseService.getAllPlan(plan.id!.toString()).then((planExercises) => {
                 const exercisesPromises = planExercises.map((exercise) =>
@@ -70,6 +75,7 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
                 );
 
                 Promise.all(exercisesPromises).then((exercises) => setArr(exercises));
+                Promise.all(exercisesPromises).then((exercises) => setArrFirst(exercises));
             });
         });
     }, [trainingPlanId]);
@@ -129,7 +135,7 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
         setArr([...arr, copiedExercise]);
     };
     const handleSave = () => {
-        updateTrainingPlan(trainingPlanId, title, description, arr, valueSportType, navigate, onClickExit); // Передаем navigate
+        updateTrainingPlan(trainingPlanId, title, description, isPrivate, arr, arrFirst, valueSportType, navigate, onClickExit); // Передаем navigate
     };
 
     return (
@@ -268,11 +274,8 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
                                                 }
                                             }}
                                         /><div className="self-center">раз.</div></>) : (<></>)}
-
                         </div>
-
                     </>
-
                 </Card>
             ))}
 
@@ -295,10 +298,19 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
                 }} onClick={handleClick} >Добавить из базы</Button>
                 <DialogCustom keepMounted open={open} onClose={handleClose} onSelectExercise={handleAddSelectedExercise} value={value} />
             </div>
+            <div className="flex mt-10 mb-5 items-center">
+                <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>
+                    Статус публикации: {isPrivate ? "Приватная" : "Публичная"}
+                </Typography>
+                <MyButton onClick={() => setIsPrivate(!isPrivate)} label={`Сделать ${isPrivate ? "публичной" : "приватной"}`} style={{
+                    textTransform: "none",
+                    fontWeight: 500
+                }} />
+            </div>
             <Button
                 variant="contained"
                 sx={{
-                    marginTop: "20px",
+                    // marginTop: "20px",
                     marginBottom: "20px",
                     color: "#FFFFFFFF",
                     background: "#4758d6",
@@ -320,7 +332,9 @@ async function updateTrainingPlan(
     id: number,
     title: string,
     description: string,
+    isPrivate: boolean,
     arr: any[],
+    arrFirst: any[],
     valueSportType: ISportType,
     navigate: ReturnType<typeof useNavigate>, // Тип для navigate,
     onClickExit: () => void
@@ -331,88 +345,118 @@ async function updateTrainingPlan(
             description: description,
             userId: 1,
             statusTrainingId: 1,
+            isPrivate: isPrivate ? 1 : 0,
             sportTypeId: valueSportType.id,
         });
 
         if (!trainingPlan.id) {
             throw new Error("Failed to create training plan");
         }
+        if (arraysAreEqual(arr, arrFirst)) {
+            console.log("Тренировка не изменилась");
+            console.log("Plan created:", trainingPlan);
+            // navigate(`/training`); // Используем navigate здесь
+            navigate(`/training/${id}`);
+            onClickExit();
+        } else {
+            // const plan = await TrainingService.getIdFirst();
+            await PlanExerciseService.deleteAll(id.toString());
 
-        // const plan = await TrainingService.getIdFirst();
-        await PlanExerciseService.deleteAll(id.toString());
+            for (const item of arr) {
+                try {
+                    const exercise = await ExercisesService.getName(item.titleExercise);
+                    let exerciseId: number;
 
-        for (const item of arr) {
-            try {
-                const exercise = await ExercisesService.getName(item.titleExercise);
-                let exerciseId: number;
+                    if (!exercise || !exercise.id) {
+                        const newExercise = await ExercisesService.create({
+                            name: item.titleExercise,
+                            description: "",
+                            ExerciseCategoryId: 40,
+                            isPrivate: true,
+                        });
+                        exerciseId = newExercise.id!;
+                    } else {
+                        exerciseId = exercise.id;
+                    }
 
-                if (!exercise || !exercise.id) {
-                    const newExercise = await ExercisesService.create({
-                        name: item.titleExercise,
-                        description: "",
-                        ExerciseCategoryId: 40,
-                        isPrivate: true,
+                    const planExercise = await PlanExerciseService.create({
+                        trainingPlanId: trainingPlan.id!,
+                        setTotal: 0,
+                        repTotal: 0,
+                        exerciseStatus: 0,
+                        exerciseId: exerciseId,
                     });
-                    exerciseId = newExercise.id!;
-                } else {
-                    exerciseId = exercise.id;
-                }
 
-                const planExercise = await PlanExerciseService.create({
-                    trainingPlanId: trainingPlan.id!,
-                    setTotal: 0,
-                    repTotal: 0,
-                    exerciseStatus: 0,
-                    exerciseId: exerciseId,
-                });
-
-                await ExerciseSetService.create({
-                    planExerciseId: planExercise.id!,
-                    duration:
-                        item.alignment === "time"
-                            ? item.alignmentTime === "hour"
-                                ? BigInt(item.countExercise * 60 * 60)
-                                : item.alignmentTime === "minute"
-                                    ? BigInt(item.countExercise * 60)
-                                    : BigInt(item.countExercise)
-                            : undefined,
-                    distance: item.alignment === "distance" ? parseInt(item.countExercise) : undefined,
-                    weight:
-                        item.alignment === "weight"
-                            ? item.alignmentDistance === "km"
-                                ? item.countExercise * 1000
-                                : item.countExercise
-                            : undefined,
-                    repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
-                    calories_burned: undefined,
-                    route_gpx: undefined,
-                    stringType: item.alignment,
-                    stringUnit:
-                        item.alignment === "distance"
-                            ? item.alignmentDistance === "km"
-                                ? "км."
-                                : "м."
-                            : item.alignment === "time"
+                    await ExerciseSetService.create({
+                        planExerciseId: planExercise.id!,
+                        duration:
+                            item.alignment === "time"
                                 ? item.alignmentTime === "hour"
-                                    ? "ч."
+                                    ? BigInt(item.countExercise * 60 * 60)
                                     : item.alignmentTime === "minute"
-                                        ? "мин."
-                                        : "сек."
-                                : item.alignment === "weight" ?
-                                    "кг."
-                                    : "раз.",
-                });
+                                        ? BigInt(item.countExercise * 60)
+                                        : BigInt(item.countExercise)
+                                : undefined,
+                        distance: item.alignment === "distance" ? parseInt(item.countExercise) : undefined,
+                        weight:
+                            item.alignment === "weight"
+                                ? item.alignmentDistance === "km"
+                                    ? item.countExercise * 1000
+                                    : item.countExercise
+                                : undefined,
+                        repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
+                        calories_burned: undefined,
+                        route_gpx: undefined,
+                        stringType: item.alignment,
+                        stringUnit:
+                            item.alignment === "distance"
+                                ? item.alignmentDistance === "km"
+                                    ? "км."
+                                    : "м."
+                                : item.alignment === "time"
+                                    ? item.alignmentTime === "hour"
+                                        ? "ч."
+                                        : item.alignmentTime === "minute"
+                                            ? "мин."
+                                            : "сек."
+                                    : item.alignment === "weight" ?
+                                        "кг."
+                                        : "раз.",
+                    });
 
-                console.log("Plan created:", trainingPlan);
-                // navigate(`/training`); // Используем navigate здесь
-                navigate(`/training/${id}`);
-                onClickExit();
+                    console.log("Plan created:", trainingPlan);
+                    // navigate(`/training`); // Используем navigate здесь
+                    navigate(`/training/${id}`);
+                    onClickExit();
 
-            } catch (exerciseError) {
-                console.error(`Error processing exercise: ${item.titleExercise}`, exerciseError);
+                } catch (exerciseError) {
+                    console.error(`Error processing exercise: ${item.titleExercise}`, exerciseError);
+                }
             }
         }
     } catch (error) {
         console.error("Error creating training plan:", error);
     }
+}
+
+function arraysAreEqual(arr1: ArrModel[], arr2: ArrModel[]): boolean {
+    if (arr1.length !== arr2.length) return false;
+
+    for (let i = 0; i < arr1.length; i++) {
+        const item1 = arr1[i];
+        const item2 = arr2[i];
+
+        // Сравниваем каждое поле объекта
+        if (
+            item1.titleExercise !== item2.titleExercise ||
+            item1.countExercise !== item2.countExercise ||
+            item1.alignment !== item2.alignment ||
+            item1.alignmentTime !== item2.alignmentTime ||
+            item1.alignmentDistance !== item2.alignmentDistance
+        ) {
+            return false;
+        }
+    }
+
+    return true;
 }

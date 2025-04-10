@@ -1,29 +1,12 @@
 import { Card, CardActionArea, CardContent, Chip, Typography } from "@mui/material";
 import { ITraining } from "../../../shared/model/ITraining";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 interface CardTrainingProps {
     training: ITraining
 }
 
 export default function CardTraining({ training }: CardTrainingProps) {
-    const [like, setLike] = useState(false);
-    const handleLikeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation();
-        setLike(!like);
-        console.log('Лайк!');
-    };
-
-    const handleCommentClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation();
-        console.log('Комментарий!');
-    };
-
-    const handleShareClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation();
-        console.log('Поделиться!');
-    };
     const navigate = useNavigate();
     return (
         <div className="mr-5 mt-5 ml-5 mb-5"
@@ -36,6 +19,7 @@ export default function CardTraining({ training }: CardTrainingProps) {
                 sx={{
                     // width: "800px",
                     width: "100%",
+                    maxWidth: "800px",
                     borderRadius: "30px"
                 }}>
                 <CardActionArea>

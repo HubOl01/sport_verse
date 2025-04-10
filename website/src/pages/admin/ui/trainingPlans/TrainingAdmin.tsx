@@ -3,6 +3,7 @@ import styles from "./Training.module.scss";
 import CardTraining from "../../../training/ui/cardTraining";
 import { TrainingService } from "../../../../shared/api/training.service";
 import { ITraining } from "../../../../shared/model/ITraining";
+import CardTrainingAdmin from "../comments/CardTrainingAdmin";
 
 export default function TrainingAdmin() {
   const { data } = useQuery(['trainingPlans'], () => TrainingService.getAll()
@@ -19,7 +20,7 @@ export default function TrainingAdmin() {
 
         {Array.isArray(data) && data.length > 0 ? (
           data.map((plan: ITraining) => (
-            <CardTraining key={plan.id} training={plan} />
+            <CardTrainingAdmin key={plan.id} training={plan} isLikes />
           ))
         ) : (
           <p className={styles.text}>Нет опубликованных планов</p>

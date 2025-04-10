@@ -9,6 +9,7 @@ export class TrainingPlanEntity implements TrainingPlan {
   description: string;
   date_created: Date;
   userId: number;
+  parentUserId: number;
   date_start: Date;
   date_end: Date;
   statusTrainingId: number;

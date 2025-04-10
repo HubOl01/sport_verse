@@ -29,6 +29,7 @@ model User {
   LikeTraining    LikeTraining[]
   CommentTraining CommentTraining[]
   ViewsTraining   ViewsTraining[]
+  parentPlans     TrainingPlan[]    @relation("ParentUser")
 }
 
 // Модель для профиля пользователя
@@ -89,11 +90,13 @@ model TrainingPlan {
   userId           Int
   date_start       DateTime?         @default(now())
   date_end         DateTime?         @default(now())
+  parentUserId     Int?
   statusTrainingId Int
   sportTypeId      Int
   statusPublish    StatusPublish?    @relation(fields: [statusPublishId], references: [id])
   sportType        SportType         @relation(fields: [sportTypeId], references: [id])
   user             User              @relation(fields: [userId], references: [id])
+  parentUser       User?             @relation("ParentUser", fields: [parentUserId], references: [id])
   PlanExercise     PlanExercise[]
   StatusTraining   StatusTraining    @relation(fields: [statusTrainingId], references: [id])
   TrainingResult   TrainingResult[]

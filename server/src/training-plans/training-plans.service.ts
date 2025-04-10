@@ -12,8 +12,26 @@ export class TrainingPlansService {
   findAll() {
     return this.prisma.trainingPlan.findMany({
       include: {
+        user: {
+          select: {
+            email: true,
+            username: true,
+            profile: {
+              select: {
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
         statusPublish: true,
         sportType: true,
+        PlanExercise: {
+          include: {
+            exercise: true,
+          },
+        },
+        StatusTraining: true,
       },
       orderBy: {
         id: 'desc',

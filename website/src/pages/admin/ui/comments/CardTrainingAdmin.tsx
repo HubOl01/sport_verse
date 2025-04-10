@@ -4,19 +4,25 @@ import { ITraining } from "../../../../shared/model/ITraining";
 import { CommentPlanService } from "../../../../shared/api/commentPlan.service";
 import { useQuery, useQueryClient } from "react-query";
 import { useEffect } from "react";
+import { LikeTrainingService } from "../../../../shared/api/likeTraining.service";
 
 interface CardTrainingProps {
-    training: ITraining
+    training: ITraining,
+    isLikes?: boolean,
 }
 
-export default function CardTrainingComments({ training }: CardTrainingProps) {
+export default function CardTrainingAdmin({ training, isLikes = false }: CardTrainingProps) {
     const navigate = useNavigate();
-    const { data } = useQuery(["commentsCount", training.id], () => CommentPlanService.getAllPlanIdCount(training.id!.toString()))
+    const { data: commentsCount } = useQuery(["commentsCount", training.id], () => CommentPlanService.getAllPlanIdCount(training.id!.toString()))
+    const { data: likesCount } = useQuery(["likesCount", training.id], () => LikeTrainingService.getCount(training.id!.toString()))
     const queryClient = useQueryClient();
 
     useEffect(() => {
-        if (data) {
+        if (commentsCount) {
             queryClient.invalidateQueries(['commentsCount', training.id]);
+        }
+        if (likesCount) {
+            queryClient.invalidateQueries(['likesCount', training.id]);
         }
     });
 
@@ -30,10 +36,14 @@ export default function CardTrainingComments({ training }: CardTrainingProps) {
             <Card onClick={() => navigate(`/admin/comments/${training.id}`)}
                 sx={{
                     width: "100%",
+                    maxWidth: "800px",
                     borderRadius: "30px"
                 }}>
                 <CardActionArea>
                     <CardContent>
+                        <Typography sx={{ marginBottom: "10px" }} variant="body2" fontWeight={600}>
+                            @{training.user?.username}
+                        </Typography>
                         <Typography gutterBottom variant="h5" component="div">
                             {training.title}
                         </Typography>
@@ -41,9 +51,18 @@ export default function CardTrainingComments({ training }: CardTrainingProps) {
                         <Typography variant="body2" color="text.secondary">
                             {training.description}
                         </Typography>
-                        <Typography sx={{ marginTop: "20px" }} variant="body2" fontWeight={600}>
-                            Комментариев: {data}
-                        </Typography>
+                        <div className="flex">
+                            {
+                                isLikes ?
+                                    <Typography sx={{ marginTop: "10px", marginRight: "20px" }} variant="body2" fontWeight={600}>
+                                        Лайков: {likesCount}
+                                    </Typography> : <></>
+                            }
+                            <Typography sx={{ marginTop: "10px" }} variant="body2" fontWeight={600}>
+                                Комментариев: {commentsCount}
+                            </Typography>
+
+                        </div>
                     </CardContent>
 
                 </CardActionArea>

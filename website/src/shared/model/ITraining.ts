@@ -1,5 +1,6 @@
 import { ISportType } from "./ISportType";
 import { StatusPublish } from "./IStatusPublish";
+import { IUser } from "./IUser";
 
 export interface ITraining {
   id?: number;
@@ -15,4 +16,5 @@ export interface ITraining {
   sportTypeId: number;
   statusPublish?: StatusPublish;
   sportType?: ISportType;
+  user?: IUser;
 }

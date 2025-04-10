@@ -62,10 +62,9 @@ export default function CommentsDetail() {
         </Toolbar>
       </AppBar>
 
-      {/* Основной контент */}
-      <Box sx={{ padding: '1rem', paddingBottom: '80px' /* чтобы не закрывал футер */ }}>
-        <div className="mr-5 mt-5 ml-5">
-          <Chip className="mb-2" label={trainingData.statusPublish!.title} />
+      <Box sx={{ padding: '1rem' }}>
+        <div className="mr-5 ml-5">
+          <Chip label={trainingData.statusPublish!.title} />
           <h1>{trainingData.title}</h1>
           <p>Вид спорта: {trainingData.sportType!.title}</p>
           <p>Описание: {trainingData.description}</p>

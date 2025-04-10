@@ -20,6 +20,9 @@ export class CreateTrainingPlanDto {
   @ApiProperty({ required: true })
   @IsInt()
   userId: number;
+  @ApiProperty({ required: false })
+  @IsInt()
+  parentUserId: number;
   @ApiProperty({ required: true })
   @IsDate()
   date_start: Date;

@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { ITraining } from "../../../../shared/model/ITraining";
 import { TrainingService } from "../../../../shared/api/training.service";
-import CardTrainingComments from "./CardTrainingComments";
+import CardTrainingAdmin from "./CardTrainingAdmin";
 
 export default function CommentsAdmin() {
   const { data } = useQuery(['trainingPlans'], () => TrainingService.getAll()
@@ -13,7 +13,7 @@ export default function CommentsAdmin() {
     <div>
       {Array.isArray(data) && data.length > 0 ? (
         data.map((plan: ITraining) => (
-          <CardTrainingComments key={plan.id} training={plan} />
+          <CardTrainingAdmin key={plan.id} training={plan} />
         ))
       ) : (
         <p>Нет планов</p>
