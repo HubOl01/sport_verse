@@ -29,7 +29,7 @@ model User {
   LikeTraining    LikeTraining[]
   CommentTraining CommentTraining[]
   ViewsTraining   ViewsTraining[]
-  parentPlans     TrainingPlan[]    @relation("ParentUser")
+  parentPlans     TrainingPlan[]    @relation("parentUser")
 }
 
 // Модель для профиля пользователя
@@ -96,7 +96,7 @@ model TrainingPlan {
   statusPublish    StatusPublish?    @relation(fields: [statusPublishId], references: [id])
   sportType        SportType         @relation(fields: [sportTypeId], references: [id])
   user             User              @relation(fields: [userId], references: [id])
-  parentUser       User?             @relation("ParentUser", fields: [parentUserId], references: [id])
+  parentUser       User?             @relation("parentUser", fields: [parentUserId], references: [id])
   PlanExercise     PlanExercise[]
   StatusTraining   StatusTraining    @relation(fields: [statusTrainingId], references: [id])
   TrainingResult   TrainingResult[]
@@ -122,6 +122,7 @@ model Exercise {
   name               String            @unique
   description        String?
   ExerciseCategoryId Int
+  userId             Int?
   imageString        String?
   isPrivate          Boolean           @default(true)
   exerciseCategory   ExerciseCategory? @relation(fields: [ExerciseCategoryId], references: [id])

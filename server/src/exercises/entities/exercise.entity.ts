@@ -5,6 +5,7 @@ export class ExerciseEntity implements Exercise {
   name: string;
   description: string;
   ExerciseCategoryId: number;
+  userId: number;
   imageString: string;
   isPrivate: boolean;
 }

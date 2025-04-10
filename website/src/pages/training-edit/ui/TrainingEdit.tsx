@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MyButton from "../../../components/MyButton";
 
-interface ArrModel {
+export interface ArrModel {
     titleExercise: string; countExercise: string, alignment: string, alignmentTime: string, alignmentDistance: string;
 }
 
@@ -367,12 +367,14 @@ async function updateTrainingPlan(
                     const exercise = await ExercisesService.getName(item.titleExercise);
                     let exerciseId: number;
 
+                    // Проверяем, существует ли упражнение с таким именем
                     if (!exercise || !exercise.id) {
                         const newExercise = await ExercisesService.create({
                             name: item.titleExercise,
                             description: "",
                             ExerciseCategoryId: 40,
-                            isPrivate: true,
+                            userId: isPrivate ? 1 : undefined,
+                            isPrivate: isPrivate,
                         });
                         exerciseId = newExercise.id!;
                     } else {

@@ -25,6 +25,18 @@ export class TrainingPlansService {
           },
         },
         statusPublish: true,
+        parentUser: {
+          select: {
+            email: true,
+            username: true,
+            profile: {
+              select: {
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
         sportType: true,
         PlanExercise: {
           include: {
@@ -92,6 +104,18 @@ export class TrainingPlansService {
         },
         statusPublish: true,
         sportType: true,
+        parentUser: {
+          select: {
+            email: true,
+            username: true,
+            profile: {
+              select: {
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
         PlanExercise: {
           include: {
             exercise: true,
@@ -140,6 +164,18 @@ export class TrainingPlansService {
           },
         },
         statusPublish: true,
+        parentUser: {
+          select: {
+            email: true,
+            username: true,
+            profile: {
+              select: {
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
         sportType: true,
         PlanExercise: {
           include: {

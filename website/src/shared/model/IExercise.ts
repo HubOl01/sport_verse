@@ -3,6 +3,7 @@ export interface IExercise {
   name: string;
   description: string;
   ExerciseCategoryId: number;
+  userId?: number;
   imageString?: string;
   isPrivate: boolean;
 }

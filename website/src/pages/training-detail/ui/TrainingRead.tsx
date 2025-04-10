@@ -1,5 +1,5 @@
-import { useQuery, useQueryClient } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { QueryClient, useQuery, useQueryClient } from "react-query";
+import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./TrainingRead.module.scss";
 import { ITraining } from '../../../shared/model/ITraining';
@@ -8,7 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { PlanExerciseService } from "../../../shared/api/planExercise.service";
-import TrainingEdit from "../../training-edit/ui/TrainingEdit";
+import TrainingEdit, { ArrModel } from "../../training-edit/ui/TrainingEdit";
 import { useEffect, useState } from "react";
 import { PiShareFat } from "react-icons/pi";
 import { PiShareFatFill } from "react-icons/pi";
@@ -23,6 +23,10 @@ import Comments from "./comments/Comments";
 import LockOutlineIcon from '@mui/icons-material/LockOutlined';
 import { LikeTrainingService } from "../../../shared/api/likeTraining.service";
 import { ILikeModel } from "../../../shared/model/ILikeModel";
+import MyButton from "../../../components/MyButton";
+import { ExerciseSetService } from "../../../shared/api/exerciseSet.service";
+import { ExercisesService } from "../../../shared/api/exercises.service";
+import { ISportType } from "../../../shared/model/ISportType";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -34,8 +38,11 @@ export default function TrainingDetail() {
   const [comment, setComment] = useState(true);
   const [share, setShare] = useState(false);
   const [value, setValue] = useState(() => window.location.href);
-
+  const [arr, setArr] = useState<ArrModel[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [sportTypeId, setSportTypeId] = useState(1);
 
 
   const { data: trainingData, isLoading, error } = useQuery<ITraining>(
@@ -87,6 +94,55 @@ export default function TrainingDetail() {
       await TrainingService.delete(id!);
       queryClient.invalidateQueries('trainingPlans');
       navigate(-1);
+    } catch (error) {
+      console.error('Ошибка при удалении тренировочного плана:', error);
+      alert('Не удалось удалить тренировочный план.');
+    }
+  };
+
+  const handleCopyPlan = async () => {
+    try {
+      // id
+      // await TrainingService.delete(id!);
+      TrainingService.get(id!).then((plan) => {
+        setTitle(plan.title);
+        setDescription(plan.description);
+        setSportTypeId(plan.sportTypeId);
+
+
+        PlanExerciseService.getAllPlan(plan.id!.toString()).then((planExercises) => {
+          const exercisesPromises = planExercises.map((exercise) =>
+            ExerciseSetService.getOnePlanExercises((exercise.id!)).then(async (sets) => {
+              const alignment = sets.duration
+                ? "time"
+                : sets.distance
+                  ? "distance"
+                  : sets.weight
+                    ? "weight"
+                    : "count";
+              const exerciseDetails = await ExercisesService.get(exercise.exerciseId.toString());
+              return {
+                titleExercise: exerciseDetails.name,
+                countExercise: (sets.repetitions || sets.weight || sets.distance || sets.duration)?.toString() || "",
+                alignment: alignment,
+                alignmentTime: sets.duration?.toString() || "",
+                alignmentDistance: sets.distance?.toString() || "",
+              };
+            })
+          );
+
+          Promise.all(exercisesPromises).then((exercises) => setArr(exercises));
+        });
+      });
+      copyTrainingPlan(
+        title,
+        description,
+        arr,
+        sportTypeId!,
+        navigate,
+        queryClient
+      )
+      // navigate(-1);
     } catch (error) {
       console.error('Ошибка при удалении тренировочного плана:', error);
       alert('Не удалось удалить тренировочный план.');
@@ -153,6 +209,11 @@ export default function TrainingDetail() {
             <ArrowBackIcon />
           </IconButton>
           <Box sx={{ flexGrow: 1 }}></Box>
+          <MyButton onClick={handleCopyPlan} label={"Сделать себе копию"}
+            style={{
+              fontSize: "12px",
+            }}
+          />
           <IconButton
             edge="end"
             sx={{ ml: 2 }}
@@ -173,12 +234,8 @@ export default function TrainingDetail() {
       {/* Основной контент */}
       <Box sx={{
         padding: '1rem', paddingBottom: '80px',
-
         maxHeight: "75vh",
         overflowY: "auto",
-
-
-
       }}>
         {edit ? (
           <TrainingEdit trainingPlanId={Number(id)} onClickExit={() => {
@@ -193,8 +250,15 @@ export default function TrainingDetail() {
                 marginRight: '0.5rem',
                 padding: '0px',
                 margin: '0px',
-              }} /> :
-              <Chip label={trainingData.statusPublish!.title} />
+              }} /> : <></>
+              // <Chip label={trainingData.statusPublish!.title} />
+            }
+            {
+              trainingData.parentUserId !== null ?
+                <Typography variant="body2" sx={{
+                  fontWeight: 600,
+                }}>Автор: {trainingData.parentUser?.username ?? "Неизвестный"}</Typography>
+                : <></>
             }
             <h1>{trainingData.title}</h1>
             <p>Вид спорта: {trainingData.sportType!.title}</p>
@@ -222,7 +286,7 @@ export default function TrainingDetail() {
           </div>
         )}
       </Box>
-      {trainingData.isPrivate === 1 ? <></> :
+      {trainingData.isPrivate === 1 || edit ? <></> :
         <Box
           className="w-full"
           sx={{
@@ -278,4 +342,93 @@ export default function TrainingDetail() {
       }
     </Box>
   );
+}
+
+
+async function copyTrainingPlan(
+  title: string,
+  description: string,
+  arr: any[],
+  sportTypeId: number,
+  navigate: NavigateFunction,
+  queryClient: QueryClient) {
+  try {
+    // Создаем тренировочный план
+    const trainingPlan = await TrainingService.create({
+      title: title,
+      description: description,
+      userId: 1,
+      parentUserId: 1,
+      statusTrainingId: 1,
+      isPrivate: 1,
+      sportTypeId: sportTypeId,
+    });
+
+    if (!trainingPlan.id) {
+      throw new Error("Failed to create training plan");
+    }
+
+    // Получаем созданный тренировочный план
+    const plan = await TrainingService.getIdFirst();
+
+    // Итерация по каждому элементу массива
+    for (const item of arr) {
+      try {
+        // Пытаемся получить упражнение по названию
+        const exercise = await ExercisesService.getName(item.titleExercise);
+
+        let exerciseId: number;
+
+        // Если упражнения нет, создаем его
+        if (!exercise || !exercise.id) {
+          const newExercise = await ExercisesService.create({
+            name: item.titleExercise,
+            description: "",
+            ExerciseCategoryId: 40,
+            userId: 1,
+            isPrivate: true,
+          });
+          exerciseId = newExercise.id!;
+        } else {
+          exerciseId = exercise.id;
+        }
+
+        // Создаем связь с планом упражнений
+        const planExercise = await PlanExerciseService.create({
+          trainingPlanId: plan.id!,
+          setTotal: 0,
+          repTotal: 0,
+          exerciseStatus: 0,
+          exerciseId: exerciseId,
+        });
+
+        // Создаем набор упражнений
+        await ExerciseSetService.create({
+          planExerciseId: planExercise.id!,
+          duration: item.alignment === "time" ?
+            item.alignmentTime == 'hour' ? BigInt(item.countExercise * 60 * 60) : item.alignmentTime == 'minute' ? BigInt(item.countExercise * 60) : BigInt(item.countExercise)
+            : undefined,
+          distance: item.alignment === "distance" ?
+            parseInt(item.countExercise) : undefined,
+          weight: item.alignment === "weight" ?
+            item.alignmentDistance == 'km' ? item.countExercise * 1000 : item.countExercise
+            : undefined,
+          repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
+          calories_burned: undefined,
+          route_gpx: undefined,
+          stringType: item.alignment,
+          stringUnit: item.alignment === 'distance' ?
+            item.alignmentDistance === 'km' ? 'км' : 'м' : item.alignment === 'time' ?
+              item.alignmentTime === 'hour' ? 'ч.' : item.alignmentTime == 'minute' ? 'мин.' : 'сек.' : 'раз.',
+        });
+        console.log("Plan created:", plan);
+        navigate('/training');
+        queryClient.invalidateQueries('trainingPlans');
+      } catch (exerciseError) {
+        console.error(`Error processing exercise: ${item.titleExercise}`, exerciseError);
+      }
+    }
+  } catch (error) {
+    console.error("Error creating training plan:", error);
+  }
 }

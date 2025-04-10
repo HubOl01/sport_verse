@@ -10,6 +10,7 @@ export interface ITraining {
   description: string;
   date_created?: Date;
   userId: number;
+  parentUserId?: number;
   date_start?: Date;
   date_end?: Date;
   statusTrainingId: number;
@@ -17,4 +18,5 @@ export interface ITraining {
   statusPublish?: StatusPublish;
   sportType?: ISportType;
   user?: IUser;
+  parentUser?: IUser;
 }
