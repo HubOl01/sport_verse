@@ -194,6 +194,8 @@ model LikeTraining {
   createdAt      DateTime     @default(now())
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, trainingPlanId])
 }
 
 model CommentTraining {

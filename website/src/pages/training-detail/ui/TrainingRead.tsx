@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./TrainingRead.module.scss";
 import { ITraining } from '../../../shared/model/ITraining';
-import { AppBar, Box, CardActions, Chip, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Box, CardActions, Chip, IconButton, Toolbar, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { PlanExerciseService } from "../../../shared/api/planExercise.service";
 import TrainingEdit from "../../training-edit/ui/TrainingEdit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PiShareFat } from "react-icons/pi";
 import { PiShareFatFill } from "react-icons/pi";
 import { BiCommentDetail } from "react-icons/bi";
@@ -21,28 +21,46 @@ import { DialogShare } from "./dialogShare";
 import { ExerciseCard } from "./ExerciseCard";
 import Comments from "./comments/Comments";
 import LockOutlineIcon from '@mui/icons-material/LockOutlined';
+import { LikeTrainingService } from "../../../shared/api/likeTraining.service";
+import { ILikeModel } from "../../../shared/model/ILikeModel";
 
 export default function TrainingDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [edit, setEdit] = useState(false); // переключатель между режимом редактирования и просмотра
-  const [like, setLike] = useState(false);   // для иконки лайка
-  const [comment, setComment] = useState(true);   // для иконки лайка
-  const [share, setShare] = useState(false);   // для иконки лайка
+  const [edit, setEdit] = useState(false);
+  const [like, setLike] = useState(false);
+  const [comment, setComment] = useState(true);
+  const [share, setShare] = useState(false);
   const [value, setValue] = useState(() => window.location.href);
 
-  // Состояние открытия диалога
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // Обработчик клика по иконке "Поделиться"
 
-  const {
-    data: trainingData,
-    isLoading,
-    error
-  } = useQuery<ITraining>(['trainingDetail', id], () => TrainingService.get(id!));
+  const { data: trainingData, isLoading, error } = useQuery<ITraining>(
+    ['trainingDetail', id],
+    () => TrainingService.get(id!),
+    { enabled: !!id }
+  );
+
+  const { data: likeData } = useQuery<ILikeModel>(
+    ['likeTraining', id, 1],
+    () => LikeTrainingService.getPlanUser(id!, (1).toString()),
+    { enabled: !!id }
+  );
+  const { data: likesCountData } = useQuery<number>(
+    ['likeCountTraining', id, 1],
+    () => LikeTrainingService.getCount(id!),
+    { enabled: !!id }
+  );
+  useEffect(() => {
+    if (likeData) {
+      setLike(true);
+    } else {
+      setLike(false);
+    }
+  }, [likeData]);
 
   const { data: planExercisesData } = useQuery(
     ['planExercises', id],
@@ -75,9 +93,23 @@ export default function TrainingDetail() {
     }
   };
 
-  // Обработчики иконок
-  const handleLikeClick = () => {
-    setLike(!like);
+  const handleLikeClick = async () => {
+    try {
+      if (like) {
+        await LikeTrainingService.deletePlanUser(id!, (1).toString());
+        setLike(false);
+      } else {
+        await LikeTrainingService.create({
+          trainingPlanId: Number(id),
+          userId: 1,
+        });
+        setLike(true);
+      }
+      queryClient.invalidateQueries('likeCountTraining');
+    } catch (error) {
+      console.error("Ошибка при обработке лайка:", error);
+      alert("Не удалось выполнить действие. Попробуйте позже.");
+    }
   };
 
   const handleCommentClick = () => {
@@ -85,16 +117,12 @@ export default function TrainingDetail() {
   };
 
 
-  // Обработчик клика по иконке "Поделиться"
   const handleShareClick = () => {
-    // Если хотите менять иконку при клике
     setShare(true);
-    // Открываем диалог
     setDialogOpen(true);
   };
 
 
-  // Закрытие диалога (передаётся в DialogShare)
   const handleCloseShareDialog = (newValue?: string) => {
     setDialogOpen(false);
     setShare(false);
@@ -103,6 +131,9 @@ export default function TrainingDetail() {
       setValue(newValue);
     }
   };
+
+
+
   return (
     <Box sx={{ position: 'relative', minHeight: '100vh' }}>
       {/* Шапка (AppBar) */}
@@ -151,9 +182,9 @@ export default function TrainingDetail() {
       }}>
         {edit ? (
           <TrainingEdit trainingPlanId={Number(id)} onClickExit={() => {
-            setEdit(!edit);
+            setEdit(false);
             queryClient.invalidateQueries(['trainingDetail', id]);
-            window.location.reload();
+            // window.location.reload();
           }} />
         ) : (
           <div className="mr-5 ml-5">
@@ -179,61 +210,72 @@ export default function TrainingDetail() {
               )}
             </div>
             <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>
-            {comment ?
-              <div>
-                <h2>Комментарии: </h2>
-                <Comments idTraining={id!} />
-              </div>
-              : <></>
+            {
+              trainingData.isPrivate === 0 &&
+                comment ?
+                <div>
+                  <h2>Комментарии: </h2>
+                  <Comments idTraining={id!} />
+                </div>
+                : <></>
             }
           </div>
         )}
       </Box>
-
-      <Box
-        className="w-full"
-        sx={{
-          position: 'fixed',
-          bottom: 0,
-          right: 0,
-          // maxWidth: `calc(100% - 300px)`,
-          maxWidth: { xs: '100%', sm: 'calc(100% - 300px)' },
-          backgroundColor: '#fff',
-          boxShadow: '0 -1px 5px rgba(0,0,0,0.1)',
-        }}
-      >
-        <CardActions
+      {trainingData.isPrivate === 1 ? <></> :
+        <Box
+          className="w-full"
           sx={{
-            justifyContent: "space-around",
-            alignItems: "center",
-            padding: '0.5rem'
+            position: 'fixed',
+            bottom: 0,
+            right: 0,
+            // maxWidth: `calc(100% - 300px)`,
+            maxWidth: { xs: '100%', sm: 'calc(100% - 300px)' },
+            backgroundColor: '#fff',
+            boxShadow: '0 -1px 5px rgba(0,0,0,0.1)',
           }}
         >
-          <IconButton aria-label="like" onClick={handleLikeClick}>
-            {like ? <ThumbUpOn sx={{
-              color: ColorBackground
-            }} /> : <ThumbUpOff />}
-          </IconButton>
+          <CardActions
+            sx={{
+              justifyContent: "space-around",
+              alignItems: "center",
+              padding: '0.5rem'
+            }}
+          >
+            <div className="flex items-center">
+              <IconButton aria-label="like" onClick={handleLikeClick}>
+                {like ? <ThumbUpOn sx={{
+                  color: ColorBackground
+                }} /> : <ThumbUpOff />}
+              </IconButton>
+              <Typography variant="body1" sx={{
+                color: like ? ColorBackground : "#000",
+                fontWeight: like ? 600 : 400,
+              }}>
+                {likesCountData}
+              </Typography>
+            </div>
 
-          <IconButton aria-label="comment" onClick={handleCommentClick}>
-            {comment ? <BiSolidCommentDetail size={24} style={{
-              color: ColorBackground
-            }} /> : <BiCommentDetail size={24} />}
-          </IconButton>
+            <IconButton aria-label="comment" onClick={handleCommentClick}>
+              {comment ? <BiSolidCommentDetail size={24} style={{
+                color: ColorBackground
+              }} /> : <BiCommentDetail size={24} />}
+            </IconButton>
 
-          <IconButton aria-label="share" onClick={handleShareClick}>
-            {share ? <PiShareFatFill size={24} style={{
-              color: ColorBackground
-            }} /> : <PiShareFat size={24} />}
-          </IconButton>
-          <DialogShare
-            keepMounted
-            value={value}
-            open={dialogOpen}
-            onClose={handleCloseShareDialog}
-          />
-        </CardActions>
-      </Box>
+            <IconButton aria-label="share" onClick={handleShareClick}>
+              {share ? <PiShareFatFill size={24} style={{
+                color: ColorBackground
+              }} /> : <PiShareFat size={24} />}
+            </IconButton>
+            <DialogShare
+              keepMounted
+              value={value}
+              open={dialogOpen}
+              onClose={handleCloseShareDialog}
+            />
+          </CardActions>
+        </Box>
+      }
     </Box>
   );
 }

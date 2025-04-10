@@ -35,6 +35,19 @@ export class LikeTrainingController {
   findOne(@Param('id') id: string) {
     return this.likeTrainingService.findOne(+id);
   }
+  @Get('/likesCount/:planId')
+  @ApiOkResponse({ type: LikeTrainingEntity, isArray: false })
+  findLikeCount(@Param('planId') planId: string) {
+    return this.likeTrainingService.findLikeCount(+planId);
+  }
+  @Get('/training/:planId/user/:userId')
+  @ApiOkResponse()
+  findPlanUser(
+    @Param('planId') planId: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.likeTrainingService.findPlanUser(+planId, +userId);
+  }
 
   @Patch(':id')
   @ApiCreatedResponse()
@@ -49,5 +62,13 @@ export class LikeTrainingController {
   @ApiOkResponse()
   remove(@Param('id') id: string) {
     return this.likeTrainingService.remove(+id);
+  }
+  @Delete('/training/:planId/user/:userId')
+  @ApiOkResponse()
+  deletePlanUser(
+    @Param('planId') planId: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.likeTrainingService.deletePlanUser(+planId, +userId);
   }
 }

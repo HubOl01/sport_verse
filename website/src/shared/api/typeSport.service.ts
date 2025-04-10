@@ -1,8 +1,7 @@
 import { AxiosError } from "axios";
-import { apiExercises, apiExercisesName, apiExercisesPublish } from "../config";
 import { api } from ".";
 import { ISportType } from "../model/ISportType";
-import { apiSportTypes } from '../config/index';
+import { apiSportTypes } from "../config/index";
 
 export const TypeSportService = {
   async getAll(): Promise<ISportType[]> {
@@ -19,19 +18,6 @@ export const TypeSportService = {
     }
   },
 
-  // async getAll(): Promise<ISportType[]> {
-  //   try {
-  //     const response = await api.get<ISportType[]>(apiExercisesPublish);
-  //     return response.data;
-  //   } catch (error) {
-  //     const err = error as AxiosError;
-  //     const message =
-  //       typeof err.response?.data === "string"
-  //         ? err.response.data
-  //         : "Произошла ошибка при загрузке всех опубликованных упражнений";
-  //     throw new Error(message);
-  //   }
-  // },
   async get(id: string): Promise<ISportType> {
     try {
       const response = await api.get<ISportType>(`${apiSportTypes}/${id}`);
@@ -75,7 +61,10 @@ export const TypeSportService = {
   },
   async update(id: number, sportType: ISportType): Promise<ISportType> {
     try {
-      const response = await api.patch<ISportType>(`${apiSportTypes}/${id}`, sportType);
+      const response = await api.patch<ISportType>(
+        `${apiSportTypes}/${id}`,
+        sportType
+      );
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -99,17 +88,4 @@ export const TypeSportService = {
       throw new Error(message);
     }
   },
-  // async get(id: string): Promise<IExercises> {
-  //   try {
-  //     const response = await api.get<IExercises>(`/training-plans/${id}`);
-  //     return response.data;
-  //   } catch (error) {
-  //     const err = error as AxiosError;
-  //     const message =
-  //       typeof err.response?.data === "string"
-  //         ? err.response.data
-  //         : `Произошла ошибка при загрузке плана с ID: ${id}`;
-  //     throw new Error(message);
-  //   }
-  // },
 };
