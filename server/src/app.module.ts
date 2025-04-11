@@ -21,6 +21,7 @@ import { ViewsTrainingModule } from './views-training/views-training.module';
 import { LikeTrainingModule } from './like-training/like-training.module';
 import { AuthModule } from './auth/auth.module';
 import { NewsModule } from './news/news.module';
+import { SportCategoriesModule } from './sport-categories/sport-categories.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { NewsModule } from './news/news.module';
     ViewsTrainingModule,
     LikeTrainingModule,
     NewsModule,
+    SportCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -64,7 +64,7 @@ export default function CommentsDetail() {
 
       <Box sx={{ padding: '1rem' }}>
         <div className="mr-5 ml-5">
-          <Chip label={trainingData.statusPublish!.title} />
+          {/* <Chip label={trainingData.statusPublish!.title} /> */}
           <h1>{trainingData.title}</h1>
           <p>Вид спорта: {trainingData.sportType!.title}</p>
           <p>Описание: {trainingData.description}</p>

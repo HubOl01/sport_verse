@@ -5,6 +5,7 @@ import { CommentPlanService } from "../../../../shared/api/commentPlan.service";
 import { useQuery, useQueryClient } from "react-query";
 import { useEffect } from "react";
 import { LikeTrainingService } from "../../../../shared/api/likeTraining.service";
+import LockOutlineIcon from '@mui/icons-material/LockOutlined';
 
 interface CardTrainingProps {
     training: ITraining,
@@ -41,9 +42,14 @@ export default function CardTrainingAdmin({ training, isLikes = false }: CardTra
                 }}>
                 <CardActionArea>
                     <CardContent>
-                        <Typography sx={{ marginBottom: "10px" }} variant="body2" fontWeight={600}>
-                            @{training.user?.username}
-                        </Typography>
+                        <div className="flex items-center" style={{ marginBottom: "10px" }}>
+                            <Typography variant="body2" fontWeight={600}>
+                                @{training.user?.username}
+                            </Typography>
+                            {training.isPrivate === 1 ? <LockOutlineIcon sx={{
+                                height: "15px",
+                            }} /> : <></>}
+                        </div>
                         <Typography gutterBottom variant="h5" component="div">
                             {training.title}
                         </Typography>
@@ -51,18 +57,21 @@ export default function CardTrainingAdmin({ training, isLikes = false }: CardTra
                         <Typography variant="body2" color="text.secondary">
                             {training.description}
                         </Typography>
-                        <div className="flex">
-                            {
-                                isLikes ?
-                                    <Typography sx={{ marginTop: "10px", marginRight: "20px" }} variant="body2" fontWeight={600}>
-                                        Лайков: {likesCount}
-                                    </Typography> : <></>
-                            }
-                            <Typography sx={{ marginTop: "10px" }} variant="body2" fontWeight={600}>
-                                Комментариев: {commentsCount}
-                            </Typography>
+                        {
+                            training.isPrivate === 1 ? <></> : <div className="flex">
+                                {
+                                    isLikes ?
+                                        <Typography sx={{ marginTop: "10px", marginRight: "20px" }} variant="body2" fontWeight={600}>
+                                            Лайков: {likesCount}
+                                        </Typography> : <></>
+                                }
+                                <Typography sx={{ marginTop: "10px" }} variant="body2" fontWeight={600}>
+                                    Комментариев: {commentsCount}
+                                </Typography>
 
-                        </div>
+                            </div>
+                        }
+
                     </CardContent>
 
                 </CardActionArea>

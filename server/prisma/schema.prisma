@@ -34,19 +34,22 @@ model User {
 
 // Модель для профиля пользователя
 model Profile {
-  id          Int       @id @default(autoincrement())
-  name        String?
-  dateOfBirth DateTime?
-  url_avatar  String?
-  about       String?
-  statusId    Int?
-  roleId      Int
-  isVerified  Boolean   @default(false)
-
+  id               Int                @id @default(autoincrement())
+  name             String?
+  dateOfBirth      DateTime?
+  startSportDate   DateTime?
+  endSportDate     DateTime?
+  url_avatar       String?
+  about            String?
+  statusId         Int?
+  roleId           Int
+  isVerified       Boolean            @default(false)
+  sportCategoryId  Int?
   userId           Int                @unique
   user             User               @relation(fields: [userId], references: [id])
   role             Role               @relation(fields: [roleId], references: [id])
   status           StatusProfile?     @relation(fields: [statusId], references: [id])
+  sportCategory    SportCategory?     @relation(fields: [sportCategoryId], references: [id])
   ProfileSportType ProfileSportType[]
 }
 
@@ -62,6 +65,13 @@ model StatusProfile {
   desc      String
   svg_image String
   Profile   Profile[]
+}
+
+model SportCategory {
+  id      Int       @id @default(autoincrement())
+  title   String    @unique
+  image   String?
+  Profile Profile[]
 }
 
 model SportType {

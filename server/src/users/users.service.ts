@@ -19,7 +19,26 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { email } });
   }
   findByUsername(username: string) {
-    return this.prisma.user.findUnique({ where: { username } });
+    return this.prisma.user.findUnique({
+      where: { username },
+      include: {
+        profile: {
+          select: {
+            id: true,
+            name: true,
+            dateOfBirth: true,
+            url_avatar: true,
+            about: true,
+            statusId: true,
+            roleId: true,
+            isVerified: true,
+            userId: true,
+            status: true,
+            role: true,
+          },
+        },
+      },
+    });
   }
   update(id: number, updateUserDto: UpdateUserDto) {
     return this.prisma.user.update({

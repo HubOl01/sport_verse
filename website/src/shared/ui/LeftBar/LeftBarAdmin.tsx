@@ -31,7 +31,7 @@ export default function LeftBarAdmin() {
             <List component="nav" aria-label="main mailbox folder"
             >
                 {itemsBarAdmin.map((item) =>
-                    <>
+                    <React.Fragment key={item.id}>
                         {item.id === 4 && (
                             <Divider
                                 component="li"
@@ -41,19 +41,17 @@ export default function LeftBarAdmin() {
                                 }}
                             />
                         )}
-                        <div key={item.id}>
-                            <ListItemButton
-                                selected={selectedIndex === item.id}
-                                onClick={() => handleListItemClick(item.id)}
-                            >
-                                <ListItemText sx={{
-                                    color: "white"
-                                }} primary={item.title} />
-                            </ListItemButton>
+                        <ListItemButton
+                            selected={selectedIndex === item.id}
+                            onClick={() => handleListItemClick(item.id)}
+                        >
+                            <ListItemText sx={{
+                                color: "white"
+                            }} primary={item.title} />
+                        </ListItemButton>
 
-                        </div>
 
-                    </>
+                    </React.Fragment>
                 )}
 
             </List>

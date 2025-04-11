@@ -4,7 +4,7 @@ import { TrainingService } from "../../../../shared/api/training.service";
 import CardTrainingAdmin from "./CardTrainingAdmin";
 
 export default function CommentsAdmin() {
-  const { data } = useQuery(['trainingPlans'], () => TrainingService.getAll()
+  const { data } = useQuery(['trainingPlansPublic'], () => TrainingService.getAllPublic()
   )
 
   // if (isLoading) return <p className={styles.text}>Загрузка...</p>;

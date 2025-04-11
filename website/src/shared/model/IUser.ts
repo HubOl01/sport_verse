@@ -1,3 +1,5 @@
+import { IProfile } from "./IProfile";
+
 export interface IUser {
     id?: number;
     email: string;
@@ -6,4 +8,5 @@ export interface IUser {
     username: string;
     createdAt?: Date;
     statusUser?: string;
+    profile?: IProfile;
 }

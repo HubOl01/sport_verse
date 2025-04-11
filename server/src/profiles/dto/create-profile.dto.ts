@@ -7,6 +7,8 @@ export class CreateProfileDto {
   name: string;
   dateOfBirth: Date;
   @ApiProperty({ required: true })
+  startSportDate: Date;
+  @ApiProperty({ required: true })
   @IsString()
   url_avatar: string;
   @ApiProperty({ required: true })
@@ -23,4 +25,6 @@ export class CreateProfileDto {
   @ApiProperty({ required: true })
   @IsNumber()
   userId: number;
+  @ApiProperty({ required: true })
+  sportCategoryId: number;
 }

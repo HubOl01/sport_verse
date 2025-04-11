@@ -6,6 +6,7 @@ import { roles } from './data/roles';
 import { profileStatuses } from './data/profileStatuses';
 import { exercises } from './data/exercises';
 import { statusesTraining } from './data/statusesTraining';
+import { sportCategories } from './data/sportCategories';
 
 const prisma = new PrismaClient();
 
@@ -19,6 +20,13 @@ async function main() {
   }
   for (const item of sportTypes) {
     await prisma.sportType.upsert({
+      where: { title: item.title },
+      update: {},
+      create: item,
+    });
+  }
+  for (const item of sportCategories) {
+    await prisma.sportCategory.upsert({
       where: { title: item.title },
       update: {},
       create: item,

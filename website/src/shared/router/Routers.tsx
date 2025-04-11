@@ -22,7 +22,7 @@ export default function Routers() {
   return (
     <Routes>
       <Route path="/" element={<PrivateRoute />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/:username" element={<Profile />} />
       <Route path="/login" element={<Sign />} />
       {CurrentRole === Roles.ADMIN && (<Route path="/admin" element={<Admin />} />)}
       {CurrentRole === Roles.ADMIN && (<Route path="/admin/news" element={<NewsRead />} />)}

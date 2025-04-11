@@ -1,12 +1,22 @@
 import { Avatar, Card } from '@mui/material'
 import styles from './Profile.module.scss'
 import ListTile from './ListTile'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DialogStatus } from './dialog';
+import { useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { IUser } from '../../../shared/model/IUser';
+import { UserService } from '../../../shared/api/User.service';
 
 export default function Profile() {
+  const { username } = useParams();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('Dione');
+  const { data } = useQuery<IUser>(
+    ['user', username],
+    () => UserService.getUsername(username!),
+    { enabled: !!username }
+  );
   const handleClick = () => {
     setOpen(true);
   };
@@ -29,31 +39,34 @@ export default function Profile() {
         <div className={styles.backgroundText}>
           <div className='flex'>
             <div className={`${styles.title_profile}`}>
-              Jack
+              {data?.profile?.name}
             </div>
             <div className={`${styles.title_emoji}`} onClick={handleClick}>
               😴
             </div>
             <DialogStatus
               keepMounted
+              status={data?.profile?.status!}
               open={open}
               onClose={handleClose}
               value={value}
             />
           </div>
           <div className={`${styles.title_content}`}>
-            Спортсмен
+            {data?.profile?.role?.title}
+          </div>
+          <div className={`${styles.about}`}>
+            {data?.profile?.about}
           </div>
         </div>
         <Card
           className="justify-center content-center self-center"
           variant="outlined"
           sx={{
-            marginBottom: '20px',
+            // marginBottom: '20px',
             borderRadius: '20px',
             marginLeft: "20px",
             marginRight: "20px",
-            marginBotton: "20px",
           }}
         >
           <div className="self-center p-2 pr-3 pl-3">

@@ -16,6 +16,7 @@ export var apiSportTypes = "/sport-types";
 export var apiStatuses = "/statuses";
 export var apiRoles = "/roles";
 export var apiUsers = "/users";
+export var apiUsersUserName = "/users/username";
 export var apiExerciseCategories = "/exercise-categories";
 export var apiExerciseSets = "/exercise-sets";
 export var apiExerciseSetsFindAllPlanExercises =
