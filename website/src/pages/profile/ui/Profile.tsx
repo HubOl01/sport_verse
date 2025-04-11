@@ -4,11 +4,12 @@ import ListTile from './ListTile'
 import { useEffect, useState } from 'react';
 import { DialogStatus } from './dialog';
 import { useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { IUser } from '../../../shared/model/IUser';
 import { UserService } from '../../../shared/api/User.service';
 
 export default function Profile() {
+  const queryClient = useQueryClient();
   const { username } = useParams();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('Dione');
@@ -17,6 +18,9 @@ export default function Profile() {
     () => UserService.getUsername(username!),
     { enabled: !!username }
   );
+  useEffect(() => {
+    queryClient.invalidateQueries(['user', username]);
+  }, [data]);
   const handleClick = () => {
     setOpen(true);
   };
@@ -42,7 +46,7 @@ export default function Profile() {
               {data?.profile?.name}
             </div>
             <div className={`${styles.title_emoji}`} onClick={handleClick}>
-              😴
+              {data?.profile?.status?.svg_image!}
             </div>
             <DialogStatus
               keepMounted
@@ -50,6 +54,7 @@ export default function Profile() {
               open={open}
               onClose={handleClose}
               value={value}
+              profile={data?.profile!}
             />
           </div>
           <div className={`${styles.title_content}`}>
