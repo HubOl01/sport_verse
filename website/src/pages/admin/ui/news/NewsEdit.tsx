@@ -9,7 +9,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
-import { de } from "date-fns/locale";
+import { ru } from "date-fns/locale";
 import MyTextField from "../../../../components/MyTextField";
 import MyDateTimePicker from "../../../../components/MyDateTimePicker";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -220,7 +220,7 @@ export default function NewsEdit() {
            
           </div> */}
           <div className="mt-4 w-full">
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
               <MyDateTimePicker label="Дата публикации"
                 value={createdAt}
                 onChange={(newValue) => { setCreatedAt(newValue) }} />

@@ -1,4 +1,4 @@
-import { Avatar, Card } from '@mui/material'
+import { Avatar, Box, Card, IconButton } from '@mui/material'
 import styles from './Profile.module.scss'
 import ListTile from './ListTile'
 import { useEffect, useState } from 'react';
@@ -7,12 +7,15 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from 'react-query';
 import { IUser } from '../../../shared/model/IUser';
 import { UserService } from '../../../shared/api/User.service';
+import EditIcon from '@mui/icons-material/Edit';
+import ProfileEdit from './ProfileEdit';
 
 export default function Profile() {
   const queryClient = useQueryClient();
   const { username } = useParams();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('Dione');
+  const [isEdit, setIsEdit] = useState(true);
   const { data } = useQuery<IUser>(
     ['user', username],
     () => UserService.getUsername(username!),
@@ -31,61 +34,96 @@ export default function Profile() {
       setValue(newValue);
     }
   };
+  const handleEditClick = () => {
+    setIsEdit(true);
+  };
   return (
-    <div>
-      <div className={`${styles.background}`}>
-        <div className={styles.backgroundImg}>
-          <Avatar sx={{
-            height: 100,
-            width: 100
-          }} />
+    isEdit ?
+      <ProfileEdit onExit={() => setIsEdit(false)} />
+      :
+      <div>
+        <div className={styles.background}>
+          <IconButton
+            aria-label="edit"
+            onClick={handleEditClick}
+            sx={{
+              position: 'absolute',
+              top: "70px",
+              right: "20px",
+            }}
+          >
+            <EditIcon
+              sx={{
+                color: "white",
+              }} />
+          </IconButton>
+          <Box
+            sx={{
+              width: "110px",
+              height: "110px",
+              borderRadius: "50%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              top: "45px",
+              left: "45px",
+              backgroundColor: "rgba(255, 255, 255)",
+            }}
+          >
+            <Avatar sx={{
+              width: "100px",
+              height: "100px",
+            }}>
+            </Avatar>
+          </Box>
+
+          <div className={styles.backgroundText}>
+            <div className='flex'>
+              <div className={`${styles.title_profile}`}>
+                {data?.profile?.name}
+              </div>
+              <div className={`${styles.title_emoji}`} onClick={handleClick}>
+                {data?.profile?.status?.svg_image!}
+              </div>
+              <DialogStatus
+                keepMounted
+                status={data?.profile?.status!}
+                open={open}
+                onClose={handleClose}
+                value={value}
+                profile={data?.profile!}
+              />
+            </div>
+            <div className={`${styles.title_content}`}>
+              {data?.profile?.role?.title}
+            </div>
+            <div className={`${styles.about}`}>
+              {data?.profile?.about}
+            </div>
+          </div>
+          <Card
+            className="justify-center content-center self-center"
+            variant="outlined"
+            sx={{
+              // marginBottom: '20px',
+              borderRadius: '20px',
+              marginLeft: "20px",
+              marginRight: "20px",
+            }}
+          >
+            <div className="self-center p-2 pr-3 pl-3">
+              <div className={`${styles.title_about}`}>
+                О себе
+              </div>
+              <br />
+              <ListTile title='Дата рождения:' content='1 января 1990' />
+              <ListTile title='Вид спорта:' content='Легкая атлетика' />
+              <ListTile title='Спортивный стаж:' content='15 лет' />
+              <ListTile title='Спортивный разряд:' content='КМС' />
+            </div>
+          </Card>
         </div>
-        <div className={styles.backgroundText}>
-          <div className='flex'>
-            <div className={`${styles.title_profile}`}>
-              {data?.profile?.name}
-            </div>
-            <div className={`${styles.title_emoji}`} onClick={handleClick}>
-              {data?.profile?.status?.svg_image!}
-            </div>
-            <DialogStatus
-              keepMounted
-              status={data?.profile?.status!}
-              open={open}
-              onClose={handleClose}
-              value={value}
-              profile={data?.profile!}
-            />
-          </div>
-          <div className={`${styles.title_content}`}>
-            {data?.profile?.role?.title}
-          </div>
-          <div className={`${styles.about}`}>
-            {data?.profile?.about}
-          </div>
-        </div>
-        <Card
-          className="justify-center content-center self-center"
-          variant="outlined"
-          sx={{
-            // marginBottom: '20px',
-            borderRadius: '20px',
-            marginLeft: "20px",
-            marginRight: "20px",
-          }}
-        >
-          <div className="self-center p-2 pr-3 pl-3">
-            <div className={`${styles.title_about}`}>
-              О себе
-            </div>
-            <br />
-            <ListTile title='Дата рождения:' content='1 января 1990' />
-            <ListTile title='Вид спорта:' content='Легкая атлетика' />
-            <ListTile title='Спортивный стаж:' content='15 лет' />
-            <ListTile title='Спортивный разряд:' content='КМС' />
-          </div>
-        </Card>
       </div>
-    </div>
   )
 }

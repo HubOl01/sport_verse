@@ -26,7 +26,6 @@ import { ILikeModel } from "../../../shared/model/ILikeModel";
 import MyButton from "../../../components/MyButton";
 import { ExerciseSetService } from "../../../shared/api/exerciseSet.service";
 import { ExercisesService } from "../../../shared/api/exercises.service";
-import { ISportType } from "../../../shared/model/ISportType";
 
 export default function TrainingDetail() {
   const { id } = useParams();

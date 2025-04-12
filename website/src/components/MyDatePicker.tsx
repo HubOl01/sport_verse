@@ -1,5 +1,6 @@
+
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ColorBackground } from '../shared/styles/colors'
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 
 interface Props {
     label: string,
@@ -7,12 +8,13 @@ interface Props {
     value?: Date | null | undefined
 }
 
-export default function MyDateTimePicker(props: Props) {
+export default function MyDatePicker(props: Props) {
     return (
-        <DateTimePicker
+        <DatePicker
             label={props.label}
             value={props.value}
             onChange={props.onChange}
+            views={['year', 'month', 'day']}
             sx={{
                 '& label.Mui-focused': {
                     color: ColorBackground,
@@ -29,10 +31,6 @@ export default function MyDateTimePicker(props: Props) {
                     },
                 },
             }}
-            viewRenderers={{
-                hours: null,
-                minutes: null,
-                seconds: null,
-            }} />
+        />
     )
 }

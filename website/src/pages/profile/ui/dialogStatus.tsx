@@ -81,7 +81,9 @@ export function DialogStatusList(props: dialogListProps) {
 
                             >
                                 <ListItemButton onClick={() => handleSelectExercise(status)}>
-                                    <ListItemAvatar>
+                                    <ListItemAvatar sx={{
+                                        fontSize: '26px',
+                                    }}>
                                         {status.svg_image}
                                     </ListItemAvatar>
                                     <ListItemText id={status.title} primary={status.title} />
