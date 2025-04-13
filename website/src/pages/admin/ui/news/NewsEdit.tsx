@@ -58,34 +58,73 @@ export default function NewsEdit() {
     }
   };
 
-  const handleSave = async () => {
+  // const handleSave = async () => {
 
-    await NewsService.update(id!, {
-      title: title,
-      description: description,
-      image: image,
-      date: createdAt! ?? Date.now(),
-    });
-    navigate(`/admin/news`);
+  //   await NewsService.update(id!, {
+  //     title: title,
+  //     description: description,
+  //     image: image,
+  //     date: createdAt! ?? Date.now(),
+  //   });
+  //   navigate(`/admin/news`);
+  // };
+  const handleSave = async () => {
+    try {
+      let imageUrl = image;
+
+      // Если выбран файл, загружаем его в Firebase
+      if (file) {
+        const storageRef = ref(storage, `images/${file.name}`);
+        await uploadBytes(storageRef, file);
+        imageUrl = await getDownloadURL(storageRef); // Получаем URL загруженного файла
+      }
+
+      // Обновляем данные новости
+      await NewsService.update(id!, {
+        title,
+        description,
+        image: imageUrl,
+        date: createdAt ?? new Date(),
+      });
+
+      // Очищаем состояние
+      setFile(null);
+
+      // Перенаправляем пользователя
+      navigate(`/admin/news`);
+    } catch (error) {
+      console.error("Ошибка при сохранении новости:", error);
+      alert("Не удалось сохранить новость.");
+    }
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (!selectedFile) return;
 
     setFile(selectedFile); // Сохраняем файл в состоянии
-
-    try {
-      const storageRef = ref(storage, `images/${selectedFile.name}`);
-      await uploadBytes(storageRef, selectedFile); // Загружаем файл в Firebase
-      const downloadURL = await getDownloadURL(storageRef); // Получаем URL загруженного файла
-      setImage(downloadURL); // Устанавливаем URL в состояние
-      alert("Изображение успешно загружено!");
-    } catch (error) {
-      console.error("Ошибка при загрузке файла:", error);
-      alert("Не удалось загрузить изображение.");
-    }
+    setImage(URL.createObjectURL(selectedFile)); // Предварительный просмотр
   };
+
+    // const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const selectedFile = event.target.files?.[0];
+  //   if (!selectedFile) return;
+
+  //   setFile(selectedFile); // Сохраняем файл в состоянии
+
+  //   try {
+  //     const storageRef = ref(storage, `images/${selectedFile.name}`);
+  //     await uploadBytes(storageRef, selectedFile); // Загружаем файл в Firebase
+  //     const downloadURL = await getDownloadURL(storageRef); // Получаем URL загруженного файла
+  //     setImage(downloadURL); // Устанавливаем URL в состояние
+  //     alert("Изображение успешно загружено!");
+  //   } catch (error) {
+  //     console.error("Ошибка при загрузке файла:", error);
+  //     alert("Не удалось загрузить изображение.");
+  //   }
+  // };
 
   return (
     <Box >
@@ -126,15 +165,12 @@ export default function NewsEdit() {
       </AppBar>
 
       <Box sx={{ position: 'relative', minHeight: '100vh', justifyContent: 'center', justifyItems: 'center' }}>
-
         <div className='mr-2 ml-2 w-screen max-w-screen-sm  mt-5'>
           <div>
             <Card
               sx={{
                 width: "100%",
-              }}
-            >
-
+              }}>
               {
                 image.length < 1 ?
                   <></> : <CardMedia
@@ -195,7 +231,9 @@ export default function NewsEdit() {
             </Card>
           </div >
           <div className="mt-4 w-ful flex">
-            <MyTextField label="Изображение из интернета" onChange={(e) => setImage(e.target.value)} value={image} />
+            <MyTextField
+              isBorder={true}
+              label="Изображение из интернета" onChange={(e) => setImage(e.target.value)} value={image} />
             <Button
               variant="contained"
               component="label"

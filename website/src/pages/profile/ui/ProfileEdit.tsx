@@ -32,7 +32,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
   const [birthDate, setBirthDate] = useState<Date>(new Date('1990-01-01'));
   const [startSportDate, setStartSportDate] = useState<Date>(new Date('2010-01-01'));
   const [image, setImage] = useState<string | null>(null);
-
+  const [file, setFile] = useState<File | null>(null);
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -66,6 +66,25 @@ export default function ProfileEdit(props: ProfileEditProps) {
   const handleEditClick = () => {
     props.onExit();
   };
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (!selectedFile) return;
+
+    // Проверка типа файла
+    if (!selectedFile.type.startsWith("image/")) {
+      alert("Пожалуйста, выберите изображение.");
+      return;
+    }
+
+    // Проверка размера файла (например, не более 5 МБ)
+    if (selectedFile.size > 5 * 1024 * 1024) {
+      alert("Размер файла не должен превышать 5 МБ.");
+      return;
+    }
+
+    setFile(selectedFile); // Сохраняем файл в состоянии
+    setImage(URL.createObjectURL(selectedFile)); // Предварительный просмотр
+  };
   return (
     <div>
       <div className={`${styles.background}`}>
@@ -95,27 +114,52 @@ export default function ProfileEdit(props: ProfileEditProps) {
             top: "45px",
             left: "45px",
             backgroundColor: "rgba(255, 255, 255)",
+            overflow: "hidden",
+            "&:hover .upload-icon": {
+              opacity: 1,
+            },
           }}
         >
-          <IconButton
-            aria-label="edit"
+          <Avatar
+            src={image || undefined}
             sx={{
               width: "100px",
               height: "100px",
-              display: "flex",
-              backgroundColor: 'transparent',
-              zIndex: 1,
             }}
-            onClick={handleAvatarClick}
           >
-            <Avatar sx={{
+            {!image && <AddAPhotoIcon />}
+          </Avatar>
+
+          <IconButton
+            aria-label="upload"
+            className="upload-icon"
+            sx={{
+              position: "absolute",
               width: "100px",
               height: "100px",
-            }}>
-              <AddAPhotoIcon />
-            </Avatar>
+              color: "#fff",
+              zIndex: 1,
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+              opacity: 0,
+              transition: "opacity 0.3s ease",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+              },
+            }}
+            onClick={() => document.getElementById("file-input")?.click()} // Открываем диалог выбора файла
+          >
+            <AddAPhotoIcon />
           </IconButton>
+
+          <input
+            id="file-input"
+            type="file"
+            hidden
+            accept="image/*"
+            onChange={handleFileUpload}
+          />
         </Box>
+
 
 
 

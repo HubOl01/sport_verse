@@ -28,36 +28,75 @@ export default function NewsAdd() {
     null
   );
 
-
   const handleSave = async () => {
+    try {
+      let imageUrl = image;
 
-    await NewsService.create({
-      title: title,
-      description: description,
-      image: image,
-      date: createdAt! ?? Date.now(),
-    });
-    navigate(`/admin/news`);
+      // Если выбран файл, загружаем его в Firebase
+      if (file) {
+        const storageRef = ref(storage, `images/${file.name}`);
+        await uploadBytes(storageRef, file);
+        imageUrl = await getDownloadURL(storageRef); // Получаем URL загруженного файла
+      }
+
+      // Обновляем данные новости
+      await NewsService.create({
+        title: title,
+        description: description,
+        image: imageUrl,
+        date: createdAt! ?? Date.now(),
+      });
+
+      // Очищаем состояние
+      setFile(null);
+
+      // Перенаправляем пользователя
+      navigate(`/admin/news`);
+    } catch (error) {
+      console.error("Ошибка при сохранении новости:", error);
+      alert("Не удалось сохранить новость.");
+    }
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (!selectedFile) return;
 
-    setFile(selectedFile); // Сохраняем файл в состоянии
-
-
-    try {
-      const storageRef = ref(storage, `images/${selectedFile.name}`);
-      await uploadBytes(storageRef, selectedFile); // Загружаем файл в Firebase
-      const downloadURL = await getDownloadURL(storageRef); // Получаем URL загруженного файла
-      setImage(downloadURL); // Устанавливаем URL в состояние
-      alert("Изображение успешно загружено!");
-    } catch (error) {
-      console.error("Ошибка при загрузке файла:", error);
-      alert("Не удалось загрузить изображение.");
-    }
+    setFile(selectedFile);
+    setImage(URL.createObjectURL(selectedFile));
   };
+
+  // const handleSave = async () => {
+
+  //   await NewsService.create({
+  //     title: title,
+  //     description: description,
+  //     image: image,
+  //     date: createdAt! ?? Date.now(),
+  //   });
+  //   navigate(`/admin/news`);
+  // };
+
+  // const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const selectedFile = event.target.files?.[0];
+  //   if (!selectedFile) return;
+
+  //   setFile(selectedFile); // Сохраняем файл в состоянии
+
+
+  //   try {
+  //     const storageRef = ref(storage, `images/${selectedFile.name}`);
+  //     await uploadBytes(storageRef, selectedFile); // Загружаем файл в Firebase
+  //     const downloadURL = await getDownloadURL(storageRef); // Получаем URL загруженного файла
+  //     setImage(downloadURL); // Устанавливаем URL в состояние
+  //     alert("Изображение успешно загружено!");
+  //   } catch (error) {
+  //     console.error("Ошибка при загрузке файла:", error);
+  //     alert("Не удалось загрузить изображение.");
+  //   }
+  // };
   return (
     <Box >
       <AppBar position="static" color="transparent" elevation={0}>
