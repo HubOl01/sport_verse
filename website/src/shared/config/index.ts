@@ -34,3 +34,4 @@ export var apiCommentTraining = "/comment-training/training";
 export var apiCommentTrainingCount = "/comment-training/training/count";
 export var apiLike = "/like-training";
 export var apiLikeCount = "/like-training/likesCount";
+export var apiSportCategories = "/sport-categories";

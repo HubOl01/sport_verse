@@ -1,4 +1,5 @@
 import { IRoleProfile } from "./IRoleProfile";
+import { ISportType } from "./ISportType";
 import { IStatusProfile } from "./IStatusProfile";
 
 export interface IProfile {
@@ -13,4 +14,5 @@ export interface IProfile {
   userId: number;
   status?: IStatusProfile;
   role?: IRoleProfile;
+  sportType?: ISportType;
 }

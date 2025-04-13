@@ -1,4 +1,4 @@
-import { Avatar, Box, Card, IconButton } from '@mui/material'
+import { Avatar, Box, Button, Card, IconButton } from '@mui/material'
 import styles from './Profile.module.scss'
 import ListTile from './ListTile'
 import { useEffect, useState } from 'react';
@@ -16,6 +16,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/L
 import MyDatePicker from '../../../components/MyDatePicker';
 import MyButton from '../../../components/MyButton'
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { DialogSportType } from '../../training-new/ui/dialogTypeSport';
+import { ISportType } from '../../../shared/model/ISportType';
 
 interface ProfileEditProps {
   onExit: () => void;
@@ -33,12 +35,13 @@ export default function ProfileEdit(props: ProfileEditProps) {
   const [startSportDate, setStartSportDate] = useState<Date>(new Date('2010-01-01'));
   const [image, setImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
+  const [openSportType, setOpenSportType] = useState(false);
+  const [valueSportType, setValueSportType] = useState<ISportType>({ id: 0, title: "", image: null });
+  const handleCloseSportType = (newValue?: string) => {
+    setOpenSportType(false);
 
+    if (newValue) {
+      setValue(newValue);
     }
   };
 
@@ -49,19 +52,15 @@ export default function ProfileEdit(props: ProfileEditProps) {
   );
   useEffect(() => {
     queryClient.invalidateQueries(['user', username]);
-  }, [data]);
-  const handleClick = () => {
-    setOpen(true);
-  };
-  const handleAvatarClick = () => {
-    console.log('Аватар был кликнут');
-  };
-  const handleClose = (newValue?: string) => {
-    setOpen(false);
-
-    if (newValue) {
-      setValue(newValue);
+    if (data) {
+      setValueSportType(data?.profile?.sportType ?? { id: 1, title: "K", image: null });
     }
+  }, [data]);
+  const handleAddSelectedSportType = (sportType: ISportType) => {
+    setValueSportType(sportType);
+  };
+  const handleClickSportType = () => {
+    setOpenSportType(true);
   };
   const handleEditClick = () => {
     props.onExit();
@@ -185,10 +184,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
               styleButton={
                 {
                   color: "black",
-                  // borderRadius: "30px",
-                  // justifyContent: "start",
                   textTransform: 'none',
-                  // width: "100%",
                   fontSize: "20px",
                   fontWeight: '400',
                   padding: "0px",
@@ -254,8 +250,10 @@ export default function ProfileEdit(props: ProfileEditProps) {
                       padding: "5px 0px 5px 0px",
                     }
                   }
-                  onClick={() => null} label={'Легкая атлетика'} />
+                  onClick={handleClickSportType} label={valueSportType.title} />
+                <DialogSportType keepMounted open={openSportType} onClose={handleCloseSportType} onSelectExercise={handleAddSelectedSportType} value={valueSportType!} />
               </div>
+
             </div>
             <div className='flex items-center'>
               <div className={`${styles.title_about_title}`}>
@@ -300,7 +298,27 @@ export default function ProfileEdit(props: ProfileEditProps) {
             </div> */}
 
           </div>
+
         </Card>
+        <div style={{
+          padding: "20px",
+        }}>
+          <Button
+            variant="contained"
+            sx={{
+              color: "#FFFFFFFF",
+              background: "#4758d6",
+              borderRadius: "20px",
+              width: "100%",
+              fontWeight: "700",
+              padding: "8px 15px",
+              boxSizing: "border-box",
+            }}
+            onClick={() => null}
+          >
+            Сохранить
+          </Button>
+        </div>
       </div>
     </div >
   )

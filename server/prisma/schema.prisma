@@ -45,11 +45,13 @@ model Profile {
   roleId           Int
   isVerified       Boolean            @default(false)
   sportCategoryId  Int?
+  sportTypeId      Int?
   userId           Int                @unique
   user             User               @relation(fields: [userId], references: [id])
   role             Role               @relation(fields: [roleId], references: [id])
   status           StatusProfile?     @relation(fields: [statusId], references: [id])
   sportCategory    SportCategory?     @relation(fields: [sportCategoryId], references: [id])
+  sportType        SportType?         @relation(fields: [sportTypeId], references: [id])
   ProfileSportType ProfileSportType[]
 }
 
@@ -80,6 +82,7 @@ model SportType {
   image            String?
   ProfileSportType ProfileSportType[]
   TrainingPlan     TrainingPlan[]
+  Profile          Profile[]
 }
 
 model ProfileSportType {

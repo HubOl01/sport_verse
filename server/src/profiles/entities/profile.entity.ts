@@ -12,5 +12,6 @@ export class ProfileEntity implements Profile {
     roleId: number;
     isVerified: boolean;
     sportCategoryId: number;
+    sportTypeId: number;
     userId: number;
 }
