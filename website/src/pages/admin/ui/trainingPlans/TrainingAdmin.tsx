@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 import styles from "./Training.module.scss";
-import CardTraining from "../../../training/ui/cardTraining";
 import { TrainingService } from "../../../../shared/api/training.service";
 import { ITraining } from "../../../../shared/model/ITraining";
 import CardTrainingAdmin from "../comments/CardTrainingAdmin";

@@ -9,13 +9,14 @@ import { IUser } from '../../../shared/model/IUser';
 import { UserService } from '../../../shared/api/User.service';
 import EditIcon from '@mui/icons-material/Edit';
 import ProfileEdit from './ProfileEdit';
+import { calculateYearsWithEnd } from '../../../shared/utils/yearCalulator';
 
 export default function Profile() {
   const queryClient = useQueryClient();
   const { username } = useParams();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('Dione');
-  const [isEdit, setIsEdit] = useState(true);
+  const [isEdit, setIsEdit] = useState(false);
   const { data } = useQuery<IUser>(
     ['user', username],
     () => UserService.getUsername(username!),
@@ -39,91 +40,94 @@ export default function Profile() {
   };
   return (
     isEdit ?
-      <ProfileEdit onExit={() => setIsEdit(false)} profile={data?.profile} />
+      <ProfileEdit onExit={() => {
+        queryClient.invalidateQueries(['user', username]);
+        setIsEdit(false)
+      }} profile={data?.profile} />
       :
-      <div>
-        <div className={styles.background}>
-          <IconButton
-            aria-label="edit"
-            onClick={handleEditClick}
+      <div className={styles.background}>
+        <IconButton
+          aria-label="edit"
+          onClick={handleEditClick}
+          sx={{
+            position: 'absolute',
+            top: "70px",
+            right: "20px",
+          }}
+        >
+          <EditIcon
             sx={{
-              position: 'absolute',
-              top: "70px",
-              right: "20px",
-            }}
-          >
-            <EditIcon
-              sx={{
-                color: "white",
-              }} />
-          </IconButton>
-          <Box
+              color: "white",
+            }} />
+        </IconButton>
+        <Box
+          sx={{
+            width: "110px",
+            height: "110px",
+            borderRadius: "50%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            top: "45px",
+            left: "45px",
+            backgroundColor: "rgba(255, 255, 255)",
+          }}
+        >
+          <Avatar
+            src={data?.profile?.url_avatar || undefined}
             sx={{
-              width: "110px",
-              height: "110px",
-              borderRadius: "50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-              top: "45px",
-              left: "45px",
-              backgroundColor: "rgba(255, 255, 255)",
-            }}
-          >
-            <Avatar sx={{
-              width: "100px",
-              height: "100px",
+              width: 100,
+              height: 100,
             }}>
-            </Avatar>
-          </Box>
+          </Avatar>
+        </Box>
 
-          <div className={styles.backgroundText}>
-            <div className='flex'>
-              <div className={`${styles.title_profile}`}>
-                {data?.profile?.name}
-              </div>
-              <div className={`${styles.title_emoji}`} onClick={handleClick}>
-                {data?.profile?.status?.svg_image!}
-              </div>
-              <DialogStatus
-                keepMounted
-                status={data?.profile?.status!}
-                open={open}
-                onClose={handleClose}
-                value={value}
-                profile={data?.profile!}
-              />
+        <div className={styles.backgroundText}>
+          <div className='flex'>
+            <div className={`${styles.title_profile}`}>
+              {data?.profile?.name}
             </div>
-            <div className={`${styles.title_content}`}>
-              {data?.profile?.role?.title}
+            <div className={`${styles.title_emoji}`} onClick={handleClick}>
+              {data?.profile?.status?.svg_image!}
             </div>
-            <div className={`${styles.about}`}>
-              {data?.profile?.about}
-            </div>
+            <DialogStatus
+              keepMounted
+              status={data?.profile?.status!}
+              open={open}
+              onClose={handleClose}
+              value={value}
+              profile={data?.profile!}
+            />
           </div>
-          <Card
-            className="justify-center content-center self-center"
-            variant="outlined"
-            sx={{
-              // marginBottom: '20px',
-              borderRadius: '20px',
-              marginLeft: "20px",
-              marginRight: "20px",
-            }}
-          >
-            <div className="self-center p-2 pr-3 pl-3">
-              <div className={`${styles.title_about}`}>
-                О себе
-              </div>
-              <br />
-              <ListTile title='Дата рождения:' content='1 января 1990' />
-              <ListTile title='Вид спорта:' content={data?.profile?.sportType?.title!} />
-              <ListTile title='Спортивный стаж:' content='15 лет' />
-              <ListTile title='Спортивный разряд:' content={data?.profile?.sportCategory?.title!} />
-            </div>
-          </Card>
+          <div className={`${styles.title_content}`}>
+            {data?.profile?.role?.title}
+          </div>
+          <div className={`${styles.about}`}>
+            {data?.profile?.about}
+          </div>
         </div>
+        <Card
+          className="justify-center content-center self-center"
+          variant="outlined"
+          sx={{
+            // marginBottom: '20px',
+            borderRadius: '20px',
+            marginLeft: "20px",
+            marginRight: "20px",
+          }}
+        >
+          <div className="self-center p-2 pr-3 pl-3">
+            <div className={`${styles.title_about}`}>
+              О себе
+            </div>
+            <br />
+            <ListTile title='Дата рождения:' content='1 января 1990' />
+            <ListTile title='Вид спорта:' content={data?.profile?.sportType?.title!} />
+            <ListTile title='Спортивный стаж:' content={data?.profile?.startSportDate ? calculateYearsWithEnd(data?.profile?.startSportDate) : 'Nan'} />
+            <ListTile title='Спортивный разряд:' content={data?.profile?.sportCategory?.title!} />
+          </div>
+        </Card>
       </div>
   )
 }

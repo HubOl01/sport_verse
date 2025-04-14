@@ -1,37 +1,37 @@
-export var apiHost = "http://localhost:3000";
-export var apiTraining = "/training-plans";
-export var apiTrainingPrivate = "/training-plans/findAllPrivate";
-export var apiTrainingPublic = "/training-plans/findAllPublic";
-export var apiTrainingGetIdFirst = "/training-plans/getIdFirst";
-export var apiProfile = "/profiles";
-export var apiExercises = "/exercises";
-export var apiExercisesPublish = "/exercises/findAllPublic";
-export var apiExercisesName = "/exercises/findAll";
-export var apiPlanExercise = "/plan-exercises";
-export var apiPlanExerciseDeleteAll = "/plan-exercises/deleteAllExercises";
-export var apiPlanExerciseAllPlan = "/plan-exercises/findAllPlan";
-export var apiPlanExercisesGetIdFirst = "/plan-exercises/getIdFirst";
-export var apiProfileSportTypes = "/profile-sport-types";
-export var apiSportTypes = "/sport-types";
-export var apiStatuses = "/statuses";
-export var apiRoles = "/roles";
-export var apiUsers = "/users";
-export var apiUsersUserName = "/users/username";
-export var apiExerciseCategories = "/exercise-categories";
-export var apiExerciseSets = "/exercise-sets";
-export var apiExerciseSetsFindAllPlanExercises =
-  "/exercise-sets/findAllPlanExercises";
-export var apiExerciseSetsRemovePlanExercise =
-  "/exercise-sets/removePlanExercise";
-export var apiTrainingResults = "/training-results";
-export var apiPublishStatuses = "/publish-statuses";
-export var apiStatusesTraining = "/statuses-training";
-export var apiAuthLogin = "/auth/login";
-export var apiAuthRegister = "/auth/login";
-export var apiNews = "/news";
-export var apiComment = "/comment-training";
-export var apiCommentTraining = "/comment-training/training";
-export var apiCommentTrainingCount = "/comment-training/training/count";
-export var apiLike = "/like-training";
-export var apiLikeCount = "/like-training/likesCount";
-export var apiSportCategories = "/sport-categories";
+export {
+  apiHost,
+  apiTraining,
+  apiTrainingPrivate,
+  apiTrainingPublic,
+  apiTrainingGetIdFirst,
+  apiProfile,
+  apiExercises,
+  apiExercisesPublish,
+  apiExercisesName,
+  apiPlanExercise,
+  apiPlanExerciseDeleteAll,
+  apiPlanExerciseAllPlan,
+  apiPlanExercisesGetIdFirst,
+  apiProfileSportTypes,
+  apiSportTypes,
+  apiStatuses,
+  apiRoles,
+  apiUsers,
+  apiUsersUserName,
+  apiExerciseCategories,
+  apiExerciseSets,
+  apiExerciseSetsFindAllPlanExercises,
+  apiExerciseSetsRemovePlanExercise,
+  apiTrainingResults,
+  apiPublishStatuses,
+  apiStatusesTraining,
+  apiAuthLogin,
+  apiAuthRegister,
+  apiNews,
+  apiComment,
+  apiCommentTraining,
+  apiCommentTrainingCount,
+  apiLike,
+  apiLikeCount,
+  apiSportCategories,
+} from "./backend";

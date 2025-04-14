@@ -101,8 +101,10 @@ export default function Sign() {
   const handleLogin = async () => {
     setError(null);
     try {
-      const data = await loginAuth(login, pass);
-      localStorage.setItem('token', data.access_token);
+      await loginAuth(login, pass);
+      // localStorage.setItem('token', data.access_token);
+      // localStorage.setItem("userId", data.user.id);
+      // localStorage.setItem("username", data.user.username);
       navigate('/');
       window.location.reload();
     } catch (err) {

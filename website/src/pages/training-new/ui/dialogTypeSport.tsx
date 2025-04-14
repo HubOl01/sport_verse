@@ -17,7 +17,7 @@ export interface dialogSportTypeProps {
 export function DialogSportType(props: dialogSportTypeProps) {
     const { onClose, value: valueProp, open, onSelectExercise, ...other } = props;
     const [value, setValue] = useState(valueProp);
-    const { data, isLoading, error } = useQuery([apiSportTypes], () => TypeSportService.getAll()
+    const { data } = useQuery([apiSportTypes], () => TypeSportService.getAll()
     )
 
     // if (isLoading) return <p>Загрузка...</p>;

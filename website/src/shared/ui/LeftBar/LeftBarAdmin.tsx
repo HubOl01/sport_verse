@@ -3,6 +3,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { itemsBarAdmin } from '../../data/itemsBarAdmin';
 import Divider from '@mui/material/Divider';
+import { useAuth } from '../../utils/useAuth';
 
 
 
@@ -17,12 +18,18 @@ function indexBarAdmin() {
 
 export default function LeftBarAdmin() {
     const [selectedIndex, setSelectedIndex] = React.useState(indexBarAdmin);
+    const { user } = useAuth();
     const navigate = useNavigate();
+
+    if (!user?.token) {
+        navigate("/login");
+        return null;
+    }
     const handleListItemClick = (
         index: number,
     ) => {
         setSelectedIndex(index);
-        navigate(itemsBarAdmin[index].link)
+        navigate(itemsBarAdmin[index].id === 4 ? `${itemsBarAdmin[index].link}/${user.username}` : itemsBarAdmin[index].link)
     };
 
 
@@ -32,7 +39,7 @@ export default function LeftBarAdmin() {
             >
                 {itemsBarAdmin.map((item) =>
                     <React.Fragment key={item.id}>
-                        {item.id === 4 && (
+                        {item.id === 5 && (
                             <Divider
                                 component="li"
                                 sx={{

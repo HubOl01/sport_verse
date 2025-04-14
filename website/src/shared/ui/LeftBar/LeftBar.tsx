@@ -2,6 +2,7 @@ import { Box, List, ListItemButton, ListItemText } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { itemsBar } from '../../data/itemsBar';
+import { useAuth } from '../../utils/useAuth';
 
 
 function indexBar() {
@@ -15,12 +16,18 @@ function indexBar() {
 
 export default function LeftBar() {
     const [selectedIndex, setSelectedIndex] = React.useState(indexBar);
+    const { user } = useAuth();
     const navigate = useNavigate();
+
+    if (!user?.token) {
+        navigate("/login");
+        return null;
+    }
     const handleListItemClick = (
         index: number,
     ) => {
         setSelectedIndex(index);
-        navigate(itemsBar[index].link)
+        navigate(itemsBar[index].id === 4 ? `${itemsBar[index].link}/${user.username}` : itemsBar[index].link)
     };
 
 

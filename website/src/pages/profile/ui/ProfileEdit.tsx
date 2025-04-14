@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Card, IconButton } from '@mui/material'
+import { Avatar, Box, Button, Card, IconButton, Stack, Typography } from '@mui/material'
 import styles from './Profile.module.scss'
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -20,6 +20,10 @@ import { IRoleProfile } from '../../../shared/model/IRoleProfile';
 import { ISportCategory } from '../../../shared/model/ISportCategory';
 import { DialogSportCategoryList } from './dialogSportCategory';
 import { IProfile } from '../../../shared/model/IProfile';
+import { ProfileService } from '../../../shared/api/Profile.service';
+import { MySwitch } from '../../../components/MySwitch';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { storage } from '../../../shared/config/firebaseConfig';
 
 interface ProfileEditProps {
   onExit: () => void;
@@ -29,13 +33,15 @@ interface ProfileEditProps {
 export default function ProfileEdit(props: ProfileEditProps) {
   const queryClient = useQueryClient();
   const { username } = useParams();
-  const [name, setName] = useState('');
-  const [about, setAbout] = useState('');
+  const [name, setName] = useState(props.profile?.name ?? '');
+  const [about, setAbout] = useState(props.profile?.about ?? '');
   // const [about, setAbout] = useState('');
   // const [value, setValue] = useState('Dione');
-  const [birthDate, setBirthDate] = useState<Date>(new Date('1990-01-01'));
-  const [startSportDate, setStartSportDate] = useState<Date>(new Date('2010-01-01'));
-  const [image, setImage] = useState<string | null>(null);
+  const [birthDate, setBirthDate] = useState<Date>(new Date(props.profile?.dateOfBirth ?? '1990-01-01'));
+  const [startSportDate, setStartSportDate] = useState<Date>(new Date(props.profile?.startSportDate ?? '2010-01-01'));
+  const [endSportDate, setEndSportDate] = useState<Date>(props.profile?.endSportDate ? new Date(props.profile?.endSportDate) : new Date());
+  const [isEndSportDate, setIsEndSportDate] = useState<boolean>(props.profile?.endSportDate ? true : false);
+  const [image, setImage] = useState<string | null>(props.profile?.url_avatar ?? null);
   const [file, setFile] = useState<File | null>(null);
   const [openDialog, setOpenDialog] = useState<{
     sportType: boolean;
@@ -110,6 +116,44 @@ export default function ProfileEdit(props: ProfileEditProps) {
     setFile(selectedFile); // Сохраняем файл в состоянии
     setImage(URL.createObjectURL(selectedFile)); // Предварительный просмотр
   };
+
+  const handleSave = async () => {
+    if (props.profile) {
+      try {
+        let imageUrl = image;
+
+        // Если выбран файл, загружаем его в Firebase
+        if (file) {
+          const storageRef = ref(storage, `images/${file.name}`);
+          await uploadBytes(storageRef, file);
+          imageUrl = await getDownloadURL(storageRef);
+        }
+
+        // Обновляем данные новости
+
+        await ProfileService.update(props.profile.id!, {
+          name: name,
+          dateOfBirth: birthDate,
+          startSportDate: startSportDate,
+          endSportDate: isEndSportDate ? endSportDate : undefined,
+          url_avatar: imageUrl!,
+          about: about,
+          statusId: props.profile.statusId,
+          roleId: selectedValues.role.id!,
+          sportCategoryId: selectedValues.sportCategory.id,
+          isVerified: props.profile.isVerified,
+          userId: props.profile.userId,
+        })
+        // Очищаем состояние
+        setFile(null);
+
+      } catch (error) {
+        console.error("Ошибка при сохранении новости:", error);
+      }
+
+      props.onExit();
+    }
+  }
   return (
     <div>
       <div className={`${styles.background}`}>
@@ -313,17 +357,35 @@ export default function ProfileEdit(props: ProfileEditProps) {
                 </LocalizationProvider>
               </div>
             </div>
-            {/* <div className='flex items-center'>
+            <div className='flex items-center'>
               <div className={`${styles.title_about_title}`}>
-                Дата окончания спортивной карьеры:
+                Закончили ли вы спортивную карьеру:
               </div>
-              <div className={`${styles.title_about_content}`}>
-                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
-                  <MyDatePicker label={'Укажите дату'} value={startSportDate}
-                    onChange={(newValue) => { setStartSportDate(newValue!) }} />
-                </LocalizationProvider>
+
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <Typography>Нет</Typography>
+                <MySwitch
+                  checked={isEndSportDate}
+                  onChange={(ev) => setIsEndSportDate(ev.target.checked)}
+                />
+                <Typography>Да</Typography>
+              </Stack>
+            </div>
+            {
+              isEndSportDate &&
+              <div className='flex items-center'>
+                <div className={`${styles.title_about_title}`}>
+                  Дата окончания спортивной карьеры:
+                </div>
+                <div className={`${styles.title_about_content}`}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
+                    <MyDatePicker label={'Укажите дату'} value={endSportDate}
+                      onChange={(newValue) => { setEndSportDate(newValue!) }} />
+                  </LocalizationProvider>
+                </div>
               </div>
-            </div> */}
+
+            }
 
           </div>
 
@@ -342,7 +404,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
               padding: "8px 15px",
               boxSizing: "border-box",
             }}
-            onClick={() => null}
+            onClick={handleSave}
           >
             Сохранить
           </Button>

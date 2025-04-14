@@ -17,6 +17,7 @@ import NewsEdit from '../../pages/admin/ui/news/NewsEdit';
 import CommentsAdmin from '../../pages/admin/ui/comments/CommentsAdmin';
 import CommentsDetail from '../../pages/admin/ui/comments/CommentsRead';
 import TrainingAdmin from '../../pages/admin/ui/trainingPlans/TrainingAdmin';
+import Search from '../../pages/search/ui/Search';
 
 export default function Routers() {
   return (
@@ -34,6 +35,7 @@ export default function Routers() {
       {CurrentRole === Roles.ADMIN && (<Route path="/admin/news/:id" element={<NewsEdit />} />)}
       <Route path="/register" element={<Register />} />
       <Route path="/training" element={<Training />} />
+      <Route path="/search" element={<Search />} />
       <Route path="/stat" element={<StatPage />} />
       <Route path="/training/new" element={<TrainingEdit />} />
       <Route path="/training/:id" element={<TrainingDetail />} />

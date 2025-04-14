@@ -3,20 +3,36 @@ import styles from './Header.module.scss';
 import { Avatar, Button, Menu, MenuItem } from '@mui/material';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
+import { IUser } from '../../model/IUser';
+import { UserService } from '../../api/User.service';
+import { useQuery } from 'react-query';
+import { username } from '../../data/user';
+import { useAuth } from '../../utils/useAuth';
 
 export default function Header() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
+    const { data } = useQuery<IUser>(
+        ['user', username],
+        () => UserService.getUsername(user.username!),
+        { enabled: !!username }
+    );
+    if (!user?.token) {
+        navigate("/login");
+        return null;
+    }
     const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
         setAnchorEl(event.currentTarget);
 
     };
-    const navigate = useNavigate();
 
     const handleClose = (title: String) => {
         switch (title) {
             case "profile":
-                navigate("/profile");
+                navigate(`/profile/${user.username}`);
                 break;
             case "my_training":
                 navigate("/training");
@@ -61,10 +77,12 @@ export default function Header() {
 
                     {location.pathname !== '/profile' && (
                         <div>
-                            <Avatar sx={{
-                                height: "50px",
-                                width: "50px",
-                            }}
+                            <Avatar
+                                src={data?.profile?.url_avatar || undefined}
+                                sx={{
+                                    height: "50px",
+                                    width: "50px",
+                                }}
                                 onClick={handleClick}
                             />
                             {/* <img

@@ -10,7 +10,29 @@ export class UsersService {
     return this.prisma.user.create({ data: createUserDto });
   }
   findAll() {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      include: {
+        profile: {
+          select: {
+            id: true,
+            name: true,
+            dateOfBirth: true,
+            url_avatar: true,
+            about: true,
+            statusId: true,
+            roleId: true,
+            startSportDate: true,
+            endSportDate: true,
+            isVerified: true,
+            userId: true,
+            status: true,
+            role: true,
+            sportType: true,
+            sportCategory: true,
+          },
+        },
+      },
+    });
   }
   findOne(id: number) {
     return this.prisma.user.findUnique({ where: { id: id } });
@@ -31,6 +53,8 @@ export class UsersService {
             about: true,
             statusId: true,
             roleId: true,
+            startSportDate: true,
+            endSportDate: true,
             isVerified: true,
             userId: true,
             status: true,
