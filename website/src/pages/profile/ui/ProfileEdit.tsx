@@ -1,15 +1,12 @@
 import { Avatar, Box, Button, Card, IconButton } from '@mui/material'
 import styles from './Profile.module.scss'
-import ListTile from './ListTile'
 import { useEffect, useState } from 'react';
-import { DialogStatus } from './dialog';
 import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from 'react-query';
 import { IUser } from '../../../shared/model/IUser';
 import { UserService } from '../../../shared/api/User.service';
 import EditIcon from '@mui/icons-material/Edit';
 import MyTextField from '../../../components/MyTextField';
-import MyDateTimePicker from '../../../components/MyDateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ru } from 'date-fns/locale';
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
@@ -18,6 +15,10 @@ import MyButton from '../../../components/MyButton'
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { DialogSportType } from '../../training-new/ui/dialogTypeSport';
 import { ISportType } from '../../../shared/model/ISportType';
+import { DialogRoleList } from './dialogRole';
+import { IRoleProfile } from '../../../shared/model/IRoleProfile';
+import { ISportCategory } from '../../../shared/model/ISportCategory';
+import { DialogSportCategoryList } from './dialogSportCategory';
 
 interface ProfileEditProps {
   onExit: () => void;
@@ -26,23 +27,51 @@ interface ProfileEditProps {
 export default function ProfileEdit(props: ProfileEditProps) {
   const queryClient = useQueryClient();
   const { username } = useParams();
-  const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [about, setAbout] = useState('');
   // const [about, setAbout] = useState('');
-  const [value, setValue] = useState('Dione');
+  // const [value, setValue] = useState('Dione');
   const [birthDate, setBirthDate] = useState<Date>(new Date('1990-01-01'));
   const [startSportDate, setStartSportDate] = useState<Date>(new Date('2010-01-01'));
   const [image, setImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [openSportType, setOpenSportType] = useState(false);
-  const [valueSportType, setValueSportType] = useState<ISportType>({ id: 0, title: "", image: null });
-  const handleCloseSportType = (newValue?: string) => {
-    setOpenSportType(false);
+  const [openDialog, setOpenDialog] = useState<{
+    sportType: boolean;
+    role: boolean;
+    sportCategory: boolean;
+  }>({
+    sportType: false,
+    role: false,
+    sportCategory: false,
+  });
 
-    if (newValue) {
-      setValue(newValue);
-    }
+  const [selectedValues, setSelectedValues] = useState<{
+    sportType: ISportType;
+    role: IRoleProfile;
+    sportCategory: ISportCategory;
+  }>({
+    sportType: { id: 0, title: "Выберите вид спорта", image: null },
+    role: { id: 0, title: "Выберите вашу роль" },
+    sportCategory: { id: 0, title: "Выберите разряд или звание", image: null },
+  });
+
+  // Открытие диалога
+  const handleOpenDialog = (type: keyof typeof openDialog) => {
+    setOpenDialog((prev) => ({ ...prev, [type]: true }));
+  };
+
+  // Закрытие диалога
+  const handleCloseDialog = (type: keyof typeof openDialog) => {
+    setOpenDialog((prev) => ({ ...prev, [type]: false }));
+  };
+
+  // Выбор значения из диалога
+  const handleSelectValue = (
+    type: keyof typeof selectedValues,
+    value: ISportType | IRoleProfile | ISportCategory
+  ) => {
+    setSelectedValues((prev) => ({ ...prev, [type]: value }));
+    handleCloseDialog(type);
   };
 
   const { data } = useQuery<IUser>(
@@ -52,16 +81,11 @@ export default function ProfileEdit(props: ProfileEditProps) {
   );
   useEffect(() => {
     queryClient.invalidateQueries(['user', username]);
-    if (data) {
-      setValueSportType(data?.profile?.sportType ?? { id: 1, title: "K", image: null });
-    }
+    // if (data) {
+    //   setValueSportType(data?.profile?.sportType ?? { id: 0, title: "Выберите вид спорта", image: null });
+    // }
   }, [data]);
-  const handleAddSelectedSportType = (sportType: ISportType) => {
-    setValueSportType(sportType);
-  };
-  const handleClickSportType = () => {
-    setOpenSportType(true);
-  };
+
   const handleEditClick = () => {
     props.onExit();
   };
@@ -190,7 +214,8 @@ export default function ProfileEdit(props: ProfileEditProps) {
                   padding: "0px",
                 }
               }
-              onClick={() => null} label={data?.profile?.role?.title!} />
+              onClick={() => handleOpenDialog("role")} label={selectedValues.role!.title} />
+            <DialogRoleList keepMounted open={openDialog.role} onClose={() => handleCloseDialog("role")} onSelect={(newValue) => handleSelectValue('role', newValue)} value={selectedValues.role!} />
           </div>
           <div className={`${styles.about}`}>
             {/* {data?.profile?.about} */}
@@ -250,8 +275,8 @@ export default function ProfileEdit(props: ProfileEditProps) {
                       padding: "5px 0px 5px 0px",
                     }
                   }
-                  onClick={handleClickSportType} label={valueSportType.title} />
-                <DialogSportType keepMounted open={openSportType} onClose={handleCloseSportType} onSelectExercise={handleAddSelectedSportType} value={valueSportType!} />
+                  onClick={() => handleOpenDialog("sportType")} label={selectedValues.sportType!.title} />
+                <DialogSportType keepMounted open={openDialog.sportType} onClose={() => handleCloseDialog('sportType')} onSelectExercise={(newValue) => handleSelectValue("sportType", newValue)} value={selectedValues.sportType!} />
               </div>
 
             </div>
@@ -271,8 +296,9 @@ export default function ProfileEdit(props: ProfileEditProps) {
                       padding: "5px 0px 5px 0px",
                     }
                   }
-                  onClick={() => null} label={'КМС'} />
+                  onClick={() => handleOpenDialog("sportCategory")} label={selectedValues.sportCategory.title} />
               </div>
+              <DialogSportCategoryList keepMounted open={openDialog.sportCategory} onClose={() => handleCloseDialog("sportCategory")} onSelect={(sportCategory) => handleSelectValue("sportCategory", sportCategory)} value={selectedValues.sportCategory!} />
             </div>
             <div className='flex items-center'>
               <div className={`${styles.title_about_title}`}>

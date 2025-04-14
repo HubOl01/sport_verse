@@ -1,9 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import CloseIcon from '@mui/icons-material/Close';
-import { ProfileService } from "../../../shared/api/Profile.service";
-import { IProfile } from "../../../shared/model/IProfile";
 import { RoleProfileService } from "../../../shared/api/roleProfile.service";
 import { IRoleProfile } from "../../../shared/model/IRoleProfile";
 
@@ -11,21 +9,15 @@ interface dialogListProps {
     keepMounted: boolean;
     value: IRoleProfile;
     open: boolean;
-    profile: IProfile;
     onClose: (status?: IRoleProfile) => void;
-    onSelectStatus: (status: IRoleProfile) => void;
+    onSelect: (status: IRoleProfile) => void;
 }
 
 export function DialogRoleList(props: dialogListProps) {
-    const { onClose, value: valueProp, open, onSelectStatus: onSelectExercise, ...other } = props;
+    const { onClose, value: valueProp, open, onSelect: onSelectExercise, ...other } = props;
     const [value, setValue] = useState(valueProp);
-    const queryClient = useQueryClient();
     const { data } = useQuery(['roles'], () => RoleProfileService.getAll()
     )
-
-    // if (isLoading) return <p>Загрузка...</p>;
-    // if (error) return <p >Произошла ошибка при загрузке данных.</p>;
-    // console.log(data, error)
 
     if (props.open) {
         if (!open) {
@@ -39,15 +31,6 @@ export function DialogRoleList(props: dialogListProps) {
 
     const handleSelectExercise = async (roleProfile: IRoleProfile) => {
         onSelectExercise(roleProfile);
-        await ProfileService.update(props.profile.id!, {
-            statusId: roleProfile.id!,
-            name: props.profile.name,
-            url_avatar: props.profile.url_avatar,
-            about: props.profile.about,
-            roleId: props.profile.roleId,
-            userId: props.profile.userId
-        })
-        queryClient.invalidateQueries('user');
         handleClose();
     };
     return (
@@ -60,8 +43,7 @@ export function DialogRoleList(props: dialogListProps) {
         >
             <DialogTitle className="flex justify-between"
                 sx={{ padding: 2 }}
-            >Выберите статус
-
+            >Выберите роль
                 <IconButton
                     size="small"
                     edge="end"
@@ -86,7 +68,7 @@ export function DialogRoleList(props: dialogListProps) {
                             </ListItem>
                         ))
                     ) : (
-                        <p>Нет статусов</p>
+                        <p>Нет ролей</p>
                     )}
                 </List>
             </DialogContent>

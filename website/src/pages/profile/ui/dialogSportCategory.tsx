@@ -1,11 +1,7 @@
-import { Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import CloseIcon from '@mui/icons-material/Close';
-import { IStatusProfile } from "../../../shared/model/IStatusProfile";
-import { StatusProfileService } from "../../../shared/api/StatusProfile.service";
-import { ProfileService } from "../../../shared/api/Profile.service";
-import { IProfile } from "../../../shared/model/IProfile";
 import { SportCategoryService } from "../../../shared/api/SportCategory.service";
 import { ISportCategory } from "../../../shared/model/ISportCategory";
 
@@ -13,15 +9,13 @@ interface dialogListProps {
     keepMounted: boolean;
     value: ISportCategory;
     open: boolean;
-    profile: IProfile;
     onClose: (status?: ISportCategory) => void;
-    onSelectStatus: (status: ISportCategory) => void;
+    onSelect: (status: ISportCategory) => void;
 }
 
 export function DialogSportCategoryList(props: dialogListProps) {
-    const { onClose, value: valueProp, open, onSelectStatus: onSelectExercise, ...other } = props;
+    const { onClose, value: valueProp, open, onSelect: onSelectExercise, ...other } = props;
     const [value, setValue] = useState(valueProp);
-    const queryClient = useQueryClient();
     const { data } = useQuery(['sportCategories'], () => SportCategoryService.getAll()
     )
 
@@ -41,15 +35,6 @@ export function DialogSportCategoryList(props: dialogListProps) {
 
     const handleSelectExercise = async (model: ISportCategory) => {
         onSelectExercise(model);
-        await ProfileService.update(props.profile.id!, {
-            statusId: model.id!,
-            name: props.profile.name,
-            url_avatar: props.profile.url_avatar,
-            about: props.profile.about,
-            roleId: props.profile.roleId,
-            userId: props.profile.userId
-        })
-        queryClient.invalidateQueries('user');
         handleClose();
     };
     return (
@@ -61,9 +46,8 @@ export function DialogSportCategoryList(props: dialogListProps) {
             {...other}
         >
             <DialogTitle className="flex justify-between"
-                sx={{ padding: 2 }}
-            >Выберите статус
-
+                sx={{ padding: 2, fontSize: 18 }}
+            >Выберите спортивный разряд или звание
                 <IconButton
                     size="small"
                     edge="end"
@@ -86,7 +70,7 @@ export function DialogSportCategoryList(props: dialogListProps) {
                             </ListItem>
                         ))
                     ) : (
-                        <p>Нет статусов</p>
+                        <p>Нет разрядов</p>
                     )}
                 </List>
             </DialogContent>
