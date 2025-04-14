@@ -36,6 +36,7 @@ export class UsersService {
             status: true,
             role: true,
             sportType: true,
+            sportCategory: true,
           },
         },
       },

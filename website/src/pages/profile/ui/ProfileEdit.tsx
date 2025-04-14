@@ -19,9 +19,11 @@ import { DialogRoleList } from './dialogRole';
 import { IRoleProfile } from '../../../shared/model/IRoleProfile';
 import { ISportCategory } from '../../../shared/model/ISportCategory';
 import { DialogSportCategoryList } from './dialogSportCategory';
+import { IProfile } from '../../../shared/model/IProfile';
 
 interface ProfileEditProps {
   onExit: () => void;
+  profile?: IProfile;
 }
 
 export default function ProfileEdit(props: ProfileEditProps) {
@@ -50,9 +52,9 @@ export default function ProfileEdit(props: ProfileEditProps) {
     role: IRoleProfile;
     sportCategory: ISportCategory;
   }>({
-    sportType: { id: 0, title: "Выберите вид спорта", image: null },
-    role: { id: 0, title: "Выберите вашу роль" },
-    sportCategory: { id: 0, title: "Выберите разряд или звание", image: null },
+    sportType: props.profile?.sportType ?? { id: 0, title: "Выберите вид спорта", image: null },
+    role: props.profile?.role ?? { id: 0, title: "Выберите вашу роль" },
+    sportCategory: props.profile?.sportCategory ?? { id: 0, title: "Выберите разряд или звание", image: null },
   });
 
   // Открытие диалога

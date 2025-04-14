@@ -1,4 +1,5 @@
 import { IRoleProfile } from "./IRoleProfile";
+import { ISportCategory } from "./ISportCategory";
 import { ISportType } from "./ISportType";
 import { IStatusProfile } from "./IStatusProfile";
 
@@ -10,9 +11,11 @@ export interface IProfile {
   about: string;
   statusId: number;
   roleId: number;
+  sportCategoryId: number;
   isVerified?: boolean;
   userId: number;
   status?: IStatusProfile;
   role?: IRoleProfile;
   sportType?: ISportType;
+  sportCategory?: ISportCategory;
 }

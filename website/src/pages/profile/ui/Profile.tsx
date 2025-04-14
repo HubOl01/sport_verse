@@ -39,7 +39,7 @@ export default function Profile() {
   };
   return (
     isEdit ?
-      <ProfileEdit onExit={() => setIsEdit(false)} />
+      <ProfileEdit onExit={() => setIsEdit(false)} profile={data?.profile} />
       :
       <div>
         <div className={styles.background}>
@@ -118,9 +118,9 @@ export default function Profile() {
               </div>
               <br />
               <ListTile title='Дата рождения:' content='1 января 1990' />
-              <ListTile title='Вид спорта:' content='Легкая атлетика' />
+              <ListTile title='Вид спорта:' content={data?.profile?.sportType?.title!} />
               <ListTile title='Спортивный стаж:' content='15 лет' />
-              <ListTile title='Спортивный разряд:' content='КМС' />
+              <ListTile title='Спортивный разряд:' content={data?.profile?.sportCategory?.title!} />
             </div>
           </Card>
         </div>
