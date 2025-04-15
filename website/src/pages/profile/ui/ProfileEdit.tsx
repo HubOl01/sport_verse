@@ -56,7 +56,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
   const [selectedValues, setSelectedValues] = useState<{
     sportType: ISportType;
     role: IRoleProfile;
-    sportCategory: ISportCategory;
+    sportCategory?: ISportCategory;
   }>({
     sportType: props.profile?.sportType ?? { id: 0, title: "Выберите вид спорта", image: null },
     role: props.profile?.role ?? { id: 0, title: "Выберите вашу роль" },
@@ -129,26 +129,38 @@ export default function ProfileEdit(props: ProfileEditProps) {
           imageUrl = await getDownloadURL(storageRef);
         }
 
-        // Обновляем данные новости
 
-        await ProfileService.update(props.profile.id!, {
-          name: name,
-          dateOfBirth: birthDate,
-          startSportDate: startSportDate,
-          endSportDate: isEndSportDate ? endSportDate : undefined,
-          url_avatar: imageUrl!,
-          about: about,
-          statusId: props.profile.statusId,
-          roleId: selectedValues.role.id!,
-          sportCategoryId: selectedValues.sportCategory.id,
-          isVerified: props.profile.isVerified,
-          userId: props.profile.userId,
-        })
+
+        await ProfileService.update(props.profile.id!,
+          {
+            name: name,
+            dateOfBirth: birthDate,
+            startSportDate: startSportDate,
+            endSportDate: isEndSportDate ? endSportDate : undefined,
+            url_avatar: imageUrl!,
+            about: about,
+            statusId: props.profile.statusId,
+            roleId: selectedValues.role.id!,
+            sportCategoryId: selectedValues.sportCategory ? selectedValues.sportCategory!.id! : null,
+            isVerified: props.profile.isVerified,
+            userId: props.profile.userId,
+          }
+        )
+        //   await ProfileService.update(props.profile.id!, {
+        //     statusId: props.profile.statusId,
+        //     name: props.profile.name,
+        //     url_avatar: props.profile.url_avatar,
+        //     about: props.profile.about,
+        //     roleId: props.profile.roleId,
+        //     userId: props.profile.userId,
+        //     sportCategoryId: props.profile.sportCategoryId
+        // })
+        queryClient.invalidateQueries('user');
         // Очищаем состояние
         setFile(null);
 
       } catch (error) {
-        console.error("Ошибка при сохранении новости:", error);
+        console.error("Ошибка при сохранении профиля:", error);
       }
 
       props.onExit();
@@ -342,7 +354,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
                       padding: "5px 0px 5px 0px",
                     }
                   }
-                  onClick={() => handleOpenDialog("sportCategory")} label={selectedValues.sportCategory.title} />
+                  onClick={() => handleOpenDialog("sportCategory")} label={selectedValues.sportCategory ? selectedValues.sportCategory!.title : "Нет разряда"} />
               </div>
               <DialogSportCategoryList keepMounted open={openDialog.sportCategory} onClose={() => handleCloseDialog("sportCategory")} onSelect={(sportCategory) => handleSelectValue("sportCategory", sportCategory)} value={selectedValues.sportCategory!} />
             </div>

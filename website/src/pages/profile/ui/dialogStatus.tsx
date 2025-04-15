@@ -45,7 +45,8 @@ export function DialogStatusList(props: dialogListProps) {
             url_avatar: props.profile.url_avatar,
             about: props.profile.about,
             roleId: props.profile.roleId,
-            userId: props.profile.userId
+            userId: props.profile.userId,
+            sportCategoryId: props.profile.sportCategoryId
         })
         queryClient.invalidateQueries('user');
         handleClose();

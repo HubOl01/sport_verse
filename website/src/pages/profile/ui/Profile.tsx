@@ -138,9 +138,9 @@ export default function Profile() {
               </div>
               <br />
               <ListTile title='Дата рождения:' content='1 января 1990' />
-              <ListTile title='Вид спорта:' content={data?.profile?.sportType?.title!} />
-              <ListTile title='Спортивный стаж:' content={data?.profile?.startSportDate ? calculateYearsWithEnd(data?.profile?.startSportDate) : 'Nan'} />
-              <ListTile title='Спортивный разряд:' content={data?.profile?.sportCategory?.title!} />
+              <ListTile title='Вид спорта:' content={data?.profile?.sportType ? data?.profile?.sportType?.title! : "Не указан вид спорта"} />
+              <ListTile title='Спортивный стаж:' content={data?.profile?.startSportDate ? calculateYearsWithEnd(data?.profile?.startSportDate) : 'Не указана дата'} />
+              <ListTile title='Спортивный разряд:' content={data?.profile?.sportCategory ? data?.profile?.sportCategory?.title! : "Нет разряда"} />
             </div>
           </Card>
         </div>

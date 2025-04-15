@@ -22,6 +22,9 @@ import { LikeTrainingModule } from './like-training/like-training.module';
 import { AuthModule } from './auth/auth.module';
 import { NewsModule } from './news/news.module';
 import { SportCategoriesModule } from './sport-categories/sport-categories.module';
+import { TrainingGroupsModule } from './training-groups/training-groups.module';
+import { AthleteInGroupsModule } from './athlete-in-groups/athlete-in-groups.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -46,6 +49,9 @@ import { SportCategoriesModule } from './sport-categories/sport-categories.modul
     LikeTrainingModule,
     NewsModule,
     SportCategoriesModule,
+    TrainingGroupsModule,
+    AthleteInGroupsModule,
+    SubscriptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

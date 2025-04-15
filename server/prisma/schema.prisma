@@ -21,15 +21,22 @@ model User {
   createdAt  DateTime   @default(now())
   statusUser StatusUser @default(USER)
 
-  // Связь с тренировочными группами (спортсмены)
-  athletesIn      TrainingGroup[]   @relation("Athletes")
-  // Связь с тренировочными группами (тренер)
-  trainersIn      TrainingGroup[]   @relation("Trainers")
   TrainingPlan    TrainingPlan[]
   LikeTraining    LikeTraining[]
   CommentTraining CommentTraining[]
   ViewsTraining   ViewsTraining[]
   parentPlans     TrainingPlan[]    @relation("parentUser")
+
+  // Связь с тренировочными группами (спортсмены)
+  athleteInGroups AthleteInGroup[]
+
+  // Связь с тренировочными группами (тренер)
+  trainerInGroups TrainingGroup[] @relation("Trainers")
+  // Подписки (на кого подписан пользователь)
+  subscriptions   Subscription[]  @relation("Subscriber")
+
+  // Подписчики (кто подписан на пользователя)
+  subscribers Subscription[] @relation("SubscribedTo")
 }
 
 // Модель для профиля пользователя
@@ -184,13 +191,45 @@ model StatusTraining {
 
 // Модель для группы с тренером и спортсменами
 model TrainingGroup {
-  id        Int  @id @default(autoincrement())
-  trainerId Int
-  athleteId Int
-  // Связь с тренером
-  trainer   User @relation("Trainers", fields: [trainerId], references: [id])
-  // Связь со спортсменом
-  athlete   User @relation("Athletes", fields: [athleteId], references: [id])
+  id        Int      @id @default(autoincrement())
+  title     String // Название группы
+  desc      String? // Описание группы (необязательное)
+  trainerId Int // ID тренера
+  createdAt DateTime @default(now())
+
+  // Связь с тренером (один тренер на группу)
+  trainer User @relation("Trainers", fields: [trainerId], references: [id])
+
+  // Связь со спортсменами (многие спортсмены в одной группе)
+  athletes AthleteInGroup[]
+
+  // Дополнительные связи или поля
+}
+
+model AthleteInGroup {
+  id              Int      @id @default(autoincrement())
+  trainingGroupId Int
+  athleteId       Int
+  joinedAt        DateTime @default(now())
+
+  // Связи
+  trainingGroup TrainingGroup @relation(fields: [trainingGroupId], references: [id])
+  athlete       User          @relation(fields: [athleteId], references: [id])
+
+  @@unique([trainingGroupId, athleteId]) // Уникальность пары (группа, спортсмен)
+}
+
+model Subscription {
+  id             Int      @id @default(autoincrement())
+  subscriberId   Int // ID подписчика (кто подписывается)
+  subscribedToId Int // ID пользователя, на которого подписываются
+  createdAt      DateTime @default(now())
+
+  // Связи
+  subscriber   User @relation("Subscriber", fields: [subscriberId], references: [id])
+  subscribedTo User @relation("SubscribedTo", fields: [subscribedToId], references: [id])
+
+  @@unique([subscriberId, subscribedToId]) // Уникальность пары (подписчик, подписка)
 }
 
 enum StatusUser {

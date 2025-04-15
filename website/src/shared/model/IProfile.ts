@@ -7,13 +7,13 @@ export interface IProfile {
   id?: number;
   name: string;
   dateOfBirth?: Date;
-  startSportDate: Date;
+  startSportDate?: Date;
   endSportDate?: Date;
   url_avatar: string;
   about: string;
   statusId: number;
   roleId: number;
-  sportCategoryId: number;
+  sportCategoryId?: number | null;
   isVerified?: boolean;
   userId: number;
   status?: IStatusProfile;

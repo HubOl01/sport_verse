@@ -14,7 +14,7 @@ interface dialogListProps {
 }
 
 export function DialogSportCategoryList(props: dialogListProps) {
-    const { onClose, value: valueProp, open, onSelect: onSelectExercise, ...other } = props;
+    const { onClose, value: valueProp, open, onSelect: onSelect, ...other } = props;
     const [value, setValue] = useState(valueProp);
     const { data } = useQuery(['sportCategories'], () => SportCategoryService.getAll()
     )
@@ -33,8 +33,8 @@ export function DialogSportCategoryList(props: dialogListProps) {
         onClose(value);
     };
 
-    const handleSelectExercise = async (model: ISportCategory) => {
-        onSelectExercise(model);
+    const handleSelect = async (model?: ISportCategory) => {
+        onSelect(model! ?? undefined);
         handleClose();
     };
     return (
@@ -59,12 +59,19 @@ export function DialogSportCategoryList(props: dialogListProps) {
             </DialogTitle>
             <DialogContent dividers sx={{ padding: 0 }}>
                 <List>
+                    <ListItem
+                        key={"Нет разряда"}
+                        disablePadding>
+                        <ListItemButton onClick={() => handleSelect(undefined)}>
+                            <ListItemText id={"Нет разряда"} primary={"Нет разряда"} />
+                        </ListItemButton>
+                    </ListItem>
                     {Array.isArray(data) && data.length > 0 ? (
                         data.map((model: ISportCategory) => (
                             <ListItem
                                 key={model.id}
                                 disablePadding>
-                                <ListItemButton onClick={() => handleSelectExercise(model)}>
+                                <ListItemButton onClick={() => handleSelect(model)}>
                                     <ListItemText id={model.title} primary={model.title} />
                                 </ListItemButton>
                             </ListItem>
