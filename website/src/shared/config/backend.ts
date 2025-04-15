@@ -19,8 +19,10 @@ export var apiUsers = "/users";
 export var apiUsersUserName = "/users/username";
 export var apiExerciseCategories = "/exercise-categories";
 export var apiExerciseSets = "/exercise-sets";
-export var apiExerciseSetsFindAllPlanExercises = "/exercise-sets/findAllPlanExercises";
-export var apiExerciseSetsRemovePlanExercise = "/exercise-sets/removePlanExercise";
+export var apiExerciseSetsFindAllPlanExercises =
+  "/exercise-sets/findAllPlanExercises";
+export var apiExerciseSetsRemovePlanExercise =
+  "/exercise-sets/removePlanExercise";
 export var apiTrainingResults = "/training-results";
 export var apiPublishStatuses = "/publish-statuses";
 export var apiStatusesTraining = "/statuses-training";
@@ -33,3 +35,6 @@ export var apiCommentTrainingCount = "/comment-training/training/count";
 export var apiLike = "/like-training";
 export var apiLikeCount = "/like-training/likesCount";
 export var apiSportCategories = "/sport-categories";
+export var apiTrainingGroups = "/training-groups";
+export var apiAthleteInGroups = "/athlete-in-groups";
+export var apiSubscription = "/subscription";

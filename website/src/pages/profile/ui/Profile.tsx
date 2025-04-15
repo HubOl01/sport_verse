@@ -11,6 +11,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import ProfileEdit from './ProfileEdit';
 import { calculateYearsWithEnd } from '../../../shared/utils/yearCalulator';
 import { useAuth } from '../../../shared/utils/useAuth';
+import MyButton from '../../../components/MyButton';
+import { useSmallScreen } from '../../../shared/utils/displaySizes';
 
 export default function Profile() {
   const queryClient = useQueryClient();
@@ -18,6 +20,8 @@ export default function Profile() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('Dione');
   const [isEdit, setIsEdit] = useState(false);
+  const isSmallScreen = useSmallScreen();
+
 
   const { data } = useQuery<IUser>(
     ['user', username],
@@ -121,6 +125,24 @@ export default function Profile() {
             <div className={`${styles.about}`}>
               {data?.profile?.about}
             </div>
+            {
+              USER.username === data?.username ? <></> :
+                isSmallScreen ?
+                  <div className={`mt-6`} style={
+                    {
+                      marginLeft: "20px",
+                      marginRight: "20px",
+                    }
+                  }>
+                    <MyButton onClick={() => null} label={'Подписаться'} style={{
+                      width: "100%",
+                    }} />
+                  </div>
+                  :
+                  <div className={`${styles.about} mt-5`}>
+                    <MyButton onClick={() => null} label={'Подписаться'} />
+                  </div>
+            }
           </div>
           <Card
             className="justify-center content-center self-center"

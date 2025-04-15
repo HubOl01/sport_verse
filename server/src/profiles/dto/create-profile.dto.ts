@@ -25,8 +25,8 @@ export class CreateProfileDto {
   @ApiProperty({ required: true })
   @IsNumber()
   userId: number;
-  @ApiProperty({ required: true })
-  sportCategoryId: number;
+  @ApiProperty({ required: false })
+  sportCategoryId?: number;
   @ApiProperty({ required: false })
   sportTypeId: number;
 }

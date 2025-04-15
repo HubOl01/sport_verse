@@ -12,8 +12,9 @@ export interface IProfile {
   url_avatar: string;
   about: string;
   statusId: number;
-  roleId: number;
+  roleId?: number;
   sportCategoryId?: number | null;
+  sportTypeId?: number | null;
   isVerified?: boolean;
   userId: number;
   status?: IStatusProfile;

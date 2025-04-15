@@ -12,7 +12,7 @@ import { useAuth } from '../../utils/useAuth';
 export default function Header() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
     const { data } = useQuery<IUser>(
         ['profile', username],
@@ -35,8 +35,11 @@ export default function Header() {
             case "my_training":
                 navigate("/training");
                 break;
+            case "logout":
+                logout()
+                break;
             default:
-                navigate("/");
+                // navigate("/");
                 break;
         }
         setAnchorEl(null);
@@ -102,9 +105,9 @@ export default function Header() {
                                 onClose={handleClose}
                                 MenuListProps={{ 'aria-labelledby': 'basic-button' }}
                             >
-                                <MenuItem onClick={() => handleClose("profile")}>Profile</MenuItem>
+                                <MenuItem onClick={() => handleClose("profile")}>Мой профиль</MenuItem>
                                 <MenuItem onClick={() => handleClose("my_training")}>Мои тренировки</MenuItem>
-                                <MenuItem onClick={() => handleClose("Logout")}>Выйти</MenuItem>
+                                <MenuItem onClick={() => handleClose("logout")} sx={{ color: 'red' }}>Выйти</MenuItem>
                             </Menu>
                         </div>
                     )}

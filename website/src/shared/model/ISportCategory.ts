@@ -1,5 +1,5 @@
 export interface ISportCategory {
-  id: number;
+  id: number | null;
   title: string;
   image: null;
 }

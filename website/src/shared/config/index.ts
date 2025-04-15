@@ -34,4 +34,7 @@ export {
   apiLike,
   apiLikeCount,
   apiSportCategories,
+  apiAthleteInGroups,
+  apiSubscription,
+  apiTrainingGroups,
 } from "./backend";

@@ -60,7 +60,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
   }>({
     sportType: props.profile?.sportType ?? { id: 0, title: "Выберите вид спорта", image: null },
     role: props.profile?.role ?? { id: 0, title: "Выберите вашу роль" },
-    sportCategory: props.profile?.sportCategory ?? { id: 0, title: "Выберите разряд или звание", image: null },
+    sportCategory: props.profile?.sportCategory ?? { id: null, title: "Выберите разряд или звание", image: null },
   });
 
   // Открытие диалога
@@ -140,21 +140,13 @@ export default function ProfileEdit(props: ProfileEditProps) {
             url_avatar: imageUrl!,
             about: about,
             statusId: props.profile.statusId,
+            sportTypeId: selectedValues.sportType.id!,
             roleId: selectedValues.role.id!,
             sportCategoryId: selectedValues.sportCategory ? selectedValues.sportCategory!.id! : null,
             isVerified: props.profile.isVerified,
             userId: props.profile.userId,
           }
         )
-        //   await ProfileService.update(props.profile.id!, {
-        //     statusId: props.profile.statusId,
-        //     name: props.profile.name,
-        //     url_avatar: props.profile.url_avatar,
-        //     about: props.profile.about,
-        //     roleId: props.profile.roleId,
-        //     userId: props.profile.userId,
-        //     sportCategoryId: props.profile.sportCategoryId
-        // })
         queryClient.invalidateQueries('user');
         // Очищаем состояние
         setFile(null);
@@ -277,7 +269,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
           </div>
           <div className={`${styles.about}`}>
             {/* {data?.profile?.about} */}
-            <MyTextField label={"О себе"} onChange={(e) => setAbout(e.target.value)} value={about}
+            <MyTextField label={"О себе кратко"} onChange={(e) => setAbout(e.target.value)} value={about}
               isAutocomplete={false}
               isLines={true}
               maxRows={3}
@@ -304,7 +296,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
               О себе
             </div>
             <br />
-            <div className='flex items-center'>
+            <div className={`${styles.listTile}`}>
               <div className={`${styles.title_about_title}`}>
                 Дата рождения:
               </div>
@@ -315,7 +307,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
                 </LocalizationProvider>
               </div>
             </div>
-            <div className='flex items-center'>
+            <div className={`${styles.listTile}`}>
               <div className={`${styles.title_about_title}`}>
                 Вид спорта:
               </div>
@@ -338,7 +330,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
               </div>
 
             </div>
-            <div className='flex items-center'>
+            <div className={`${styles.listTile}`}>
               <div className={`${styles.title_about_title}`}>
                 Спортивный разряд:
               </div>
@@ -358,7 +350,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
               </div>
               <DialogSportCategoryList keepMounted open={openDialog.sportCategory} onClose={() => handleCloseDialog("sportCategory")} onSelect={(sportCategory) => handleSelectValue("sportCategory", sportCategory)} value={selectedValues.sportCategory!} />
             </div>
-            <div className='flex items-center'>
+            <div className={`${styles.listTile}`}>
               <div className={`${styles.title_about_title}`}>
                 Дата начала спортивной карьеры:
               </div>
@@ -369,7 +361,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
                 </LocalizationProvider>
               </div>
             </div>
-            <div className='flex items-center'>
+            <div className={`${styles.listTile}`}>
               <div className={`${styles.title_about_title}`}>
                 Закончили ли вы спортивную карьеру:
               </div>
@@ -385,7 +377,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
             </div>
             {
               isEndSportDate &&
-              <div className='flex items-center'>
+              <div className={`${styles.listTile}`}>
                 <div className={`${styles.title_about_title}`}>
                   Дата окончания спортивной карьеры:
                 </div>
