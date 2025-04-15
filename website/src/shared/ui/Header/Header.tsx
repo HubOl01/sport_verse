@@ -14,9 +14,8 @@ export default function Header() {
     const open = Boolean(anchorEl);
     const { user } = useAuth();
     const navigate = useNavigate();
-
     const { data } = useQuery<IUser>(
-        ['user', username],
+        ['profile', username],
         () => UserService.getUsername(user.username!),
         { enabled: !!username }
     );
@@ -26,7 +25,6 @@ export default function Header() {
     }
     const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
         setAnchorEl(event.currentTarget);
-
     };
 
     const handleClose = (title: String) => {

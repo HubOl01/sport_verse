@@ -1,14 +1,26 @@
 import { useQuery } from "react-query"
 import { UserService } from "../../../shared/api/User.service"
-import { Avatar, Box, Divider, ListItemAvatar, ListItemButton, ListItemText, Typography } from "@mui/material";
+import { Avatar, Box, Chip, Divider, ListItemAvatar, ListItemButton, ListItemText, Typography } from "@mui/material";
 import React, { useState } from "react";
 import MyTextField from "../../../components/MyTextField";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../shared/utils/useAuth";
 
 export default function Search() {
     const [searchStr, setSearchStr] = useState('');
     const { data } = useQuery('users', () => UserService.getAll());
     const navigate = useNavigate();
+    const { user: USER } = useAuth();
+
+    if (!USER?.token) {
+        navigate("/login");
+        return null;
+    }
+
+    const filteredUsers = data?.filter((user) =>
+        user.username.toLowerCase().includes(searchStr.toLowerCase()) ||
+        (user.profile?.name || "").toLowerCase().includes(searchStr.toLowerCase())
+    );
     return (
         <Box
 
@@ -25,12 +37,14 @@ export default function Search() {
                         margin: 0,
                         borderRadius: "25px",
                     }}
-                    label={"Поиск по юзернейму"}
+                    label={"Поиск по юзернейму или имени пользователя"}
                     onChange={(e) => { setSearchStr(e.target.value) }}
                     value={searchStr}
+                    onClickClear={() => setSearchStr('')}
+                    // onClickClear={setSearchStr('')}
                     isSearch />
             </div>
-            {data?.map((user) =>
+            {filteredUsers?.map((user) =>
                 <><ListItemButton
                     onClick={() => { navigate(`/profile/${user.username}`) }}
                     className="mr-2 ml-2 w-screen max-w-screen-sm mb-5"
@@ -41,7 +55,24 @@ export default function Search() {
                         <Avatar alt="avatar" src={user.profile?.url_avatar} />
                     </ListItemAvatar>
                     <ListItemText
-                        primary={user.profile?.name}
+                        primary={
+                            <>
+                                {
+                                    USER.username === user.username ?
+                                        <>
+                                            {user.profile?.name} (Вы)
+                                        </>
+                                        :
+                                        <>
+                                            {user.profile?.name}
+                                        </>
+                                }
+                                <Chip label={user.profile?.role?.title} variant="outlined" size="small" sx={{
+                                    marginLeft: "10px",
+                                    fontSize: "12px",
+                                }} />
+                            </>
+                        }
                         secondary={<React.Fragment>
                             <Typography
                                 component="span"

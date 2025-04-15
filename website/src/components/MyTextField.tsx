@@ -1,6 +1,7 @@
 import { FormControl, IconButton, Input, InputAdornment, InputLabel, TextField } from '@mui/material'
 import { ColorBackground } from '../shared/styles/colors'
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface Props {
     label: string,
@@ -13,7 +14,8 @@ interface Props {
     maxLength?: number,
     maxRows?: number,
     inputStyle?: React.CSSProperties,
-    onClickSearch?: void,
+    onClickSearch?: () => void,
+    onClickClear?: () => void,
 }
 
 export default function MyTextField(props: Props) {
@@ -35,14 +37,22 @@ export default function MyTextField(props: Props) {
                 },
             },
         }} variant="standard">
-            <InputLabel htmlFor="standard-adornment-password">Поиск по юзернейму</InputLabel>
+            <InputLabel htmlFor="standard-search">{props.label}</InputLabel>
             <Input
-                id="standard-adornment-password"
+                id="standard-search"
                 onChange={props.onChange} value={props.value}
                 endAdornment={
                     <InputAdornment position="end">
+                        {
+                            props.value !== '' ?
+                                <IconButton
+                                    onClick={props.onClickClear} aria-label="clear"
+                                >
+                                    <CloseIcon />
+                                </IconButton> : <></>
+                        }
                         <IconButton
-                            onClick={() => props.onClickSearch} aria-label="search"
+                            onClick={props.onClickSearch} aria-label="search"
                         >
                             <SearchIcon />
                         </IconButton>

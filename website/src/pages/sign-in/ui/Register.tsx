@@ -54,7 +54,7 @@ export default function Register() {
 
         try {
             // Вызываем функцию регистрации
-             await registerAuth(email, username, password);
+            await registerAuth(email, username, password);
 
             // localStorage.setItem("token", data.access_token);
             // localStorage.setItem("userId", data.user.id);
@@ -118,7 +118,7 @@ export default function Register() {
                 />
 
                 {/* Поле ввода логина */}
-                <TextField
+                <OutlinedInput
                     sx={{
                         width: '300px',
                         "& .MuiOutlinedInput-root": {
@@ -149,8 +149,8 @@ export default function Register() {
                     }}
                     id="username"
                     label="Имя на латинице"
-                    variant="outlined"
                     value={username}
+                    startAdornment={<InputAdornment position="start">@</InputAdornment>}
                     onChange={handleUsernameChange}
                 />
 
