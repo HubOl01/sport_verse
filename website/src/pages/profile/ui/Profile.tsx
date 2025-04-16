@@ -14,6 +14,7 @@ import { useAuth } from '../../../shared/utils/useAuth';
 import MyButton from '../../../components/MyButton';
 import { useSmallScreen } from '../../../shared/utils/displaySizes';
 import { SubscriptionService } from '../../../shared/api/subscriptions.service';
+import InformCount from './informCount';
 
 export default function Profile() {
   const queryClient = useQueryClient();
@@ -81,121 +82,148 @@ export default function Profile() {
         setIsEdit(false)
       }} profile={data?.profile} />
       :
-      <>
-        <div className={styles.background}>
-          {USER?.username === username ?
-            (<IconButton
-              aria-label="edit"
-              onClick={handleEditClick}
-              sx={{
-                position: 'absolute',
-                top: "70px",
-                right: "20px",
-              }}
-            >
-              <EditIcon
-                sx={{
-                  color: "white",
-                }} />
-            </IconButton>)
-            : <></>
-          }
-          <Box
+
+      <div className={styles.background}>
+        {USER?.username === username ?
+          <IconButton
+            aria-label="edit"
+            onClick={handleEditClick}
             sx={{
-              width: "110px",
-              height: "110px",
-              borderRadius: "50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-              top: "45px",
-              left: "45px",
-              backgroundColor: "rgba(255, 255, 255)",
+              position: 'absolute',
+              top: "70px",
+              right: "20px",
             }}
           >
-            <Avatar
-              src={data?.profile?.url_avatar || undefined}
+            <EditIcon
               sx={{
-                width: 100,
-                height: 100,
-              }}>
-            </Avatar>
-          </Box>
+                color: "white",
+              }} />
+          </IconButton>
+          : <></>
+        }
 
-          <div className={styles.backgroundText}>
-            <div className='flex'>
-              <div className={`${styles.title_profile}`}>
-                {data?.profile?.name}
-              </div>
-              <div className={`${styles.title_emoji}`} onClick={handleClick}>
-                {data?.profile?.status?.svg_image!}
-              </div>
-              <DialogStatus
-                keepMounted
-                status={data?.profile?.status!}
-                open={open}
-                onClose={handleClose}
-                value={value}
-                profile={data?.profile!}
-                username={data?.username!}
-              />
-            </div>
-            <div className={`${styles.title_content}`}>
-              {data?.profile?.role?.title}
-            </div>
-            <div className={`${styles.about}`}>
-              {data?.profile?.about}
-            </div>
-            {
-              USER.username === data?.username ? <></> :
-                isSmallScreen ?
-                  <div className={`mt-6`} style={
-                    {
-                      marginLeft: "20px",
-                      marginRight: "20px",
-                    }
-                  }>
-                    <MyButton onClick={handleClickSubscription}
-                      label={isSubscribed ? "Вы подписаны" : 'Подписаться'}
-                      secondary={isSubscribed}
-                      style={{
-                        width: "100%",
-                      }} />
-                  </div>
-                  :
-                  <div className={`${styles.about} mt-5`}>
-                    <MyButton onClick={handleClickSubscription}
-                      label={isSubscribed ? "Вы подписаны" : 'Подписаться'
-                      }
-                      secondary={isSubscribed}
+        <Box
+          sx={{
+            width: "110px",
+            height: "110px",
+            borderRadius: "50%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            top: "45px",
+            left: "45px",
+            backgroundColor: "rgba(255, 255, 255)",
+          }}
+        >
+          <Avatar
+            src={data?.profile?.url_avatar || undefined}
+            sx={{
+              width: 100,
+              height: 100,
+            }}>
+          </Avatar>
+        </Box>
 
-                    />
-                  </div>
-            }
+        <div className={styles.backgroundText}>
+          <div className='flex'>
+            <div className={`${styles.title_profile}`}>
+              {data?.profile?.name}
+            </div>
+            <div className={`${styles.title_emoji}`} onClick={handleClick}>
+              {data?.profile?.status?.svg_image!}
+            </div>
+            <DialogStatus
+              keepMounted
+              status={data?.profile?.status!}
+              open={open}
+              onClose={handleClose}
+              value={value}
+              profile={data?.profile!}
+              username={data?.username!}
+            />
           </div>
-          <Card
-            className="justify-center content-center self-center"
-            variant="outlined"
-            sx={{
-              // marginBottom: '20px',
-              borderRadius: '20px',
-              marginLeft: "20px",
-              marginRight: "20px",
-            }}
-          >
-            <div className="self-center p-2 pr-3 pl-3">
-              <div className={`${styles.title_about}`}>
-                О себе
-              </div>
-              <br />
-              <ListTile title='Дата рождения:' content='1 января 1990' />
-              <ListTile title='Вид спорта:' content={data?.profile?.sportType ? data?.profile?.sportType?.title! : "Не указан вид спорта"} />
-              <ListTile title='Спортивный стаж:' content={data?.profile?.startSportDate ? calculateYearsWithEnd(data?.profile?.startSportDate) : 'Не указана дата'} />
-              <ListTile title='Спортивный разряд:' content={data?.profile?.sportCategory ? data?.profile?.sportCategory?.title! : "Нет разряда"} />
-            </div>
-          </Card>
+          <div className={`${styles.title_content}`}>
+            {data?.profile?.role?.title}
+          </div>
+          <div className={`${styles.about}`}>
+            {data?.profile?.about}
+          </div>
+          {
+            USER.username === data?.username ? <></> :
+              isSmallScreen ?
+                <div className={`mt-6`} style={
+                  {
+                    marginLeft: "20px",
+                    marginRight: "20px",
+                  }
+                }>
+                  <MyButton onClick={handleClickSubscription}
+                    label={isSubscribed ? "Вы подписаны" : 'Подписаться'}
+                    secondary={isSubscribed}
+                    style={{
+                      width: "100%",
+                    }} />
+                </div>
+                :
+                <div className={`${styles.about} mt-5`}>
+                  <MyButton onClick={handleClickSubscription}
+                    label={isSubscribed ? "Вы подписаны" : 'Подписаться'
+                    }
+                    secondary={isSubscribed}
+
+                  />
+                </div>
+          }
+
         </div>
-      </>
+        <div style={{
+          display: 'grid',
+          marginTop: USER.username === data?.username ? '-30px' : '-50px',
+          marginBottom: '30px',
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
+          gap: '10px',
+        }}>
+          <InformCount
+            count={data?.subscriptions.length.toString()!}
+            title='Подписок'
+          />
+          <InformCount
+            count={data?.subscribers.length.toString()!}
+            title='Подписчиков'
+          />
+          <InformCount
+            count={data?.TrainingPlan.length.toString()!}
+            title='Созданных тренировок'
+          />
+          <InformCount
+            count='0'
+            title='Лайков'
+          />
+
+        </div>
+        <Card
+          className="justify-center content-center self-center"
+          variant="outlined"
+          sx={{
+            // marginBottom: '20px',
+            borderRadius: '20px',
+            marginLeft: "20px",
+            marginRight: "20px",
+            marginBottom: "30px",
+          }}
+        >
+          <div className="self-center p-2 pr-3 pl-3">
+            <div className={`${styles.title_about}`}>
+              О себе
+            </div>
+            <br />
+            <ListTile title='Дата рождения:' content='1 января 1990' />
+            <ListTile title='Вид спорта:' content={data?.profile?.sportType ? data?.profile?.sportType?.title! : "Не указан вид спорта"} />
+            <ListTile title='Спортивный стаж:' content={data?.profile?.startSportDate ? calculateYearsWithEnd(data?.profile?.startSportDate) : 'Не указана дата'} />
+            <ListTile title='Спортивный разряд:' content={data?.profile?.sportCategory ? data?.profile?.sportCategory?.title! : "Нет разряда"} />
+          </div>
+        </Card>
+      </div>
   )
 }
