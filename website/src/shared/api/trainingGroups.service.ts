@@ -2,11 +2,27 @@ import { AxiosError } from "axios";
 import { api } from ".";
 import { apiTrainingGroups } from "../config";
 import { ITrainingGroup } from "../model/ITrainingGroup";
+import { apiTrainingGroupsSearch } from "../config/backend";
 
 export const TrainingGroupService = {
   async getAll(): Promise<ITrainingGroup[]> {
     try {
       const response = await api.get<ITrainingGroup[]>(apiTrainingGroups);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке всех TrainingGroup";
+      throw new Error(message);
+    }
+  },
+  async getSearch(search: string): Promise<ITrainingGroup[]> {
+    try {
+      const response = await api.get<ITrainingGroup[]>(
+        `${apiTrainingGroupsSearch}/${search}?limit=10`
+      );
       return response.data;
     } catch (error) {
       const err = error as AxiosError;

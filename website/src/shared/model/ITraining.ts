@@ -15,6 +15,7 @@ export interface ITraining {
   date_end?: Date;
   statusTrainingId: number;
   sportTypeId: number;
+  trainingGroupId?: number;
   statusPublish?: StatusPublish;
   sportType?: ISportType;
   user?: IUser;

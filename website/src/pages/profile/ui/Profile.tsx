@@ -15,11 +15,15 @@ import MyButton from '../../../components/MyButton';
 import { useSmallScreen } from '../../../shared/utils/displaySizes';
 import { SubscriptionService } from '../../../shared/api/subscriptions.service';
 import InformCount from './informCount';
+import { getPluralForm } from '../../../shared/utils/getPluralForm';
+import { DialogSubscriptionList } from './dialogSubsciption';
 
 export default function Profile() {
   const queryClient = useQueryClient();
   const { username } = useParams();
   const [open, setOpen] = useState(false);
+  const [openUsers, setOpenUsers] = useState(false);
+  const [isSub, setIsSub] = useState(false);
   const [value, setValue] = useState('Dione');
   const [isEdit, setIsEdit] = useState(false);
   const isSmallScreen = useSmallScreen();
@@ -186,22 +190,36 @@ export default function Profile() {
         }}>
           <InformCount
             count={data?.subscriptions.length.toString()!}
-            title='Подписок'
+            title={getPluralForm(data?.subscriptions.length!, ["Подписка", "Подписки", "Подписок"])}
+            onClick={
+              data?.subscriptions.length! < 1 ? undefined :
+                () => {
+                  setIsSub(false),
+                    setOpenUsers(true)
+                }}
           />
+
           <InformCount
             count={data?.subscribers.length.toString()!}
-            title='Подписчиков'
+            title={getPluralForm(data?.subscribers.length!, ["Подписчик", "Подписчика", "Подписчиков"])}
+            onClick={
+              data?.subscribers.length! < 1 ? undefined : () => {
+                setIsSub(true),
+                  setOpenUsers(true)
+              }}
           />
           <InformCount
             count={data?.TrainingPlan.length.toString()!}
-            title='Созданных тренировок'
+            title={getPluralForm(data?.TrainingPlan.length!, ["Созданная тренировка", "Созданные тренировки", "Созданных тренировок"])}
           />
           <InformCount
             count='0'
-            title='Лайков'
+            title={getPluralForm(0, ["лайк", "лайка", "лайков"])}
           />
-
         </div>
+        <DialogSubscriptionList keepMounted={false} open={openUsers} userId={data?.id!}
+          username={data?.username!}
+          isSubscribers={isSub} onClose={() => setOpenUsers(false)} />
         <Card
           className="justify-center content-center self-center"
           variant="outlined"

@@ -29,7 +29,7 @@ export default function LeftBarAdmin() {
         index: number,
     ) => {
         setSelectedIndex(index);
-        navigate(itemsBarAdmin[index].id === 4 ? `${itemsBarAdmin[index].link}/${user.username}` : itemsBarAdmin[index].link)
+        navigate(itemsBarAdmin[index].id === 5 ? `${itemsBarAdmin[index].link}/${user.username}` : itemsBarAdmin[index].link)
     };
 
 
@@ -39,7 +39,7 @@ export default function LeftBarAdmin() {
             >
                 {itemsBarAdmin.map((item) =>
                     <React.Fragment key={item.id}>
-                        {item.id === 5 && (
+                        {item.id === 6 && (
                             <Divider
                                 component="li"
                                 sx={{

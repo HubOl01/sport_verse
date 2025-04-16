@@ -90,6 +90,7 @@ model SportType {
   ProfileSportType ProfileSportType[]
   TrainingPlan     TrainingPlan[]
   Profile          Profile[]
+  TrainingGroup    TrainingGroup[]
 }
 
 model ProfileSportType {
@@ -111,6 +112,7 @@ model TrainingPlan {
   date_start       DateTime?         @default(now())
   date_end         DateTime?         @default(now())
   parentUserId     Int?
+  trainingGroupId  Int?
   statusTrainingId Int
   sportTypeId      Int
   statusPublish    StatusPublish?    @relation(fields: [statusPublishId], references: [id])
@@ -119,6 +121,7 @@ model TrainingPlan {
   parentUser       User?             @relation("parentUser", fields: [parentUserId], references: [id])
   PlanExercise     PlanExercise[]
   StatusTraining   StatusTraining    @relation(fields: [statusTrainingId], references: [id])
+  TrainingGroup    TrainingGroup?    @relation(fields: [trainingGroupId], references: [id])
   TrainingResult   TrainingResult[]
   LikeTraining     LikeTraining[]
   CommentTraining  CommentTraining[]
@@ -191,19 +194,22 @@ model StatusTraining {
 
 // Модель для группы с тренером и спортсменами
 model TrainingGroup {
-  id        Int      @id @default(autoincrement())
-  title     String // Название группы
-  desc      String? // Описание группы (необязательное)
-  trainerId Int // ID тренера
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  title       String // Название группы
+  desc        String? // Описание группы (необязательное)
+  trainerId   Int // ID тренера
+  sportTypeId Int?
+  isPrivate   Int      @default(0)
+  createdAt   DateTime @default(now())
 
   // Связь с тренером (один тренер на группу)
-  trainer User @relation("Trainers", fields: [trainerId], references: [id])
-
+  trainer   User             @relation("Trainers", fields: [trainerId], references: [id])
+  sportType SportType?       @relation(fields: [sportTypeId], references: [id])
   // Связь со спортсменами (многие спортсмены в одной группе)
-  athletes AthleteInGroup[]
+  athletes  AthleteInGroup[]
 
   // Дополнительные связи или поля
+  TrainingPlan TrainingPlan[]
 }
 
 model AthleteInGroup {

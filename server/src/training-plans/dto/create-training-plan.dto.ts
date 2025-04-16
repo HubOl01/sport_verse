@@ -35,4 +35,7 @@ export class CreateTrainingPlanDto {
   @ApiProperty({ required: true })
   @IsInt()
   sportTypeId: number;
+  @ApiProperty({ required: false })
+  @IsInt()
+  trainingGroupId: number;
 }

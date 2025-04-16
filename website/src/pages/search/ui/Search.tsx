@@ -29,7 +29,6 @@ export default function Search() {
 
     return (
         <Box
-
             sx={{
                 position: 'relative', minHeight: '100vh', justifyContent: 'center', justifyItems: 'center', maxHeight: "80vh",
                 overflowY: "auto",

@@ -1,17 +1,22 @@
+import { Typography } from "@mui/material"
+
 interface InformCountProps {
     count: string
     title: string
+    onClick?: () => void
 }
 
 export default function InformCount(props: InformCountProps) {
     return (
-        <div>
-            <div style={{ fontSize: "30px", fontWeight: "bold", textAlign: 'center' }}>
+        <div onClick={props.onClick} style={{
+            cursor: props.onClick ? "pointer" : undefined,
+        }}>
+            <Typography textAlign={"center"} variant="h5" fontWeight={600}>
                 {props.count}
-            </div>
-            <div style={{ fontSize: "14px", fontWeight: "bold", textAlign: 'center' }}>
+            </Typography>
+            <Typography textAlign={"center"} lineHeight={1.2} variant="body1">
                 {props.title}
-            </div>
+            </Typography>
         </div>
     )
 }

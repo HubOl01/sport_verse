@@ -14,4 +14,5 @@ export class TrainingPlanEntity implements TrainingPlan {
   date_end: Date;
   statusTrainingId: number;
   sportTypeId: number;
+  trainingGroupId: number;
 }

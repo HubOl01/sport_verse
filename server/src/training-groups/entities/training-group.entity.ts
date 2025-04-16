@@ -6,4 +6,6 @@ export class TrainingGroupEntity implements TrainingGroup {
     desc: string;
     trainerId: number;
     createdAt: Date;
+    sportTypeId: number;
+    isPrivate: number;
 }

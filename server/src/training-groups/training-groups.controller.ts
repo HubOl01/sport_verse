@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TrainingGroupsService } from './training-groups.service';
 import { CreateTrainingGroupDto } from './dto/create-training-group.dto';
@@ -28,6 +29,12 @@ export class TrainingGroupsController {
   @ApiOkResponse({ type: TrainingGroupEntity, isArray: true })
   findAll() {
     return this.trainingGroupsService.findAll();
+  }
+  @Get('search/:search')
+  @ApiOkResponse({ type: TrainingGroupEntity, isArray: true })
+  findAllSearch(@Param('search') search: string, @Query('limit') limit?: number,) {
+     const parsedLimit = limit ? parseInt(limit.toString(), 10) : undefined;
+  return this.trainingGroupsService.findSearch(search, parsedLimit);
   }
 
   @Get(':id')

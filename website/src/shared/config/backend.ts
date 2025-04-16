@@ -36,5 +36,6 @@ export var apiLike = "/like-training";
 export var apiLikeCount = "/like-training/likesCount";
 export var apiSportCategories = "/sport-categories";
 export var apiTrainingGroups = "/training-groups";
+export var apiTrainingGroupsSearch = "/training-groups/search";
 export var apiAthleteInGroups = "/athlete-in-groups";
 export var apiSubscription = "/subscription";
