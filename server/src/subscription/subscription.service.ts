@@ -25,7 +25,14 @@ export class SubscriptionService {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.subscription.delete({ where: { id } });
+  remove(subscriberId: number, subscribedToId: number) {
+    return this.prisma.subscription.delete({
+      where: {
+        subscriberId_subscribedToId: {
+          subscriberId: subscriberId,
+          subscribedToId: subscribedToId,
+        },
+      },
+    });
   }
 }

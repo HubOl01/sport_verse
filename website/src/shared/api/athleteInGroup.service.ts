@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from ".";
 import { apiAthleteInGroups } from "../config";
-import { PlanExerciseService } from "./planExercise.service";
 import { IAthleteInGroup } from "../model/IAthleteInGroup";
 
 export const AthleteInGroupService = {
@@ -68,7 +67,6 @@ export const AthleteInGroupService = {
   },
   async delete(id: string): Promise<IAthleteInGroup> {
     try {
-      await PlanExerciseService.deleteAll(id);
       const response = await api.delete<IAthleteInGroup>(
         `${apiAthleteInGroups}/${id}`
       );

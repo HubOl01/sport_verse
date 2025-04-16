@@ -44,9 +44,12 @@ export class SubscriptionController {
     return this.subscriptionService.update(+id, updateSubscriptionDto);
   }
 
-  @Delete(':id')
+  @Delete(':subscriberId/:subscribedToId')
   @ApiOkResponse()
-  remove(@Param('id') id: string) {
-    return this.subscriptionService.remove(+id);
+  remove(
+    @Param('subscriberId') subscriberId: string,
+    @Param('subscribedToId') subscribedToId: string,
+  ) {
+    return this.subscriptionService.remove(+subscriberId, +subscribedToId);
   }
 }

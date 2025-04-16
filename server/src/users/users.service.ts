@@ -29,8 +29,14 @@ export class UsersService {
             role: true,
             sportType: true,
             sportCategory: true,
+            ProfileSportType: true,
           },
         },
+        TrainingPlan: true,
+        athleteInGroups: true,
+        trainerInGroups: true,
+        subscriptions: true,
+        subscribers: true,
       },
     });
   }
@@ -61,8 +67,14 @@ export class UsersService {
             role: true,
             sportType: true,
             sportCategory: true,
+            ProfileSportType: true,
           },
         },
+        TrainingPlan: true,
+        athleteInGroups: true,
+        trainerInGroups: true,
+        subscriptions: true,
+        subscribers: true,
       },
     });
   }

@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from ".";
 import { apiSubscription } from "../config";
-import { PlanExerciseService } from "./planExercise.service";
 import { ISubscription } from "../model/ISubscription";
 
 export const SubscriptionService = {
@@ -58,10 +57,9 @@ export const SubscriptionService = {
       throw new Error(message);
     }
   },
-  async delete(id: string): Promise<ISubscription> {
+  async delete(subscriberId: string, subscribedToId: string): Promise<ISubscription> {
     try {
-      await PlanExerciseService.deleteAll(id);
-      const response = await api.delete<ISubscription>(`${apiSubscription}/${id}`);
+      const response = await api.delete<ISubscription>(`${apiSubscription}/${subscriberId}/${subscribedToId}`);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;

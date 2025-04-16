@@ -13,6 +13,7 @@ import { calculateYearsWithEnd } from '../../../shared/utils/yearCalulator';
 import { useAuth } from '../../../shared/utils/useAuth';
 import MyButton from '../../../components/MyButton';
 import { useSmallScreen } from '../../../shared/utils/displaySizes';
+import { SubscriptionService } from '../../../shared/api/subscriptions.service';
 
 export default function Profile() {
   const queryClient = useQueryClient();
@@ -53,6 +54,26 @@ export default function Profile() {
   const handleEditClick = () => {
     setIsEdit(true);
   };
+  const isSubscribed =
+    Array.isArray(data?.subscribers) &&
+    data.subscribers.some(
+      (subscriber) => subscriber.subscriberId === Number(USER.userId)
+    );
+  const handleClickSubscription = async () => {
+    if (isSubscribed) {
+      await SubscriptionService.delete(
+        USER.userId!,
+        data?.id!.toString()!
+      );
+    }
+    else {
+      await SubscriptionService.create({
+        subscriberId: Number(USER.userId)!,
+        subscribedToId: data?.id!,
+      });
+    }
+    await queryClient.invalidateQueries(['user', username]);
+  }
   return (
     isEdit ?
       <ProfileEdit onExit={() => {
@@ -117,6 +138,7 @@ export default function Profile() {
                 onClose={handleClose}
                 value={value}
                 profile={data?.profile!}
+                username={data?.username!}
               />
             </div>
             <div className={`${styles.title_content}`}>
@@ -134,13 +156,21 @@ export default function Profile() {
                       marginRight: "20px",
                     }
                   }>
-                    <MyButton onClick={() => null} label={'Подписаться'} style={{
-                      width: "100%",
-                    }} />
+                    <MyButton onClick={handleClickSubscription}
+                      label={isSubscribed ? "Вы подписаны" : 'Подписаться'}
+                      secondary={isSubscribed}
+                      style={{
+                        width: "100%",
+                      }} />
                   </div>
                   :
                   <div className={`${styles.about} mt-5`}>
-                    <MyButton onClick={() => null} label={'Подписаться'} />
+                    <MyButton onClick={handleClickSubscription}
+                      label={isSubscribed ? "Вы подписаны" : 'Подписаться'
+                      }
+                      secondary={isSubscribed}
+
+                    />
                   </div>
             }
           </div>

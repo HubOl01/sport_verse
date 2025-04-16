@@ -1,6 +1,5 @@
 import { AxiosError } from "axios";
 import { api } from ".";
-import { PlanExerciseService } from "./planExercise.service";
 import { apiTrainingGroups } from "../config";
 import { ITrainingGroup } from "../model/ITrainingGroup";
 
@@ -65,7 +64,6 @@ export const TrainingGroupService = {
   },
   async delete(id: string): Promise<ITrainingGroup> {
     try {
-      await PlanExerciseService.deleteAll(id);
       const response = await api.delete<ITrainingGroup>(
         `${apiTrainingGroups}/${id}`
       );

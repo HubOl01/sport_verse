@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from ".";
 import { apiNews } from "../config";
-import { PlanExerciseService } from "./planExercise.service";
 import { INewModel } from "../model/INewModel";
 
 export const NewsService = {
@@ -60,7 +59,6 @@ export const NewsService = {
   },
   async delete(id: string): Promise<INewModel> {
     try {
-      await PlanExerciseService.deleteAll(id);
       const response = await api.delete<INewModel>(`${apiNews}/${id}`);
       return response.data;
     } catch (error) {

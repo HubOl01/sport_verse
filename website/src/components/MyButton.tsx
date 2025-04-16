@@ -9,6 +9,7 @@ interface ButtonProps {
     secondary?: boolean
     textButton?: boolean
     styleButton?: React.CSSProperties
+    disabled?: boolean
 }
 
 export default function MyButton(props: ButtonProps) {
@@ -24,7 +25,11 @@ export default function MyButton(props: ButtonProps) {
                     width: "100%",
                     fontSize: "18px",
                     padding: "5px 8px 5px 0px",
-                }} onClick={props.onClick}>{props.label}</Button>
+                }}
+                onClick={props.onClick}
+                disabled={props.disabled}
+            >{props.label}
+            </Button>
             :
             <Button
                 variant={!props.secondary ? "contained" : "outlined"}
@@ -39,8 +44,15 @@ export default function MyButton(props: ButtonProps) {
                     color: ColorBackground,
                     borderColor: ColorBackground,
                     borderRadius: "10px",
+                    "&.Mui-disabled": {
+                        color: ColorBackground || "black",
+                        borderColor: ColorBackground || "black",
+                        opacity: 1,
+                        textTransform: 'none',
+                    }
                 }}
                 style={props.style}
+                disabled={props.disabled}
             >
                 {props.label}
             </Button>

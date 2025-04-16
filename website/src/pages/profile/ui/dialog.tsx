@@ -5,12 +5,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { DialogStatusList } from "./dialogStatus";
 import { IProfile } from "../../../shared/model/IProfile";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../shared/utils/useAuth";
 
 export interface dialogProps {
     keepMounted: boolean;
     value: string;
     open: boolean;
     status: IStatusProfile;
+    username: string;
     profile: IProfile;
     onClose: (value?: string) => void;
 }
@@ -26,6 +29,14 @@ export function DialogStatus(props: dialogProps) {
             setValueStatus(props.status);
         }
     }, [props.status]);
+
+    const { user: USER } = useAuth();
+    const navigate = useNavigate();
+
+    if (!USER?.token) {
+        navigate("/login");
+        return null;
+    }
 
     if (props.open) {
         if (!open) {
@@ -70,7 +81,7 @@ export function DialogStatus(props: dialogProps) {
                     width: '100%',
                 }}
             >
-                <IconButton
+                {USER.username === props.username ? <IconButton
                     aria-label="edit"
                     onClick={handleEditClick}
                     sx={{
@@ -80,7 +91,7 @@ export function DialogStatus(props: dialogProps) {
                     }}
                 >
                     <EditIcon />
-                </IconButton>
+                </IconButton> : <></>}
                 <DialogStatusList keepMounted={false} value={valueStatus!} open={openList} onClose={handleCloseList} onSelectStatus={handleSelectedStatus} profile={props.profile} />
 
                 {/* Основной контент заголовка */}

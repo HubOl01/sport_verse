@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from ".";
 import { apiCommentTraining, apiCommentTrainingCount } from "../config";
-import { PlanExerciseService } from "./planExercise.service";
 import { ICommentModel } from "../model/ICommentModel";
 import { apiComment } from '../config/index';
 
@@ -88,7 +87,6 @@ export const CommentPlanService = {
   },
   async delete(id: string): Promise<ICommentModel> {
     try {
-      await PlanExerciseService.deleteAll(id);
       const response = await api.delete<ICommentModel>(`${apiComment}/${id}`);
       return response.data;
     } catch (error) {
