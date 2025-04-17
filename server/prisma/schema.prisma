@@ -37,6 +37,7 @@ model User {
 
   // Подписчики (кто подписан на пользователя)
   subscribers Subscription[] @relation("SubscribedTo")
+  JoinRequest JoinRequest[]
 }
 
 // Модель для профиля пользователя
@@ -121,11 +122,11 @@ model TrainingPlan {
   parentUser       User?             @relation("parentUser", fields: [parentUserId], references: [id])
   PlanExercise     PlanExercise[]
   StatusTraining   StatusTraining    @relation(fields: [statusTrainingId], references: [id])
-  TrainingGroup    TrainingGroup?    @relation(fields: [trainingGroupId], references: [id])
   TrainingResult   TrainingResult[]
   LikeTraining     LikeTraining[]
   CommentTraining  CommentTraining[]
   ViewsTraining    ViewsTraining[]
+  PlanInGroup      PlanInGroup[]
 }
 
 model PlanExercise {
@@ -203,13 +204,23 @@ model TrainingGroup {
   createdAt   DateTime @default(now())
 
   // Связь с тренером (один тренер на группу)
-  trainer   User             @relation("Trainers", fields: [trainerId], references: [id])
-  sportType SportType?       @relation(fields: [sportTypeId], references: [id])
+  trainer     User             @relation("Trainers", fields: [trainerId], references: [id])
+  sportType   SportType?       @relation(fields: [sportTypeId], references: [id])
   // Связь со спортсменами (многие спортсмены в одной группе)
-  athletes  AthleteInGroup[]
+  athletes    AthleteInGroup[]
+  PlanInGroup PlanInGroup[]
+  JoinRequest JoinRequest[]
+}
 
-  // Дополнительные связи или поля
-  TrainingPlan TrainingPlan[]
+model PlanInGroup {
+  id      Int           @id @default(autoincrement())
+  title   String?
+  desc    String?
+  planAt  DateTime      @default(now())
+  planId  Int
+  groupId Int
+  plan    TrainingPlan  @relation(fields: [planId], references: [id])
+  group   TrainingGroup @relation(fields: [groupId], references: [id])
 }
 
 model AthleteInGroup {
@@ -217,6 +228,20 @@ model AthleteInGroup {
   trainingGroupId Int
   athleteId       Int
   joinedAt        DateTime @default(now())
+
+  // Связи
+  trainingGroup TrainingGroup @relation(fields: [trainingGroupId], references: [id])
+  athlete       User          @relation(fields: [athleteId], references: [id])
+
+  @@unique([trainingGroupId, athleteId]) // Уникальность пары (группа, спортсмен)
+}
+
+model JoinRequest {
+  id              Int      @id @default(autoincrement())
+  trainingGroupId Int
+  athleteId       Int
+  status          String   @default("pending") // Статус: pending, approved, rejected
+  createdAt       DateTime @default(now())
 
   // Связи
   trainingGroup TrainingGroup @relation(fields: [trainingGroupId], references: [id])

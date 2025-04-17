@@ -25,6 +25,8 @@ import { SportCategoriesModule } from './sport-categories/sport-categories.modul
 import { TrainingGroupsModule } from './training-groups/training-groups.module';
 import { AthleteInGroupsModule } from './athlete-in-groups/athlete-in-groups.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { PlanInGroupsModule } from './plan-in-groups/plan-in-groups.module';
+import { JoinRequestsModule } from './join-requests/join-requests.module';
 
 @Module({
   imports: [
@@ -52,6 +54,8 @@ import { SubscriptionModule } from './subscription/subscription.module';
     TrainingGroupsModule,
     AthleteInGroupsModule,
     SubscriptionModule,
+    PlanInGroupsModule,
+    JoinRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

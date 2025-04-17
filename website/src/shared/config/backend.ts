@@ -38,4 +38,6 @@ export var apiSportCategories = "/sport-categories";
 export var apiTrainingGroups = "/training-groups";
 export var apiTrainingGroupsSearch = "/training-groups/search";
 export var apiAthleteInGroups = "/athlete-in-groups";
+export var apiPlanInGroups = "/plan-in-groups";
 export var apiSubscription = "/subscription";
+export var apiJoinRequests = "/join-requests";

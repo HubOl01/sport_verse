@@ -18,7 +18,7 @@ import CommentsAdmin from '../../pages/admin/ui/comments/CommentsAdmin';
 import CommentsDetail from '../../pages/admin/ui/comments/CommentsRead';
 import TrainingAdmin from '../../pages/admin/ui/trainingPlans/TrainingAdmin';
 import Search from '../../pages/search/ui/Search';
-import Groups from '../../pages/groups/ui/Groups';
+import TrainingGroups from '../../pages/groups/ui/TrainingGroups';
 import GroupDetail from '../../pages/groups/ui/GroupDetail';
 
 export default function Routers() {
@@ -42,7 +42,7 @@ export default function Routers() {
       <Route path="/training/new" element={<TrainingEdit />} />
       <Route path="/training/:id" element={<TrainingDetail />} />
       <Route path="/settings" element={<Settings />} />
-      <Route path="/groups" element={<Groups />} />
+      <Route path="/groups" element={<TrainingGroups />} />
       <Route path="/group/:id" element={<GroupDetail />} />
     </Routes>
   );

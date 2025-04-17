@@ -1,13 +1,12 @@
 import { AxiosError } from "axios";
 import { api } from ".";
-import { apiTrainingGroups } from "../config";
-import { ITrainingGroup } from "../model/ITrainingGroup";
-import { apiTrainingGroupsSearch } from "../config/backend";
+import { IPlanInGroup } from "../model/IPlanInGroup";
+import { apiPlanInGroups } from "../config";
 
-export const TrainingGroupService = {
-  async getAll(): Promise<ITrainingGroup[]> {
+export const PlanInGroupService = {
+  async getAll(): Promise<IPlanInGroup[]> {
     try {
-      const response = await api.get<ITrainingGroup[]>(apiTrainingGroups);
+      const response = await api.get<IPlanInGroup[]>(apiPlanInGroups);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -18,27 +17,10 @@ export const TrainingGroupService = {
       throw new Error(message);
     }
   },
-  async getSearch(search: string): Promise<ITrainingGroup[]> {
-    try {
-      const response = await api.get<ITrainingGroup[]>(
-        `${apiTrainingGroupsSearch}/${search}?limit=10`
-      );
-      return response.data;
-    } catch (error) {
-      const err = error as AxiosError;
-      const message =
-        typeof err.response?.data === "string"
-          ? err.response.data
-          : "Произошла ошибка при загрузке всех TrainingGroup search";
-      throw new Error(message);
-    }
-  },
 
-  async get(id: string): Promise<ITrainingGroup> {
+  async get(id: string): Promise<IPlanInGroup> {
     try {
-      const response = await api.get<ITrainingGroup>(
-        `${apiTrainingGroups}/${id}`
-      );
+      const response = await api.get<IPlanInGroup>(`${apiPlanInGroups}/${id}`);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -49,9 +31,9 @@ export const TrainingGroupService = {
       throw new Error(message);
     }
   },
-  async create(model: ITrainingGroup): Promise<ITrainingGroup> {
+  async create(model: IPlanInGroup): Promise<IPlanInGroup> {
     try {
-      const response = await api.post<ITrainingGroup>(apiTrainingGroups, model);
+      const response = await api.post<IPlanInGroup>(apiPlanInGroups, model);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -62,10 +44,10 @@ export const TrainingGroupService = {
       throw new Error(message);
     }
   },
-  async update(id: string, model: ITrainingGroup): Promise<ITrainingGroup> {
+  async update(id: string, model: IPlanInGroup): Promise<IPlanInGroup> {
     try {
-      const response = await api.patch<ITrainingGroup>(
-        `${apiTrainingGroups}/${id}`,
+      const response = await api.patch<IPlanInGroup>(
+        `${apiPlanInGroups}/${id}`,
         model
       );
       return response.data;
@@ -78,10 +60,10 @@ export const TrainingGroupService = {
       throw new Error(message);
     }
   },
-  async delete(id: string): Promise<ITrainingGroup> {
+  async delete(id: string): Promise<IPlanInGroup> {
     try {
-      const response = await api.delete<ITrainingGroup>(
-        `${apiTrainingGroups}/${id}`
+      const response = await api.delete<IPlanInGroup>(
+        `${apiPlanInGroups}/${id}`
       );
       return response.data;
     } catch (error) {

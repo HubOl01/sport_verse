@@ -63,40 +63,44 @@ export class TrainingGroupsService {
       where: { id },
       include: {
         athletes: true,
-        TrainingPlan: {
+        PlanInGroup: {
           include: {
-            user: {
-              select: {
-                email: true,
-                username: true,
-                profile: {
-                  select: {
-                    url_avatar: true,
-                    status: true,
-                  },
-                },
-              },
-            },
-            statusPublish: true,
-            parentUser: {
-              select: {
-                email: true,
-                username: true,
-                profile: {
-                  select: {
-                    url_avatar: true,
-                    status: true,
-                  },
-                },
-              },
-            },
-            sportType: true,
-            PlanExercise: {
+            plan: {
               include: {
-                exercise: true,
+                user: {
+                  select: {
+                    email: true,
+                    username: true,
+                    profile: {
+                      select: {
+                        url_avatar: true,
+                        status: true,
+                      },
+                    },
+                  },
+                },
+                statusPublish: true,
+                parentUser: {
+                  select: {
+                    email: true,
+                    username: true,
+                    profile: {
+                      select: {
+                        url_avatar: true,
+                        status: true,
+                      },
+                    },
+                  },
+                },
+                sportType: true,
+                PlanExercise: {
+                  include: {
+                    exercise: true,
+                  },
+                },
+                StatusTraining: true,
               },
             },
-            StatusTraining: true,
           },
         },
       },
