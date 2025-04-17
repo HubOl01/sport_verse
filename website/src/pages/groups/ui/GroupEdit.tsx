@@ -1,18 +1,21 @@
-import { AppBar, Avatar, Box, Chip, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Box, Button, Chip, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Toolbar, Typography } from "@mui/material";
 import MyButton from "../../../components/MyButton";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import { ITrainingGroup } from "../../../shared/model/ITrainingGroup";
 import MyTextField from "../../../components/MyTextField";
 import { useState } from "react";
 import LockOutlineIcon from '@mui/icons-material/LockOutlined';
 import { DialogAthletesList } from "./dialogAthletes";
-import { username } from '../../../shared/data/user';
 import { IUser } from "../../../shared/model/IUser";
-import { data } from "react-router-dom";
-import { ISubscription } from "../../../shared/model/ISubscription";
+import { useNavigate } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
+import { TrainingGroupService } from "../../../shared/api/trainingGroups.service";
+import { useAuth } from "../../../shared/utils/useAuth";
+import { DialogSportType } from "../../training-new/ui/dialogTypeSport";
+import { ISportType } from "../../../shared/model/ISportType";
+import { AthleteInGroupService } from "../../../shared/api/athleteInGroup.service";
+import { useQueryClient } from 'react-query';
 
 interface GroupEditProps {
     onClose: () => void;
@@ -20,14 +23,56 @@ interface GroupEditProps {
 
 }
 export default function GroupEdit(props: GroupEditProps) {
+    const queryClient = useQueryClient();
     const [titleGroup, setTitleGroup] = useState<string>('')
     const [descGroup, setDescGroup] = useState<string>('')
     const [isPrivate, setIsPrivate] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
+    const [openSportType, setOpenSportType] = useState(false)
+    // const [value, setValue] = useState<string>('');
+    const [valueSportType, setValueSportType] = useState<ISportType>({ id: 0, title: '', image: null });
     const [athletes, setAthletes] = useState<IUser[]>([])
+    const { user: USER } = useAuth();
+    const navigate = useNavigate();
+    if (!USER?.token) {
+        navigate("/login");
+        return null;
+    }
 
 
+    async function createTrainingGroup() {
+        try {
+            await TrainingGroupService.create({
+                title: titleGroup,
+                desc: descGroup,
+                trainerId: Number(USER.userId),
+                sportTypeId: valueSportType.id,
+                isPrivate: isPrivate ? 1 : 0,
+            });
+            const groups = await TrainingGroupService.getAll();
+            for (var athlete of athletes) {
+                await AthleteInGroupService.create({
+                    trainingGroupId: groups[groups.length - 1].id!,
+                    athleteId: athlete.id!,
+                })
+            }
+            queryClient.invalidateQueries('groups');
+            props.onClose();
+        } catch (error) {
+            console.error('Ошибка при создании группы:', error);
+        }
+    }
+    const handleClickSportType = () => {
+        setOpenSportType(true);
+    };
+    const handleAddSelectedSportType = (sportType: ISportType) => {
+        setValueSportType(sportType);
+    };
 
+
+    const handleCloseSportType = () => {
+        setOpenSportType(false);
+    };
     return (
         <Box sx={{ position: 'relative', minHeight: '100vh' }}>
             <AppBar position="static" color="transparent" elevation={0}>
@@ -68,6 +113,16 @@ export default function GroupEdit(props: GroupEditProps) {
                 }} >
                 <MyTextField label={"Название группы"} onChange={(e) => setTitleGroup(e.target.value)} value={titleGroup} isBorder />
                 <MyTextField label={"Описание группы"} onChange={(e) => setDescGroup(e.target.value)} value={descGroup} isBorder />
+                <Button sx={{
+                    color: "black",
+                    // borderRadius: "30px",
+                    justifyContent: "start",
+                    textTransform: 'none',
+                    width: "100%",
+                    fontSize: "18px",
+                    padding: "5px 8px 5px 0px",
+                }} onClick={handleClickSportType}>Вид спорта: {valueSportType?.title}</Button>
+                <DialogSportType keepMounted open={openSportType} onClose={handleCloseSportType} onSelectSportType={handleAddSelectedSportType} value={valueSportType!} />
                 <div className="flex items-center">
                     <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>
                         <div className="flex items-center">
@@ -154,6 +209,31 @@ export default function GroupEdit(props: GroupEditProps) {
                 </List>
                 <DialogAthletesList keepMounted={false} open={openDialog} onClose={() => setOpenDialog(false)} valuesSelected={athletes} setValuesSelected={setAthletes} />
             </>
+            <div
+                style={{
+                    margin: "15px"
+                }}
+            >
+                <Button variant="contained" sx={{
+                    marginBottom: "20px",
+                    color: "#FFFFFFFF",
+                    background: "#4758d6",
+                    borderRadius: "20px",
+                    width: "100%",
+                    fontWeight: "700",
+                    padding: "8px 15px",
+                }}
+                    onClick={
+                        () => {
+                            if (titleGroup === '' && descGroup === '' && athletes.length === 0 && valueSportType.id === 0) {
+                                alert('Заполните все поля');
+                            } else {
+                                createTrainingGroup();
+                            }
+                        }
+                    }
+                >Сохранить</Button>
+            </div>
         </Box >
     )
 }

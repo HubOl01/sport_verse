@@ -21,7 +21,6 @@ export default function TrainingGroups() {
   return (
     isEditGroup ? <GroupEdit onClose={() => setIsEditGroup(false)} /> :
       <>
-
         <div style={{
           width: "100%",
           display: "flex",
@@ -40,6 +39,10 @@ export default function TrainingGroups() {
         >
           <div className="flex w-screen max-w-screen-sm justify-center items-center">
             <MyTextField
+              inputStyle={{
+                marginLeft: "15px",
+                marginRight: "15px",
+              }}
               label={"Поиск по названию группы"}
               onChange={(e) => { setSearch(e.target.value) }}
               value={search}
@@ -48,13 +51,12 @@ export default function TrainingGroups() {
           </div>
 
           <Grid2
-            columns={{ xs: 1, sm: 1, md: 2 }}
-            sx={{ width: '100%' }}
-            spacing={{ xs: 2, sm: 2, md: 3 }}
+            className="mt-3"
+            container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {Array.isArray(data) && data.length > 0 ? (
               data.map((item, index) => (
-                <div key={index} >
+                <Grid2 key={index} size={{ xs: 6, sm: 6, md: 6 }}>
                   <Card onClick={() => navigate(`/group/${item.id}`)}
                     sx={{
                       width: "100%",
@@ -72,7 +74,7 @@ export default function TrainingGroups() {
                       </CardContent>
                     </CardActionArea>
                   </Card>
-                </div>
+                </Grid2>
               ))
             )
               : (

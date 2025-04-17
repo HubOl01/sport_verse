@@ -6,7 +6,6 @@ import AddIcon from '@mui/icons-material/Add';
 import { IUser } from '../../model/IUser';
 import { UserService } from '../../api/User.service';
 import { useQuery } from 'react-query';
-import { username } from '../../data/user';
 import { useAuth } from '../../utils/useAuth';
 
 export default function Header() {
@@ -15,9 +14,9 @@ export default function Header() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const { data } = useQuery<IUser>(
-        ['profile', username],
+        ['profile', user.username],
         () => UserService.getUsername(user.username!),
-        { enabled: !!username }
+        { enabled: !!user.username }
     );
     if (!user?.token) {
         navigate("/login");

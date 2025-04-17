@@ -21,6 +21,7 @@ interface Props {
 export default function MyTextField(props: Props) {
     return (
         props.isSearch ? <FormControl sx={{
+            ...props.inputStyle,
             width: '100%',
             '& label.Mui-focused': {
                 color: ColorBackground,
@@ -36,7 +37,8 @@ export default function MyTextField(props: Props) {
                     borderColor: ColorBackground,
                 },
             },
-        }} variant="standard">
+        }}
+            variant="standard">
             <InputLabel htmlFor="standard-search">{props.label}</InputLabel>
             <Input
                 id="standard-search"

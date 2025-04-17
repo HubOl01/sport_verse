@@ -326,7 +326,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
                     }
                   }
                   onClick={() => handleOpenDialog("sportType")} label={selectedValues.sportType!.title} />
-                <DialogSportType keepMounted open={openDialog.sportType} onClose={() => handleCloseDialog('sportType')} onSelectExercise={(newValue) => handleSelectValue("sportType", newValue)} value={selectedValues.sportType!} />
+                <DialogSportType keepMounted open={openDialog.sportType} onClose={() => handleCloseDialog('sportType')} onSelectSportType={(newValue) => handleSelectValue("sportType", newValue)} value={selectedValues.sportType!} />
               </div>
 
             </div>

@@ -1,5 +1,5 @@
 import { Avatar, Chip, Dialog, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Typography } from "@mui/material";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import CloseIcon from '@mui/icons-material/Close';
 import { UserService } from "../../../shared/api/User.service";
 import { useAuth } from "../../../shared/utils/useAuth";
@@ -52,13 +52,13 @@ export function DialogAthletesList(props: dialogListProps) {
         setSearchAthlete("");
         props.onClose();
     };
-    const listData = data!.subscribers
+    const listData = Array.isArray(data) && data.length > 0 ? data!.subscribers
         .filter((subscription: ISubscription) => {
             const subscriber = subscription.subscriber!;
             return (
                 !props.valuesSelected.some((selectedUser) => selectedUser.username === subscriber.username)
             );
-        });
+        }) : [];
 
     return (
         <Dialog
@@ -86,11 +86,10 @@ export function DialogAthletesList(props: dialogListProps) {
                         />
                     </div>
 
-                    {/* Список найденных пользователей */}
                     {Array.isArray(filteredUsers) && filteredUsers.length > 0 && searchAthlete.length > 0 ? (
                         filteredUsers.map((user: IUser) => {
                             return (
-                                USER.username !== user.username && props.valuesSelected.some((value) => value.username !== user.username) ? (
+                                USER.username !== user.username && props.valuesSelected.every((value) => value.username !== user.username) ? (
                                     <ListItem
                                         key={user.id}
                                         className="w-screen max-w-screen-sm mb-5"

@@ -11,11 +11,11 @@ export interface dialogSportTypeProps {
     value: ISportType;
     open: boolean;
     onClose: (value?: string) => void;
-    onSelectExercise: (sportType: ISportType) => void;
+    onSelectSportType: (sportType: ISportType) => void;
 }
 
 export function DialogSportType(props: dialogSportTypeProps) {
-    const { onClose, value: valueProp, open, onSelectExercise, ...other } = props;
+    const { onClose, value: valueProp, open, onSelectSportType: onSelectExercise, ...other } = props;
     const [value, setValue] = useState(valueProp);
     const { data } = useQuery([apiSportTypes], () => TypeSportService.getAll()
     )

@@ -129,7 +129,7 @@ export default function TrainingEdit() {
           fontSize: "18px",
           padding: "5px 8px 5px 0px",
         }} onClick={handleClickSportType}>Вид спорта: {valueSportType?.title}</Button>
-        <DialogSportType keepMounted open={openSportType} onClose={handleCloseSportType} onSelectExercise={handleAddSelectedSportType} value={valueSportType!} />
+        <DialogSportType keepMounted open={openSportType} onClose={handleCloseSportType} onSelectSportType={handleAddSelectedSportType} value={valueSportType!} />
         <div className={`${styles.name} mb-5`}>Упражения</div>
         {arr.map((exercise, index) => (
           <Card className="justify-center content-center self-center" key={index} variant="outlined" sx={{ marginBottom: '20px', borderRadius: '20px', }}>
