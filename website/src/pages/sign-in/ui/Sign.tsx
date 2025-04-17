@@ -155,7 +155,7 @@ export default function Sign() {
             }
           }}
           id="login"
-          label="Логин"
+          label="Email"
           variant="outlined"
           value={login}
           onChange={(e) => setLogin(e.target.value)}

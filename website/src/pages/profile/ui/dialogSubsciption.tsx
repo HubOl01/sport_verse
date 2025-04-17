@@ -32,6 +32,14 @@ export function DialogSubscriptionList(props: dialogListProps) {
 
     const useSubscribed = (subscription: ISubscription): boolean => {
         return (
+            Array.isArray(subscription.subscriber?.subscribers) &&
+            subscription.subscriber?.subscribers.some(
+                (subscriber) => subscriber.subscriberId === Number(USER.userId)
+            )
+        );
+    };
+    const useSubscribed2 = (subscription: ISubscription): boolean => {
+        return (
             Array.isArray(subscription.subscribedTo?.subscribers) &&
             subscription.subscribedTo?.subscribers.some(
                 (subscriber) => subscriber.subscriberId === Number(USER.userId)
@@ -39,16 +47,11 @@ export function DialogSubscriptionList(props: dialogListProps) {
         );
     };
 
+
     const handleClose = () => {
         onClose();
     };
 
-    // const handleClickSubscription = async () => {
-
-
-    //     queryClient.invalidateQueries('user');
-    //     handleClose();
-    // };
     return (
         <Dialog
             sx={{ '& .MuiDialog-paper': { width: '80%', } }}
@@ -74,26 +77,25 @@ export function DialogSubscriptionList(props: dialogListProps) {
                 <List>
                     {props.isSubscribers ? Array.isArray(data?.subscribers) && data.subscribers.length > 0 ? (
                         data.subscribers.map((subscription: ISubscription) => {
-                            // const isSubscribed =
-                            //     Array.isArray(user.subscribers) &&
-                            //     user.subscribers.some(
-                            //         (subscriber) => subscriber.subscriberId === Number(USER.userId)
-                            //     );
-                            // const handleClickSubscription = async () => {
-                            //     if (isSubscribed) {
-                            //         await SubscriptionService.delete(
-                            //             USER.userId!,
-                            //             user.id!.toString()!
-                            //         );
-                            //     }
-                            //     else {
-                            //         await SubscriptionService.create({
-                            //             subscriberId: Number(USER.userId)!,
-                            //             subscribedToId: user.id!,
-                            //         });
-                            //     }
-                            //     await queryClient.invalidateQueries(['users']);
-                            // }
+                            const isSubscribed = useSubscribed(subscription);
+                            const handleClickSubscription = async () => {
+                                if (isSubscribed) {
+                                    await SubscriptionService.delete(
+                                        USER.userId!,
+                                        subscription.subscriber!.id!.toString()!,
+                                    );
+                                }
+                                else {
+                                    await SubscriptionService.create({
+                                        subscriberId:
+                                            Number(USER.userId)!,
+                                        subscribedToId:
+                                            subscription.subscriber!.id!,
+                                    });
+                                }
+                                await queryClient.invalidateQueries(['users']);
+                                await queryClient.invalidateQueries(['user', props.username]);
+                            }
                             return (
                                 <ListItem
                                     key={subscription.id}
@@ -103,14 +105,13 @@ export function DialogSubscriptionList(props: dialogListProps) {
                                         width: "100%"
                                     }}
                                     disablePadding
-                                // secondaryAction={USER.username !== user.username ? <MyButton
-                                //     onClick={handleClickSubscription}
-                                //     disabled={isSubscribed}
-                                //     label={isSubscribed ? "Вы подписаны" : 'Подписаться'
-                                //     }
-                                //     secondary={isSubscribed}
+                                    secondaryAction={USER.username !== subscription.subscriber!.username ? <MyButton
+                                        onClick={handleClickSubscription}
+                                        label={isSubscribed ? "Вы подписаны" : 'Подписаться'
+                                        }
+                                        secondary={isSubscribed}
 
-                                // /> : null}
+                                    /> : null}
                                 ><ListItemButton
                                     onClick={() => {
                                         props.onClose();
@@ -162,12 +163,7 @@ export function DialogSubscriptionList(props: dialogListProps) {
                         }}>Нет подписчиков</p>
                     ) : Array.isArray(data?.subscriptions) && data.subscriptions.length > 0 ? (
                         data.subscriptions.map((subscription: ISubscription) => {
-                            const isSubscribed = useSubscribed(subscription);
-                            // const isSubscribed =
-                            //     Array.isArray(subscription.subscriber!.subscribers) &&
-                            //     subscription.subscriber!.subscribers.some(
-                            //         (subscriber) => subscriber.subscriberId === Number(USER.userId)
-                            //     );
+                            const isSubscribed = useSubscribed2(subscription);
                             const handleClickSubscription = async () => {
                                 if (isSubscribed) {
                                     await SubscriptionService.delete(
