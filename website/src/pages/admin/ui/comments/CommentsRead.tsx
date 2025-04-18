@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./CommentsRead.module.scss";
-import { AppBar, Box, Chip, IconButton, Toolbar } from "@mui/material";
+import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useEffect } from "react";
 import { TrainingService } from "../../../../shared/api/training.service";

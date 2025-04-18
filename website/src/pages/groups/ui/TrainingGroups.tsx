@@ -1,4 +1,4 @@
-import { Box, Card, CardActionArea, CardContent, Grid2, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Box, Card, CardActionArea, CardActions, CardContent, Grid2, Typography } from "@mui/material";
 import MyButton from "../../../components/MyButton";
 import { useQuery } from "react-query";
 import { TrainingGroupService } from "../../../shared/api/trainingGroups.service";
@@ -32,8 +32,7 @@ export default function TrainingGroups() {
         </div>
         <Box
           sx={{
-            position: 'relative', minHeight: '100vh', justifyContent: 'center', justifyItems: 'center', maxHeight: "80vh",
-            overflowY: "auto",
+            position: 'relative', justifyContent: 'center', justifyItems: 'center',
             width: "100%",
           }}
         >
@@ -52,7 +51,7 @@ export default function TrainingGroups() {
 
           <Grid2
             className="mt-3"
-            container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}
+            container spacing={{ xs: 2, md: 3, sm: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}
           >
             {Array.isArray(data) && data.length > 0 ? (
               data.map((item, index) => (
@@ -65,6 +64,9 @@ export default function TrainingGroups() {
                     }}>
                     <CardActionArea>
                       <CardContent>
+                        <Typography gutterBottom variant="caption" fontWeight={600}>
+                          Автор: {item.trainer?.profile?.name}
+                        </Typography>
                         <Typography gutterBottom variant="h5" component="div">
                           {item.title}
                         </Typography>
@@ -72,6 +74,46 @@ export default function TrainingGroups() {
                           {item.desc}
                         </Typography>
                       </CardContent>
+                      <CardActions disableSpacing>
+                        {/* <AvatarGroup
+                          renderSurplus={(surplus) => <span>+{surplus.toString()[0]}k</span>}
+                          total={4251}
+                        // spacing="small"
+                        >
+                          {item.athletes?.map((athlete) => (
+                            <Avatar alt={athlete.athlete.profile?.name} src={athlete.athlete.profile?.url_avatar} />
+                          ))}
+                        </AvatarGroup> */}
+                        <AvatarGroup
+                          total={item.athletes?.length}
+                          sx={{
+                            '& .MuiAvatarGroup-avatar': {
+                              width: 32,
+                              height: 32,
+                              fontSize: 14,
+                            },
+                          }}
+                          renderSurplus={(surplus) => <span
+                          >
+                            +{surplus}
+                          </span>}
+                          max={4}
+                        // spacing="small"
+                        >
+                          {item.athletes?.map((athlete) => (
+                            <Avatar
+                              key={athlete.athlete!.id}
+                              alt={athlete.athlete!.profile?.name}
+                              src={athlete.athlete!.profile?.url_avatar}
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                fontSize: 14,
+                              }}
+                            />
+                          ))}
+                        </AvatarGroup>
+                      </CardActions>
                     </CardActionArea>
                   </Card>
                 </Grid2>

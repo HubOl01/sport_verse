@@ -53,8 +53,7 @@ export default function NewsRead() {
     <Box
       ref={containerRef}
       sx={{
-        position: 'relative', minHeight: '100vh', justifyContent: 'center', justifyItems: 'center', maxHeight: "80vh",
-        overflowY: "auto",
+        position: 'relative', justifyContent: 'center', justifyItems: 'center',
       }}>
       <div className='mt-5'>
         {isLoading && <p className={styles.text}>Загрузка...</p>}

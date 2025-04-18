@@ -15,7 +15,34 @@ export class TrainingGroupsService {
     return this.prisma.trainingGroup.findMany({
       where: { isPrivate: 0 },
       include: {
+        trainer: {
+          include: {
+            profile: {
+              select: {
+                name: true,
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
         sportType: true,
+        athletes: {
+          include: {
+            athlete: {
+              select: {
+                id: true,
+                username: true,
+                profile: {
+                  select: {
+                    url_avatar: true,
+                    status: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -31,6 +58,33 @@ export class TrainingGroupsService {
       take: limit,
       include: {
         sportType: true,
+        trainer: {
+          include: {
+            profile: {
+              select: {
+                name: true,
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
+        athletes: {
+          include: {
+            athlete: {
+              select: {
+                id: true,
+                username: true,
+                profile: {
+                  select: {
+                    url_avatar: true,
+                    status: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -62,7 +116,34 @@ export class TrainingGroupsService {
     return this.prisma.trainingGroup.findUnique({
       where: { id },
       include: {
-        athletes: true,
+        sportType: true,
+        trainer: {
+          include: {
+            profile: {
+              select: {
+                name: true,
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
+        athletes: {
+          include: {
+            athlete: {
+              select: {
+                id: true,
+                username: true,
+                profile: {
+                  select: {
+                    url_avatar: true,
+                    status: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         PlanInGroup: {
           include: {
             plan: {

@@ -21,6 +21,7 @@ import { ISportType } from "../../../shared/model/ISportType";
 import { useNavigate } from "react-router-dom";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MyButton from "../../../components/MyButton";
+import { useAuth } from "../../../shared/utils/useAuth";
 
 export interface ArrModel {
     titleExercise: string; countExercise: string, alignment: string, alignmentTime: string, alignmentDistance: string;
@@ -45,7 +46,12 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
     const [openSportType, setOpenSportType] = useState(false);
     const [value, setValue] = useState('Dione');
     const navigate = useNavigate();
+    const { user: USER } = useAuth();
 
+    if (!USER?.token) {
+        navigate("/login");
+        return null;
+    }
     useEffect(() => {
         TrainingService.get(trainingPlanId.toString()).then((plan) => {
             setTitle(plan.title);
@@ -135,7 +141,7 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
         setArr([...arr, copiedExercise]);
     };
     const handleSave = () => {
-        updateTrainingPlan(trainingPlanId, title, description, isPrivate, arr, arrFirst, valueSportType, navigate, onClickExit); // Передаем navigate
+        updateTrainingPlan(trainingPlanId, title, description, isPrivate, arr, Number(USER.userId), arrFirst, valueSportType, navigate, onClickExit); // Передаем navigate
     };
 
     return (
@@ -334,6 +340,7 @@ async function updateTrainingPlan(
     description: string,
     isPrivate: boolean,
     arr: any[],
+    userId: number,
     arrFirst: any[],
     valueSportType: ISportType,
     navigate: ReturnType<typeof useNavigate>, // Тип для navigate,
@@ -343,7 +350,7 @@ async function updateTrainingPlan(
         const trainingPlan = await TrainingService.update(id, {
             title: title,
             description: description,
-            userId: 1,
+            userId: userId,
             statusTrainingId: 1,
             isPrivate: isPrivate ? 1 : 0,
             sportTypeId: valueSportType.id,
@@ -373,7 +380,7 @@ async function updateTrainingPlan(
                             name: item.titleExercise,
                             description: "",
                             ExerciseCategoryId: 40,
-                            userId: isPrivate ? 1 : undefined,
+                            userId: isPrivate ? userId : undefined,
                             isPrivate: isPrivate,
                         });
                         exerciseId = newExercise.id!;

@@ -11,10 +11,6 @@ export default function Main() {
   )
   return (
     <div
-      style={{
-        maxHeight: "100vh",
-        overflowY: "auto",
-      }}
     >
       <div className='mr-5 ml-5 mt-5'>
         <div className="flex ">

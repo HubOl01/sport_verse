@@ -21,10 +21,7 @@ export default function Training() {
   return (
     <div>
       <ToggleTraining alignment={alignment} handleAlignmentChange={(newAlignment) => { handleAlignmentChange(newAlignment) }} />
-      <div style={{
-        maxHeight: "75vh",
-        overflowY: "auto",
-      }}>
+      <div>
 
         {alignment === "public" ? Array.isArray(trainingPlansPublicData) && trainingPlansPublicData.length > 0 ? (
           trainingPlansPublicData.map((plan: ITraining) => (

@@ -16,7 +16,7 @@ export interface dialogProps {
 export function DialogCustom(props: dialogProps) {
     const { onClose, value: valueProp, open, onSelectExercise, ...other } = props;
     const [value, setValue] = useState(valueProp);
-    const { data, isLoading, error } = useQuery(['exercises'], () => ExercisesService.getAll()
+    const { data } = useQuery(['exercises'], () => ExercisesService.getAll()
     )
 
     // if (isLoading) return <p>Загрузка...</p>;

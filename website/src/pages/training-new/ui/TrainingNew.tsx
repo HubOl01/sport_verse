@@ -13,6 +13,7 @@ import { DialogSportType } from "./dialogTypeSport";
 import { ISportType } from '../../../shared/model/ISportType';
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import MyButton from "../../../components/MyButton";
+import { useAuth } from "../../../shared/utils/useAuth";
 
 
 interface ArrModel {
@@ -41,6 +42,12 @@ export default function TrainingEdit() {
   const handleClick = () => {
     setOpen(true);
   };
+  const { user: USER } = useAuth();
+
+  if (!USER?.token) {
+    navigate("/login");
+    return null;
+  }
 
 
   const handleClose = (newValue?: string) => {
@@ -95,10 +102,7 @@ export default function TrainingEdit() {
   };
 
   return (
-    <div style={{
-      maxHeight: "100vh",
-      overflowY: "auto",
-    }}>
+    <div>
       <div className='mr-5 ml-5'><TextField variant="standard" margin="normal" autoFocus placeholder="Заголовок" sx={{ width: "100%" }} value={title} onChange={(e) => setTitle(e.target.value)}
         slotProps={{
           input: {
@@ -282,7 +286,7 @@ export default function TrainingEdit() {
               if (title === '' && description === '' && arr.length === 0 && valueSportType.id === 0) {
                 alert('Заполните все поля');
               } else {
-                createTrainingPlan(title, description, isPrivate, arr, valueSportType, navigate);
+                createTrainingPlan(title, description, isPrivate, arr, Number(USER.userId), valueSportType, navigate);
               }
             }
           }
@@ -297,6 +301,7 @@ async function createTrainingPlan(
   description: string,
   isPrivate: boolean,
   arr: any[],
+  userId: number,
   valueSportType: ISportType,
   navigate: NavigateFunction) {
 
@@ -305,7 +310,7 @@ async function createTrainingPlan(
     const trainingPlan = await TrainingService.create({
       title: title,
       description: description,
-      userId: 1,
+      userId: userId,
       statusTrainingId: 1,
       isPrivate: isPrivate ? 1 : 0,
       sportTypeId: valueSportType.id,
@@ -332,7 +337,7 @@ async function createTrainingPlan(
             name: item.titleExercise,
             description: "",
             ExerciseCategoryId: 40,
-            userId: isPrivate ? 1 : undefined,
+            userId: isPrivate ? userId : undefined,
             isPrivate: isPrivate,
           });
           exerciseId = newExercise.id!;

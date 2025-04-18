@@ -1,3 +1,5 @@
+import { ITraining } from "./ITraining";
+
 export interface IPlanInGroup {
   id?: number;
   title: string;
@@ -5,4 +7,6 @@ export interface IPlanInGroup {
   planAt: Date;
   planId: number;
   groupId: number;
+
+  plan: ITraining;
 }

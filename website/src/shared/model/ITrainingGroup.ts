@@ -1,5 +1,8 @@
 import { IAthleteInGroup } from "./IAthleteInGroup";
+import { IJoinRequest } from "./IJoinRequest";
+import { IPlanInGroup } from "./IPlanInGroup";
 import { ISportType } from "./ISportType";
+import { IUser } from "./IUser";
 
 export interface ITrainingGroup {
   id?: number;
@@ -10,7 +13,9 @@ export interface ITrainingGroup {
   sportTypeId: number;
   isPrivate?: number;
 
-  trainingGroup?: ITrainingGroup[];
+  trainer?: IUser;
+  planInGroups?: IPlanInGroup[];
   athletes?: IAthleteInGroup[];
   sportType?: ISportType;
+  joinRequest?: IJoinRequest[];
 }

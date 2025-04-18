@@ -17,18 +17,18 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <div className='w-full min-h-screen'>
-
+        <div className='flex flex-col h-full'>
           {location.pathname !== '/login' && location.pathname !== '/register' ? <Header /> : <></>}
-          <div className='block sm:flex h-fit min-h-screen'>
+
+          <div className='sm:flex flex-1 sm:overflow-hidden'>
             {location.pathname !== '/login' && location.pathname !== '/register' ?
               isAuthenticated() ?
                 (
-                  <div className='w-full sm:w-1/6 bg-gray-900' style={{ minWidth: "300px" }}>
+                  <div className='w-full max-sm:max-h-[200px] sm:w-1/6 bg-gray-900 overflow-y-auto' style={{ minWidth: "300px" }}>
                     {CurrentRole === Roles.ADMIN ? <LeftBarAdmin /> : <LeftBar />}
                   </div>
                 ) : <></> : <></>}
-            <div className={`w-full  ${location.pathname !== '/login' && location.pathname !== '/register'}`}>
+            <div className={`flex-1 overflow-y-auto ${location.pathname !== '/login' && location.pathname !== '/register'}`}>
 
               <Routers></Routers>
             </div>

@@ -3,7 +3,7 @@ import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./TrainingRead.module.scss";
 import { ITraining } from '../../../shared/model/ITraining';
-import { AppBar, Box, CardActions, Chip, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, CardActions, IconButton, Toolbar, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -233,8 +233,6 @@ export default function TrainingDetail() {
       {/* Основной контент */}
       <Box sx={{
         padding: '1rem', paddingBottom: '80px',
-        maxHeight: "75vh",
-        overflowY: "auto",
       }}>
         {edit ? (
           <TrainingEdit trainingPlanId={Number(id)} onClickExit={() => {
