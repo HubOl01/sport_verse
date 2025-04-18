@@ -18,7 +18,6 @@ import ThumbUpOn from '@mui/icons-material/ThumbUpAlt';
 import ThumbUpOff from '@mui/icons-material/ThumbUpOffAlt';
 import { ColorBackground } from "../../../shared/styles/colors";
 import { DialogShare } from "./dialogShare";
-import { ExerciseCard } from "./ExerciseCard";
 import Comments from "./comments/Comments";
 import LockOutlineIcon from '@mui/icons-material/LockOutlined';
 import { LikeTrainingService } from "../../../shared/api/likeTraining.service";
@@ -26,6 +25,7 @@ import { ILikeModel } from "../../../shared/model/ILikeModel";
 import MyButton from "../../../components/MyButton";
 import { ExerciseSetService } from "../../../shared/api/exerciseSet.service";
 import { ExercisesService } from "../../../shared/api/exercises.service";
+import { GroupedExercises } from "./groupedExercises";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -68,11 +68,12 @@ export default function TrainingDetail() {
     }
   }, [likeData]);
 
-  const { data: planExercisesData } = useQuery(
-    ['planExercises', id],
-    () => PlanExerciseService.getAllPlan(trainingData?.id!.toString() ?? ""),
-    { enabled: !!trainingData }
-  );
+
+  // const { data: planExercisesData } = useQuery(
+  //   ['planExercises', id],
+  //   () => PlanExerciseService.getAllPlan(trainingData?.id!.toString() ?? ""),
+  //   { enabled: !!trainingData }
+  // );
 
   if (isLoading) return <p className={styles.text}>Загрузка...</p>;
   if (error) return <p className={styles.text}>Произошла ошибка при загрузке данных.</p>;
@@ -262,10 +263,12 @@ export default function TrainingDetail() {
             <p>Описание: {trainingData.description}</p>
             <div className={`${styles.name} mb-5`}>Упражнения</div>
             <div>
-              {planExercisesData && planExercisesData.length > 0 ? (
-                planExercisesData.map((exercise, i) => (
-                  <ExerciseCard key={exercise.id} exerciseId={exercise.exerciseId} index={i + 1} planExerciseId={exercise.id!} />
-                ))
+              {Array.isArray(trainingData.PlanExercise) && trainingData.PlanExercise!.length > 0 ? (
+                <GroupedExercises planExercises={trainingData.PlanExercise ?? []} />
+                // planExercisesData.map((exercise, i) => (
+                // <ExerciseCard key={exercise.id} exerciseId={exercise.exerciseId} index={i + 1} planExerciseId={exercise.id!} />
+                // )
+                // )
               ) : (
                 <p>Упражнений пока нет.</p>
               )}

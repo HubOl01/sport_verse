@@ -1,3 +1,4 @@
+import { IPlanExercise } from "./IPlanExercise";
 import { ISportType } from "./ISportType";
 import { StatusPublish } from "./IStatusPublish";
 import { IUser } from "./IUser";
@@ -20,4 +21,6 @@ export interface ITraining {
   sportType?: ISportType;
   user?: IUser;
   parentUser?: IUser;
+
+  PlanExercise?: IPlanExercise[];
 }

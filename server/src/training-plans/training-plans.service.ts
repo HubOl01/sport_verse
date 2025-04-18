@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateTrainingPlanDto } from './dto/create-training-plan.dto';
 import { UpdateTrainingPlanDto } from './dto/update-training-plan.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { exercises } from '../prisma/data/exercises';
 
 @Injectable()
 export class TrainingPlansService {
@@ -180,6 +181,7 @@ export class TrainingPlansService {
         PlanExercise: {
           include: {
             exercise: true,
+            ExerciseSet: true,
           },
         },
         StatusTraining: true,

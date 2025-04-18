@@ -46,12 +46,6 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
     const [openSportType, setOpenSportType] = useState(false);
     const [value, setValue] = useState('Dione');
     const navigate = useNavigate();
-    const { user: USER } = useAuth();
-
-    if (!USER?.token) {
-        navigate("/login");
-        return null;
-    }
     useEffect(() => {
         TrainingService.get(trainingPlanId.toString()).then((plan) => {
             setTitle(plan.title);
@@ -86,6 +80,12 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
         });
     }, [trainingPlanId]);
 
+    const { user: USER } = useAuth();
+
+    if (!USER?.token) {
+        navigate("/login");
+        return null;
+    }
 
     const handleClose = (newValue?: string) => {
         setOpen(false);
