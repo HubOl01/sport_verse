@@ -7,7 +7,7 @@ import {
     ToggleButtonGroup,
     Typography,
 } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TrainingService } from "../../../shared/api/training.service";
 import { PlanExerciseService } from "../../../shared/api/planExercise.service";
@@ -46,16 +46,57 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
     const [openSportType, setOpenSportType] = useState(false);
     const [value, setValue] = useState('Dione');
     const navigate = useNavigate();
-    useEffect(() => {
-        TrainingService.get(trainingPlanId.toString()).then((plan) => {
-            setTitle(plan.title);
-            setDescription(plan.description);
-            setValueSportType(plan.sportType!);
-            setIsPrivate(plan.isPrivate === 1 ? true : false);
+    // useEffect(() => {
+    //     TrainingService.get(trainingPlanId.toString()).then((plan) => {
+    //         setTitle(plan.title);
+    //         setDescription(plan.description);
+    //         setValueSportType(plan.sportType!);
+    //         setIsPrivate(plan.isPrivate === 1 ? true : false);
 
-            PlanExerciseService.getAllPlan(plan.id!.toString()).then((planExercises) => {
-                const exercisesPromises = planExercises.map((exercise) =>
-                    ExerciseSetService.getOnePlanExercises((exercise.id!)).then(async (sets) => {
+    //         PlanExerciseService.getAllPlan(plan.id!.toString()).then((planExercises) => {
+    //             const exercisesPromises = planExercises.map((exercise) =>
+    //                 ExerciseSetService.getOnePlanExercises((exercise.id!)).then(async (sets) => {
+    //                     const alignment = sets.duration
+    //                         ? "time"
+    //                         : sets.distance
+    //                             ? "distance"
+    //                             : sets.weight
+    //                                 ? "weight"
+    //                                 : "count";
+    //                     const exerciseDetails = await ExercisesService.get(exercise.exerciseId.toString());
+    //                     return {
+    //                         titleExercise: exerciseDetails.name,
+    //                         countExercise: (sets.repetitions || sets.weight || sets.distance || sets.duration)?.toString() || "",
+    //                         alignment: alignment,
+    //                         alignmentTime: sets.stringUnit === 'ч.' ? 'hour' : sets.stringUnit === 'мин.' ? 'minute' : 'second',
+    //                         alignmentDistance: sets.stringUnit === 'км.' ? 'km' : 'm'
+    //                     };
+    //                 })
+    //             );
+
+    //             Promise.all(exercisesPromises).then((exercises) => setArr(exercises));
+    //             if (Array.isArray(arrFirst) && arrFirst.length <= 0) {
+    //                 Promise.all(exercisesPromises).then((exercises) => setArrFirst(exercises));
+    //             }
+    //         });
+    //     });
+    // }, [trainingPlanId]);
+    const hasSavedInitialArr = useRef(false);
+
+    useEffect(() => {
+        async function loadTrainingPlan() {
+            try {
+                const plan = await TrainingService.get(trainingPlanId.toString());
+                setTitle(plan.title);
+                setDescription(plan.description);
+                setValueSportType(plan.sportType!);
+                setIsPrivate(plan.isPrivate === 1);
+
+                const planExercises = await PlanExerciseService.getAllPlan(plan.id!.toString());
+
+                const exercises = await Promise.all(
+                    planExercises.map(async (exercise) => {
+                        const sets = await ExerciseSetService.getOnePlanExercises(exercise.id!);
                         const alignment = sets.duration
                             ? "time"
                             : sets.distance
@@ -63,22 +104,39 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
                                 : sets.weight
                                     ? "weight"
                                     : "count";
+
                         const exerciseDetails = await ExercisesService.get(exercise.exerciseId.toString());
+
                         return {
                             titleExercise: exerciseDetails.name,
-                            countExercise: (sets.repetitions || sets.weight || sets.distance || sets.duration)?.toString() || "",
-                            alignment: alignment,
-                            alignmentTime: sets.duration?.toString() || "",
-                            alignmentDistance: sets.distance?.toString() || "",
+                            countExercise: (
+                                sets.repetitions ??
+                                    sets.weight ??
+                                    sets.stringUnit === "км" ? sets.distance! / 1000 : sets.distance! ??
+                                        sets.stringUnit! === 'ч.' ? sets.duration! / 60 / 60 : sets.stringUnit! === 'мин.' ? sets.duration! / 60 : sets.duration!
+                                // sets.duration
+                            )?.toString() ?? "",
+                            alignment,
+                            alignmentTime: sets.stringUnit === "ч." ? "hour" : sets.stringUnit === "мин." ? "minute" : "second",
+                            alignmentDistance: sets.stringUnit === "км" ? "km" : "m",
                         };
                     })
                 );
 
-                Promise.all(exercisesPromises).then((exercises) => setArr(exercises));
-                Promise.all(exercisesPromises).then((exercises) => setArrFirst(exercises));
-            });
-        });
+                setArr(exercises);
+                if (!hasSavedInitialArr.current) {
+                    setArrFirst(exercises);
+                    hasSavedInitialArr.current = true;
+                }
+
+            } catch (error) {
+                console.error("Ошибка при загрузке плана тренировки:", error);
+            }
+        }
+
+        loadTrainingPlan();
     }, [trainingPlanId]);
+
 
     const { user: USER } = useAuth();
 
@@ -364,7 +422,7 @@ async function updateTrainingPlan(
         if (!trainingPlan.id) {
             throw new Error("Failed to create training plan");
         }
-        if (arraysAreEqual(arr, arrFirst)) {
+        if (arraysAreEqual(arrFirst, arr)) {
             console.log("Тренировка не изменилась");
             // console.log("item.alignment: ", item.alignment);
             console.log("Plan created:", trainingPlan);
@@ -401,43 +459,69 @@ async function updateTrainingPlan(
                         exerciseStatus: 0,
                         exerciseId: exerciseId,
                     });
-
                     await ExerciseSetService.create({
                         planExerciseId: planExercise.id!,
-                        duration:
-                            item.alignment === "time"
-                                ? item.alignmentTime === "hour"
-                                    ? BigInt(item.countExercise * 60 * 60)
-                                    : item.alignmentTime === "minute"
-                                        ? BigInt(item.countExercise * 60)
-                                        : BigInt(item.countExercise)
-                                : undefined,
-                        distance: item.alignment === "distance" ? parseInt(item.countExercise) : undefined,
-                        weight:
-                            item.alignment === "weight"
-                                ? item.alignmentDistance === "km"
-                                    ? item.countExercise * 1000
-                                    : item.countExercise
-                                : undefined,
+                        duration: item.alignment === "time"
+                            ? item.alignmentTime === 'hour'
+                                ? (parseInt(item.countExercise) * 60 * 60)
+                                : item.alignmentTime === 'minute'
+                                    ? (parseInt(item.countExercise) * 60)
+                                    : parseInt(item.countExercise)
+                            : undefined,
+                        distance: item.alignment === "distance" ?
+                            item.alignmentDistance === 'km' ?
+                                parseFloat(item.countExercise) * 1000 :
+                                parseFloat(item.countExercise) : undefined,
+                        weight: item.alignment === "weight" ?
+                            parseFloat(item.countExercise)
+                            : undefined,
                         repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
                         calories_burned: undefined,
                         route_gpx: undefined,
                         stringType: item.alignment,
-                        stringUnit:
-                            item.alignment === "distance"
-                                ? item.alignmentDistance === "km"
-                                    ? "км."
-                                    : "м."
-                                : item.alignment === "time"
-                                    ? item.alignmentTime === "hour"
-                                        ? "ч."
-                                        : item.alignmentTime === "minute"
-                                            ? "мин."
-                                            : "сек."
-                                    : item.alignment === "weight" ?
-                                        "кг."
-                                        : "раз.",
+                        stringUnit: item.alignment === 'distance' ?
+                            item.alignmentDistance === 'km' ? 'км' : 'м' : item.alignment === 'time' ?
+                                item.alignmentTime === 'hour' ? 'ч.' : item.alignmentTime === 'minute' ? 'мин.' : 'сек.' :
+                                item.alignment === "weight" ?
+                                    "кг." :
+                                    'раз.',
                     });
+                    // await ExerciseSetService.create({
+                    //     planExerciseId: planExercise.id!,
+                    //     duration:
+                    //         item.alignment === "time"
+                    //             ? item.alignmentTime === "hour"
+                    //                 ? BigInt(item.countExercise * 60 * 60)
+                    //                 : item.alignmentTime === "minute"
+                    //                     ? BigInt(item.countExercise * 60)
+                    //                     : BigInt(item.countExercise)
+                    //             : undefined,
+                    //     distance: item.alignment === "distance" ? parseInt(item.countExercise) : undefined,
+                    //     weight:
+                    //         item.alignment === "weight"
+                    //             ? item.alignmentDistance === "km"
+                    //                 ? item.countExercise * 1000
+                    //                 : item.countExercise
+                    //             : undefined,
+                    //     repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
+                    //     calories_burned: undefined,
+                    //     route_gpx: undefined,
+                    //     stringType: item.alignment,
+                    //     stringUnit:
+                    //         item.alignment === "distance"
+                    //             ? item.alignmentDistance === "km"
+                    //                 ? "км."
+                    //                 : "м."
+                    //             : item.alignment === "time"
+                    //                 ? item.alignmentTime === "hour"
+                    //                     ? "ч."
+                    //                     : item.alignmentTime === "minute"
+                    //                         ? "мин."
+                    //                         : "сек."
+                    //                 : item.alignment === "weight" ?
+                    //                     "кг."
+                    //                     : "раз.",
+                    // });
                     console.log("item.alignment: ", item.alignment);
                     console.log("Plan created:", trainingPlan);
                     // navigate(`/training`); // Используем navigate здесь
@@ -458,6 +542,7 @@ function arraysAreEqual(arr1: ArrModel[], arr2: ArrModel[]): boolean {
     if (arr1.length !== arr2.length) return false;
 
     for (let i = 0; i < arr1.length; i++) {
+        console.log(`index: ${i}`);
         const item1 = arr1[i];
         const item2 = arr2[i];
 

@@ -42,8 +42,8 @@ export function GroupedExercises({ planExercises }: GroupedExercisesProps) {
         const values = allSets
           .map(set => {
             switch (set.stringType) {
-              case "time": return set.duration;
-              case "distance": return set.distance;
+              case "time": return set.stringUnit! === 'ч.' ? set.duration! / 60 / 60 : set.stringUnit === 'мин.' ? set.duration! / 60 : set.duration!;
+              case "distance": return set.stringUnit! === 'км' ? set.distance! / 1000 : set.distance;
               case "weight": return set.weight;
               case "count":
               default: return set.repetitions;

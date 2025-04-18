@@ -3,7 +3,7 @@ export interface IExerciseSet{
     id?: number;
     planExerciseId: number;
     date?: Date;
-    duration?: bigint;
+    duration?: number;
     distance?: number;
     weight?: number;
     repetitions?: number;

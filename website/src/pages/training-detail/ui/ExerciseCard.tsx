@@ -65,9 +65,10 @@ export function ExerciseCard({
 
         switch (set.stringType) {
             case "time":
-                return `${set.duration?.toString() ?? "—"} ${set.stringUnit ?? ""}`;
+                return `${(set.stringUnit === "ч." ? (set.duration! / 60 / 60).toString() : set.stringUnit === "мин." ? (set.duration! / 60).toString() : (set.duration!).toString()) ?? "—"} ${set.stringUnit ?? ""}`;
             case "distance":
-                return `${set.distance?.toString() ?? "—"} ${set.stringUnit ?? ""}`;
+                return `${set.stringUnit === "км" ? (set.distance! / 1000).toString() : set.distance?.toString()
+                    ?? "—"} ${set.stringUnit ?? ""}`;
             case "weight":
                 return `${set.weight?.toString() ?? "—"} ${set.stringUnit ?? ""}`;
             case "count":

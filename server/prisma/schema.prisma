@@ -165,7 +165,7 @@ model ExerciseSet {
   planExerciseId Int
   date           DateTime? @default(now())
 
-  duration        BigInt?
+  duration        Int?
   distance        Float?
   weight          Float?
   repetitions     Int?
@@ -181,7 +181,7 @@ model TrainingResult {
   id             Int          @id @default(autoincrement())
   trainingPlanId Int
   date_end       DateTime
-  duration       BigInt?
+  duration       Int?
   difficulty     Int?         @default(0) // сложность тренировки от 0-10
   trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
 }

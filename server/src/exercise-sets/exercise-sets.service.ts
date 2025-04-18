@@ -16,7 +16,9 @@ export class ExerciseSetsService {
   }
 
   findOnePlanExercise(planExerciseId: number) {
-    return this.prisma.exerciseSet.findFirst({ where: { planExerciseId: planExerciseId }});
+    return this.prisma.exerciseSet.findFirst({
+      where: { planExerciseId: planExerciseId },
+    });
   }
 
   findOne(id: number) {

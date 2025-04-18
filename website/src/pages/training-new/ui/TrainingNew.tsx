@@ -363,13 +363,20 @@ async function createTrainingPlan(
         // Создаем набор упражнений
         await ExerciseSetService.create({
           planExerciseId: planExercise.id!,
-          duration: item.alignment === "time" ?
-            item.alignmentTime == 'hour' ? BigInt(item.countExercise * 60 * 60) : item.alignmentTime == 'minute' ? BigInt(item.countExercise * 60) : BigInt(item.countExercise)
+          duration: item.alignment === "time"
+            ? item.alignmentTime === 'hour'
+              ? (parseInt(item.countExercise) * 60 * 60)
+              : item.alignmentTime === 'minute'
+                ? (parseInt(item.countExercise) * 60)
+                : parseInt(item.countExercise)
             : undefined,
-          distance: item.alignment === "distance" ?
-            parseInt(item.countExercise) : undefined,
+
+            distance: item.alignment === "distance" ?
+            item.alignmentDistance === 'km' ?
+                parseFloat(item.countExercise) * 1000 :
+                parseFloat(item.countExercise) : undefined,
           weight: item.alignment === "weight" ?
-            item.alignmentDistance == 'km' ? item.countExercise * 1000 : item.countExercise
+            item.countExercise
             : undefined,
           repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
           calories_burned: undefined,
@@ -377,7 +384,10 @@ async function createTrainingPlan(
           stringType: item.alignment,
           stringUnit: item.alignment === 'distance' ?
             item.alignmentDistance === 'km' ? 'км' : 'м' : item.alignment === 'time' ?
-              item.alignmentTime === 'hour' ? 'ч.' : item.alignmentTime == 'minute' ? 'мин.' : 'сек.' : 'раз.',
+              item.alignmentTime === 'hour' ? 'ч.' : item.alignmentTime === 'minute' ? 'мин.' : 'сек.' :
+              item.alignment === "weight" ?
+                "кг." :
+                'раз.',
         });
         console.log("Plan created:", plan);
         navigate('/training');

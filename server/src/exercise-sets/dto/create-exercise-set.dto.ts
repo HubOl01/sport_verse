@@ -11,7 +11,7 @@ export class CreateExerciseSetDto {
   date: Date;
   @ApiProperty({ required: true })
   @IsInt()
-  duration: bigint;
+  duration: number;
   @ApiProperty({ required: true })
   @IsNumber()
   distance: number;
