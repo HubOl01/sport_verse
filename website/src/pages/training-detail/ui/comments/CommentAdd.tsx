@@ -17,6 +17,7 @@ export default function CommentAdd({ content, onChange, sentComment, sentCancel,
                 onChange={onChange}
                 value={content}
                 isLines={true}
+                isBorder
 
             />
             <div className="flex space-x-2">

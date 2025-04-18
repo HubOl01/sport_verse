@@ -37,7 +37,7 @@ export default function TrainingEdit() {
   const [open, setOpen] = useState(false);
   const [openSportType, setOpenSportType] = useState(false);
   const [value, setValue] = useState('Dione');
-  const [valueSportType, setValueSportType] = useState<ISportType>({ id: 0, title: '', image: null });
+  const [valueSportType, setValueSportType] = useState<ISportType>({ id: 0, title: 'Выберите вид спорта', image: null });
   const navigate = useNavigate();
   const handleClick = () => {
     setOpen(true);
@@ -132,7 +132,13 @@ export default function TrainingEdit() {
           width: "100%",
           fontSize: "18px",
           padding: "5px 8px 5px 0px",
-        }} onClick={handleClickSportType}>Вид спорта: {valueSportType?.title}</Button>
+        }} onClick={handleClickSportType}>
+
+          <Typography variant="subtitle1" marginRight={"6px"}>
+            Вид спорта:
+          </Typography>
+          {valueSportType.id === 0 ? <Typography variant="subtitle1" color="textSecondary">{' ' + valueSportType?.title}</Typography> : <Typography variant="subtitle1">{valueSportType?.title}</Typography>}
+        </Button>
         <DialogSportType keepMounted open={openSportType} onClose={handleCloseSportType} onSelectSportType={handleAddSelectedSportType} value={valueSportType!} />
         <div className={`${styles.name} mb-5`}>Упражения</div>
         {arr.map((exercise, index) => (

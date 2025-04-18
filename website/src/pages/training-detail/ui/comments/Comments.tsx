@@ -4,6 +4,7 @@ import { CommentPlanService } from "../../../../shared/api/commentPlan.service";
 import { ICommentModel } from "../../../../shared/model/ICommentModel";
 import CommentAdd from "./CommentAdd";
 import CommentItem from "./CommentItem";
+import { useAuth } from "../../../../shared/utils/useAuth";
 
 interface CommentsProps {
   idTraining: string
@@ -11,6 +12,7 @@ interface CommentsProps {
 }
 
 export default function Comments({ idTraining, isAdmin = false }: CommentsProps) {
+  const { user: USER } = useAuth();
   const { data, isLoading } = useQuery<ICommentModel[]>(['comments', idTraining], async () => await CommentPlanService.getAllPlanId(idTraining));
   // const {
   //   data: trainingData,
@@ -19,13 +21,13 @@ export default function Comments({ idTraining, isAdmin = false }: CommentsProps)
   // } = useQuery<ITraining>(['trainingDetail', id], () => TrainingService.get(id!));
   const [content, setContent] = useState("")
   const queryClient = useQueryClient();
-
   const sentComment = async () => {
     try {
+
       if (content.trim() !== "") {
         await CommentPlanService.create({
           content: content,
-          userId: 1,
+          userId: Number(USER.userId!),
           trainingPlanId: Number(idTraining),
         });
 

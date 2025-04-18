@@ -46,7 +46,7 @@ export class LikeTrainingController {
     @Param('planId') planId: string,
     @Param('userId') userId: string,
   ) {
-    return this.likeTrainingService.findPlanUser(+planId, +userId);
+    return this.likeTrainingService.findPlanUser(+userId, +planId);
   }
 
   @Patch(':id')
@@ -69,6 +69,6 @@ export class LikeTrainingController {
     @Param('planId') planId: string,
     @Param('userId') userId: string,
   ) {
-    return this.likeTrainingService.deletePlanUser(+planId, +userId);
+    return this.likeTrainingService.deletePlanUser(+userId, +planId);
   }
 }

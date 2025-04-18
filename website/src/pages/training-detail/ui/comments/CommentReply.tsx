@@ -4,6 +4,8 @@ import { useState } from "react";
 import { CommentPlanService } from "../../../../shared/api/commentPlan.service";
 import { ColorBackground } from "../../../../shared/styles/colors";
 import { QueryClient } from "react-query";
+import { useAuth } from "../../../../shared/utils/useAuth";
+import { useNavigate } from "react-router-dom";
 
 interface CommentReplyProps {
     idTraining: number;
@@ -18,6 +20,13 @@ export default function CommentReply(props: CommentReplyProps) {
     const [contentReply, setContentReply] = useState("")
     const [isReply, setReply] = useState(false)
     const [isEdit, setEdit] = useState(false)
+
+    const { user: USER } = useAuth();
+    const navigate = useNavigate();
+    if (!USER?.token) {
+        navigate("/login");
+        return null;
+    }
     const clickReplay = async () => {
         setReply(true)
     }
@@ -34,7 +43,7 @@ export default function CommentReply(props: CommentReplyProps) {
             // Создаем новый комментарий
             await CommentPlanService.create({
                 content: contentReply,
-                userId: 1,
+                userId: Number(USER.userId!),
                 trainingPlanId: props.idTraining,
                 parentCommentId: props.idComment,
             });

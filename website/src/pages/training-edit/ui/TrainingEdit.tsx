@@ -33,7 +33,7 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [isPrivate, setIsPrivate] = useState(true);
-    const [valueSportType, setValueSportType] = useState<ISportType>({ id: 0, title: "", image: null });
+    const [valueSportType, setValueSportType] = useState<ISportType>({ id: 0, title: "Выберите вид спорта", image: null });
 
 
     const [titleExercise, setTitleExercise] = useState('');
@@ -175,7 +175,12 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
                 width: "100%",
                 fontSize: "18px",
                 padding: "5px 8px 5px 0px",
-            }} onClick={handleClickSportType}>Вид спорта: {valueSportType?.title}</Button>
+            }} onClick={handleClickSportType}>
+                <Typography variant="subtitle1" marginRight={"6px"}>
+                    Вид спорта:
+                </Typography>
+                {valueSportType.id === 0 ? <Typography variant="subtitle1" color="textSecondary">{' ' + valueSportType?.title}</Typography> : <Typography variant="subtitle1">{valueSportType?.title}</Typography>}
+            </Button>
             <DialogSportType keepMounted open={openSportType} onClose={handleCloseSportType} onSelectSportType={handleAddSelectedSportType} value={valueSportType!} />
             <div className={`${styles.name} mb-5`}>Упражения</div>
             {arr.map((exercise, index) => (
@@ -361,6 +366,7 @@ async function updateTrainingPlan(
         }
         if (arraysAreEqual(arr, arrFirst)) {
             console.log("Тренировка не изменилась");
+            // console.log("item.alignment: ", item.alignment);
             console.log("Plan created:", trainingPlan);
             // navigate(`/training`); // Используем navigate здесь
             navigate(`/training/${id}`);
@@ -432,7 +438,7 @@ async function updateTrainingPlan(
                                         "кг."
                                         : "раз.",
                     });
-
+                    console.log("item.alignment: ", item.alignment);
                     console.log("Plan created:", trainingPlan);
                     // navigate(`/training`); // Используем navigate здесь
                     navigate(`/training/${id}`);

@@ -26,6 +26,7 @@ import MyButton from "../../../components/MyButton";
 import { ExerciseSetService } from "../../../shared/api/exerciseSet.service";
 import { ExercisesService } from "../../../shared/api/exercises.service";
 import { GroupedExercises } from "./groupedExercises";
+import { useAuth } from "../../../shared/utils/useAuth";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -43,20 +44,25 @@ export default function TrainingDetail() {
   const [description, setDescription] = useState("");
   const [sportTypeId, setSportTypeId] = useState(1);
 
+  const { user: USER } = useAuth();
+
+  // if (!USER?.token) {
+  //   navigate("/login");
+  //   return null;
+  // }
 
   const { data: trainingData, isLoading, error } = useQuery<ITraining>(
     ['trainingDetail', id],
     () => TrainingService.get(id!),
     { enabled: !!id }
   );
-
   const { data: likeData } = useQuery<ILikeModel>(
-    ['likeTraining', id, 1],
-    () => LikeTrainingService.getPlanUser(id!, (1).toString()),
+    ['likeTraining', id, Number(USER.userId!)],
+    () => LikeTrainingService.getPlanUser(id!, (USER.userId!).toString()),
     { enabled: !!id }
   );
   const { data: likesCountData } = useQuery<number>(
-    ['likeCountTraining', id, 1],
+    ['likeCountTraining', id, Number(USER.userId!)],
     () => LikeTrainingService.getCount(id!),
     { enabled: !!id }
   );
@@ -139,6 +145,7 @@ export default function TrainingDetail() {
         description,
         arr,
         sportTypeId!,
+        trainingData.userId,
         navigate,
         queryClient
       )
@@ -152,12 +159,12 @@ export default function TrainingDetail() {
   const handleLikeClick = async () => {
     try {
       if (like) {
-        await LikeTrainingService.deletePlanUser(id!, (1).toString());
+        await LikeTrainingService.deletePlanUser(id!, (USER.userId!).toString());
         setLike(false);
       } else {
         await LikeTrainingService.create({
           trainingPlanId: Number(id),
-          userId: 1,
+          userId: Number(USER.userId!),
         });
         setLike(true);
       }
@@ -350,15 +357,22 @@ async function copyTrainingPlan(
   description: string,
   arr: any[],
   sportTypeId: number,
+  parentUserId: number,
   navigate: NavigateFunction,
   queryClient: QueryClient) {
   try {
+    const { user: USER } = useAuth();
+
+    if (!USER?.token) {
+      navigate("/login");
+      return null;
+    }
     // Создаем тренировочный план
     const trainingPlan = await TrainingService.create({
       title: title,
       description: description,
-      userId: 1,
-      parentUserId: 1,
+      userId: Number(USER.userId!),
+      parentUserId: parentUserId,
       statusTrainingId: 1,
       isPrivate: 1,
       sportTypeId: sportTypeId,
@@ -385,7 +399,7 @@ async function copyTrainingPlan(
             name: item.titleExercise,
             description: "",
             ExerciseCategoryId: 40,
-            userId: 1,
+            userId: Number(USER.userId!),
             isPrivate: true,
           });
           exerciseId = newExercise.id!;
