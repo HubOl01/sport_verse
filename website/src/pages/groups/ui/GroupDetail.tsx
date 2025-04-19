@@ -56,21 +56,10 @@ export default function GroupDetail() {
           {/* <Box className="flex w-full" sx={{ height: '100%' }} > */}
           <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden', height: '100%' }}>
             <Box
-              // sx={{
-              //   display: "flex",
-              //   flexDirection: "column",
-              //   gap: "5px",
-              //   boxShadow: { sm: "7px 0 10px -5px rgba(0,0,0,0.1)" },
-              //   borderBottom: { xs: "2px solid rgba(0,0,0,0.1)", md: "0px" },
-              //   zIndex: 1,
-              //   height: "100%",
-              //   width: { xs: '100%', sm: '28%' },
-              //   // maxWidth: { sm: '400px' },
-              // }}
               sx={{
-                width: { xs: '100%', sm: '28%' },
+                // width: { xs: '100%', sm: '28%' },
                 maxWidth: '400px',
-                padding: 2,
+                // padding: 2,
                 boxShadow: { sm: "7px 0 10px -5px rgba(0,0,0,0.1)" },
                 overflowY: 'hidden',
               }}
