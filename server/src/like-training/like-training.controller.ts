@@ -40,6 +40,11 @@ export class LikeTrainingController {
   findLikeCount(@Param('planId') planId: string) {
     return this.likeTrainingService.findLikeCount(+planId);
   }
+  @Get('/likesCountUser/:userId')
+  @ApiOkResponse({ type: LikeTrainingEntity, isArray: false })
+  countLikesForUserPlans(@Param('userId') userId: string) {
+    return this.likeTrainingService.countLikesForUserPlans(+userId);
+  }
   @Get('/training/:planId/user/:userId')
   @ApiOkResponse()
   findPlanUser(

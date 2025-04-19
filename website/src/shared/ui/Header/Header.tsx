@@ -1,12 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
-import { Avatar, Button, Menu, MenuItem } from '@mui/material';
+import { Avatar, Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { IUser } from '../../model/IUser';
 import { UserService } from '../../api/User.service';
 import { useQuery } from 'react-query';
 import { useAuth } from '../../utils/useAuth';
+import { ExitToApp, FitnessCenter, Person, Settings } from '@mui/icons-material';
 
 export default function Header() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -18,10 +19,6 @@ export default function Header() {
         () => UserService.getUsername(user.username!),
         { enabled: !!user.username }
     );
-    if (!user?.token) {
-        navigate("/login");
-        return null;
-    }
     const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -32,7 +29,10 @@ export default function Header() {
                 navigate(`/profile/${user.username}`);
                 break;
             case "my_training":
-                navigate("/training");
+                navigate("/training/private");
+                break;
+            case "settings":
+                navigate("/settings");
                 break;
             case "logout":
                 {
@@ -107,9 +107,32 @@ export default function Header() {
                                 onClose={handleClose}
                                 MenuListProps={{ 'aria-labelledby': 'basic-button' }}
                             >
-                                <MenuItem onClick={() => handleClose("profile")}>Мой профиль</MenuItem>
-                                <MenuItem onClick={() => handleClose("my_training")}>Мои тренировки</MenuItem>
-                                <MenuItem onClick={() => handleClose("logout")} sx={{ color: 'red' }}>Выйти</MenuItem>
+                                <Typography padding={"5px 15px"} fontWeight={600} variant='subtitle1'>@{user.username}</Typography>
+                                <Divider />
+                                <MenuItem onClick={() => handleClose("profile")}>
+                                    <ListItemIcon>
+                                        <Person fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>Мой профиль</ListItemText>
+                                </MenuItem>
+                                <MenuItem onClick={() => handleClose("my_training")}>
+                                    <ListItemIcon>
+                                        <FitnessCenter fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>Мои тренировки</ListItemText>
+                                </MenuItem>
+                                <MenuItem onClick={() => handleClose("settings")}>
+                                    <ListItemIcon>
+                                        <Settings fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>Настройки</ListItemText>
+                                </MenuItem>
+                                <MenuItem onClick={() => handleClose("logout")} sx={{ color: 'red' }}>
+                                    <ListItemIcon>
+                                        <ExitToApp fontSize="small" sx={{ color: 'red' }} />
+                                    </ListItemIcon>
+                                    <ListItemText>Выйти</ListItemText>
+                                </MenuItem>
                             </Menu>
                         </div>
                     )}

@@ -34,7 +34,7 @@ export default function Training(props: TrainingProps) {
 
         {alignment === "public" ? Array.isArray(trainingPlansPublicData) && trainingPlansPublicData.length > 0 ? (
           trainingPlansPublicData.map((plan: ITraining) => (
-            <CardTraining key={plan.id} training={plan} />
+            <CardTraining key={plan.id} training={plan} countLikes={plan._count?.LikeTraining} />
           ))
         ) : (
           <p className={styles.text}>Нет опубликованных планов</p>

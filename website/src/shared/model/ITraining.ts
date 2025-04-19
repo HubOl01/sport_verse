@@ -23,4 +23,7 @@ export interface ITraining {
   parentUser?: IUser;
 
   PlanExercise?: IPlanExercise[];
+  _count?: {
+    LikeTraining: number;
+  };
 }

@@ -1,5 +1,40 @@
 import { useState, useEffect, createContext, useContext } from "react";
 
+export function useAuthLog() {
+  const [user, setUser] = useState<{
+    token: string | null;
+    userId: string | null;
+    username: string | null;
+    statusUser: string | null;
+  }>({
+    token: null,
+    userId: null,
+    username: null,
+    statusUser: null,
+  });
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    const username = localStorage.getItem("username");
+    const statusUser = localStorage.getItem("statusUser");
+
+    if (token && userId && username && statusUser) {
+      setUser({ token, userId, username, statusUser });
+    }
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("username");
+    localStorage.removeItem("statusUser");
+    setUser({ token: null, userId: null, username: null, statusUser: null });
+  };
+
+  return { user, logout };
+}
+
 interface AuthState {
   token: string | null;
   userId: string | null;

@@ -1,17 +1,21 @@
-import { Card, CardActionArea, CardContent, Chip, Typography } from "@mui/material";
+import { Card, CardActionArea, CardActions, CardContent, Chip, Typography } from "@mui/material";
 import { ITraining } from "../../../shared/model/ITraining";
 import { useNavigate } from "react-router-dom";
 import LockOutlineIcon from '@mui/icons-material/LockOutlined';
+import { Favorite } from "@mui/icons-material";
+import { ColorBackground } from "../../../shared/styles/colors";
 
 interface CardTrainingProps {
     training: ITraining,
     isPrivateUser?: boolean,
+    grid?: boolean,
+    countLikes?: number,
 }
 
-export default function CardTraining({ training, isPrivateUser }: CardTrainingProps) {
+export default function CardTraining({ training, isPrivateUser, grid, countLikes }: CardTrainingProps) {
     const navigate = useNavigate();
     return (
-        <div className="mr-5 mt-5 ml-5 mb-5"
+        <div className={grid ? 'mr-5 ml-5' : "mr-5 mt-5 ml-5 mb-5"}
             style={{
                 display: "flex",
                 justifyContent: "center",
@@ -21,11 +25,14 @@ export default function CardTraining({ training, isPrivateUser }: CardTrainingPr
                 sx={{
                     // width: "800px",
                     width: "100%",
-                    maxWidth: "800px",
+                    maxWidth: grid ? "100%" : "800px",
                     borderRadius: "30px"
                 }}>
                 <CardActionArea>
-                    <CardContent>
+                    <CardContent sx={{
+                        padding: countLikes ? grid ? "10px 15px" : "15px 20px" : null,
+                        // margin: 0
+                    }}>
                         {isPrivateUser ? <></> : <Typography gutterBottom variant="body2" fontWeight={600}>
                             @{training.user?.username}
                         </Typography>}
@@ -40,8 +47,25 @@ export default function CardTraining({ training, isPrivateUser }: CardTrainingPr
                         <Typography variant="body2" color="text.secondary">
                             {training.description}
                         </Typography>
+                        {
+                            countLikes ?
+                                <CardActions disableSpacing sx={{
+                                    padding: 0,
+                                    margin: 0
+                                }} >
+                                    <Favorite fontSize="small" sx={{
+                                        color: ColorBackground,
+                                    }} />
+                                    <Typography variant="body2" sx={{
+                                        marginLeft: "3px",
+                                        color: ColorBackground
+                                    }} fontWeight={600}>
+                                        {countLikes?.toString()}
+                                    </Typography>
+                                </CardActions> :
+                                <></>
+                        }
                     </CardContent>
-
                 </CardActionArea>
             </Card>
         </div>

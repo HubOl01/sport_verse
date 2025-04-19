@@ -232,188 +232,190 @@ export default function ProfileEdit(props: ProfileEditProps) {
             onChange={handleFileUpload}
           />
         </Box>
+      </div>
 
 
 
-
-        <div className={styles.backgroundText}>
-          <div className='flex'>
-            <div className={`${styles.title_profile}`}>
-              {/* {data?.profile?.name} */}
-              <MyTextField label={"Имя профиля"} onChange={(e) => setName(e.target.value)} value={name}
-                isAutocomplete={false}
-                inputStyle={{
-                  width: "100%",
-                  fontSize: "40px",
-                  fontWeight: '600',
-                  color: "white",
-                }} />
-            </div>
-          </div>
-
-          <div className={`${styles.title_content}`}>
-            {/* {data?.profile?.role?.title} */}
-            <MyButton
-              textButton={true}
-              styleButton={
-                {
-                  color: "black",
-                  textTransform: 'none',
-                  fontSize: "20px",
-                  fontWeight: '400',
-                  padding: "0px",
-                }
-              }
-              onClick={() => handleOpenDialog("role")} label={selectedValues.role!.title} />
-            <DialogRoleList keepMounted open={openDialog.role} onClose={() => handleCloseDialog("role")} onSelect={(newValue) => handleSelectValue('role', newValue)} value={selectedValues.role!} />
-          </div>
-          <div className={`${styles.about}`}>
-            {/* {data?.profile?.about} */}
-            <MyTextField label={"О себе кратко"} onChange={(e) => setAbout(e.target.value)} value={about}
+      <div className={styles.backgroundText}>
+        <div className='flex'>
+          <div className={`${styles.title_profile}`}>
+            {/* {data?.profile?.name} */}
+            <MyTextField label={"Имя профиля"} onChange={(e) => setName(e.target.value)} value={name}
               isAutocomplete={false}
-              isLines={true}
-              maxRows={3}
-              maxLength={180}
               inputStyle={{
                 width: "100%",
-                fontSize: "14px",
-                color: "black",
+                fontSize: "40px",
+                fontWeight: '600',
+                color: "white",
               }} />
           </div>
         </div>
-        <Card
-          className="justify-center content-center self-center"
-          variant="outlined"
-          sx={{
-            // marginBottom: '20px',
-            borderRadius: '20px',
-            marginLeft: "20px",
-            marginRight: "20px",
-          }}
-        >
-          <div className="self-center p-2 pr-3 pl-3">
-            <div className={`${styles.title_about}`}>
-              О себе
-            </div>
-            <br />
-            <div className={`${styles.listTile}`}>
-              <div className={`${styles.title_about_title}`}>
-                Дата рождения:
-              </div>
-              <div className={`${styles.title_about_content}`}>
-                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
-                  <MyDatePicker label={'Укажите дату'} value={birthDate}
-                    onChange={(newValue) => { setBirthDate(newValue!) }} />
-                </LocalizationProvider>
-              </div>
-            </div>
-            <div className={`${styles.listTile}`}>
-              <div className={`${styles.title_about_title}`}>
-                Вид спорта:
-              </div>
-              <div className={`${styles.title_about_content}`}>
-                <MyButton
-                  textButton={true}
-                  styleButton={
-                    {
-                      color: "black",
-                      // borderRadius: "30px",
-                      justifyContent: "start",
-                      textTransform: 'none',
-                      // width: "100%",
-                      fontSize: "16px",
-                      padding: "5px 0px 5px 0px",
-                    }
-                  }
-                  onClick={() => handleOpenDialog("sportType")} label={selectedValues.sportType!.title} />
-                <DialogSportType keepMounted open={openDialog.sportType} onClose={() => handleCloseDialog('sportType')} onSelectSportType={(newValue) => handleSelectValue("sportType", newValue)} value={selectedValues.sportType!} />
-              </div>
 
-            </div>
-            <div className={`${styles.listTile}`}>
-              <div className={`${styles.title_about_title}`}>
-                Спортивный разряд:
-              </div>
-              <div className={`${styles.title_about_content}`}>
-                <MyButton
-                  textButton={true}
-                  styleButton={
-                    {
-                      color: "black",
-                      justifyContent: "start",
-                      textTransform: 'none',
-                      fontSize: "16px",
-                      padding: "5px 0px 5px 0px",
-                    }
-                  }
-                  onClick={() => handleOpenDialog("sportCategory")} label={selectedValues.sportCategory ? selectedValues.sportCategory!.title : "Нет разряда"} />
-              </div>
-              <DialogSportCategoryList keepMounted open={openDialog.sportCategory} onClose={() => handleCloseDialog("sportCategory")} onSelect={(sportCategory) => handleSelectValue("sportCategory", sportCategory)} value={selectedValues.sportCategory!} />
-            </div>
-            <div className={`${styles.listTile}`}>
-              <div className={`${styles.title_about_title}`}>
-                Дата начала спортивной карьеры:
-              </div>
-              <div className={`${styles.title_about_content}`}>
-                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
-                  <MyDatePicker label={'Укажите дату'} value={startSportDate}
-                    onChange={(newValue) => { setStartSportDate(newValue!) }} />
-                </LocalizationProvider>
-              </div>
-            </div>
-            <div className={`${styles.listTile}`}>
-              <div className={`${styles.title_about_title}`}>
-                Закончили ли вы спортивную карьеру:
-              </div>
-
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <Typography>Нет</Typography>
-                <MySwitch
-                  checked={isEndSportDate}
-                  onChange={(ev) => setIsEndSportDate(ev.target.checked)}
-                />
-                <Typography>Да</Typography>
-              </Stack>
-            </div>
-            {
-              isEndSportDate &&
-              <div className={`${styles.listTile}`}>
-                <div className={`${styles.title_about_title}`}>
-                  Дата окончания спортивной карьеры:
-                </div>
-                <div className={`${styles.title_about_content}`}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
-                    <MyDatePicker label={'Укажите дату'} value={endSportDate}
-                      onChange={(newValue) => { setEndSportDate(newValue!) }} />
-                  </LocalizationProvider>
-                </div>
-              </div>
-
+        <div className={`${styles.title_content}`}>
+          {/* {data?.profile?.role?.title} */}
+          <MyButton
+            textButton={true}
+            styleButton={
+              {
+                color: "black",
+                textTransform: 'none',
+                fontSize: "20px",
+                fontWeight: '400',
+                padding: "0px",
+              }
             }
+            onClick={() => handleOpenDialog("role")} label={selectedValues.role!.title} />
+          <DialogRoleList keepMounted open={openDialog.role} onClose={() => handleCloseDialog("role")} onSelect={(newValue) => handleSelectValue('role', newValue)} value={selectedValues.role!} />
+        </div>
 
-          </div>
-
-        </Card>
-        <div style={{
-          padding: "20px",
-        }}>
-          <Button
-            variant="contained"
-            sx={{
-              color: "#FFFFFFFF",
-              background: "#4758d6",
-              borderRadius: "20px",
+        <div className={`${styles.about}`}>
+          {/* {data?.profile?.about} */}
+          <MyTextField label={"О себе кратко"} onChange={(e) => setAbout(e.target.value)} value={about}
+            isAutocomplete={false}
+            isLines={true}
+            maxRows={3}
+            maxLength={180}
+            inputStyle={{
               width: "100%",
-              fontWeight: "700",
-              padding: "8px 15px",
-              boxSizing: "border-box",
-            }}
-            onClick={handleSave}
-          >
-            Сохранить
-          </Button>
+              fontSize: "14px",
+              color: "black",
+            }} />
         </div>
       </div>
+
+      <Card
+        className="justify-center content-center self-center"
+        variant="outlined"
+        sx={{
+          // marginBottom: '20px',
+          borderRadius: '20px',
+          marginLeft: "20px",
+          marginRight: "20px",
+        }}
+      >
+        <div className="self-center p-2 pr-3 pl-3">
+          <div className={`${styles.title_about}`}>
+            О себе
+          </div>
+          <br />
+          <div className={`${styles.listTile}`}>
+            <div className={`${styles.title_about_title}`}>
+              Дата рождения:
+            </div>
+            <div className={`${styles.title_about_content}`}>
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
+                <MyDatePicker label={'Укажите дату'} value={birthDate}
+                  onChange={(newValue) => { setBirthDate(newValue!) }} />
+              </LocalizationProvider>
+            </div>
+          </div>
+          <div className={`${styles.listTile}`}>
+            <div className={`${styles.title_about_title}`}>
+              Вид спорта:
+            </div>
+            <div className={`${styles.title_about_content}`}>
+              <MyButton
+                textButton={true}
+                styleButton={
+                  {
+                    color: "black",
+                    // borderRadius: "30px",
+                    justifyContent: "start",
+                    textTransform: 'none',
+                    // width: "100%",
+                    fontSize: "16px",
+                    padding: "5px 0px 5px 0px",
+                  }
+                }
+                onClick={() => handleOpenDialog("sportType")} label={selectedValues.sportType!.title} />
+              <DialogSportType keepMounted open={openDialog.sportType} onClose={() => handleCloseDialog('sportType')} onSelectSportType={(newValue) => handleSelectValue("sportType", newValue)} value={selectedValues.sportType!} />
+            </div>
+
+          </div>
+          <div className={`${styles.listTile}`}>
+            <div className={`${styles.title_about_title}`}>
+              Спортивный разряд:
+            </div>
+            <div className={`${styles.title_about_content}`}>
+              <MyButton
+                textButton={true}
+                styleButton={
+                  {
+                    color: "black",
+                    justifyContent: "start",
+                    textTransform: 'none',
+                    fontSize: "16px",
+                    padding: "5px 0px 5px 0px",
+                  }
+                }
+                onClick={() => handleOpenDialog("sportCategory")} label={selectedValues.sportCategory ? selectedValues.sportCategory!.title : "Нет разряда"} />
+            </div>
+            <DialogSportCategoryList keepMounted open={openDialog.sportCategory} onClose={() => handleCloseDialog("sportCategory")} onSelect={(sportCategory) => handleSelectValue("sportCategory", sportCategory)} value={selectedValues.sportCategory!} />
+          </div>
+          <div className={`${styles.listTile}`}>
+            <div className={`${styles.title_about_title}`}>
+              Дата начала спортивной карьеры:
+            </div>
+            <div className={`${styles.title_about_content}`}>
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
+                <MyDatePicker label={'Укажите дату'} value={startSportDate}
+                  onChange={(newValue) => { setStartSportDate(newValue!) }} />
+              </LocalizationProvider>
+            </div>
+          </div>
+          <div className={`${styles.listTile}`}>
+            <div className={`${styles.title_about_title}`}>
+              Закончили ли вы спортивную карьеру:
+            </div>
+
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+              <Typography>Нет</Typography>
+              <MySwitch
+                checked={isEndSportDate}
+                onChange={(ev) => setIsEndSportDate(ev.target.checked)}
+              />
+              <Typography>Да</Typography>
+            </Stack>
+          </div>
+          {
+            isEndSportDate &&
+            <div className={`${styles.listTile}`}>
+              <div className={`${styles.title_about_title}`}>
+                Дата окончания спортивной карьеры:
+              </div>
+              <div className={`${styles.title_about_content}`}>
+                <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
+                  <MyDatePicker label={'Укажите дату'} value={endSportDate}
+                    onChange={(newValue) => { setEndSportDate(newValue!) }} />
+                </LocalizationProvider>
+              </div>
+            </div>
+
+          }
+
+        </div>
+
+      </Card>
+      <div style={{
+        padding: "20px",
+      }}>
+        <Button
+          variant="contained"
+          sx={{
+            color: "#FFFFFFFF",
+            background: "#4758d6",
+            borderRadius: "20px",
+            width: "100%",
+            fontWeight: "700",
+            padding: "8px 15px",
+            boxSizing: "border-box",
+          }}
+          onClick={handleSave}
+        >
+          Сохранить
+        </Button>
+      </div>
+
     </div >
   )
 }

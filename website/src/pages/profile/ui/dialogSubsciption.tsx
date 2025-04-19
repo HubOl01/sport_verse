@@ -19,16 +19,11 @@ interface dialogListProps {
 }
 
 export function DialogSubscriptionList(props: dialogListProps) {
-    const { onClose, open, ...other } = props;
+    const { onClose, open, isSubscribers, userId, ...other } = props;
     const queryClient = useQueryClient();
     const { data } = useQuery(['user', props.username], () => UserService.getUsername(props.username))
     const { user: USER } = useAuth();
     const navigate = useNavigate();
-
-    if (!USER?.token) {
-        navigate("/login");
-        return null;
-    }
 
     const useSubscribed = (subscription: ISubscription): boolean => {
         return (

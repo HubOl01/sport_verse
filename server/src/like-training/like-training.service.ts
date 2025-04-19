@@ -32,6 +32,15 @@ export class LikeTrainingService {
       },
     });
   }
+  async countLikesForUserPlans(userId: number) {
+    return this.prisma.likeTraining.count({
+      where: {
+        trainingPlan: {
+          userId: userId,
+        },
+      },
+    });
+  }
   findAllUser(idUser: number) {
     return this.prisma.likeTraining.findMany({
       where: {
@@ -72,6 +81,11 @@ export class LikeTrainingService {
               },
             },
             StatusTraining: true,
+            _count: {
+              select: {
+                LikeTraining: true,
+              },
+            },
           },
         },
       },

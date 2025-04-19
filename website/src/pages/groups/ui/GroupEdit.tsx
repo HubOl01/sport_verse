@@ -34,10 +34,6 @@ export default function GroupEdit(props: GroupEditProps) {
     const [athletes, setAthletes] = useState<IUser[]>([])
     const { user: USER } = useAuth();
     const navigate = useNavigate();
-    if (!USER?.token) {
-        navigate("/login");
-        return null;
-    }
 
 
     async function createTrainingGroup() {
@@ -73,6 +69,10 @@ export default function GroupEdit(props: GroupEditProps) {
     const handleCloseSportType = () => {
         setOpenSportType(false);
     };
+    if (!USER?.token) {
+        navigate("/login");
+        return null;
+    }
     return (
         <Box sx={{ position: 'relative', minHeight: '100vh' }}>
             <AppBar position="static" color="transparent" elevation={0}>

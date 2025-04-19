@@ -5,7 +5,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { DialogStatusList } from "./dialogStatus";
 import { IProfile } from "../../../shared/model/IProfile";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../shared/utils/useAuth";
 
 export interface dialogProps {
@@ -31,12 +30,7 @@ export function DialogStatus(props: dialogProps) {
     }, [props.status]);
 
     const { user: USER } = useAuth();
-    const navigate = useNavigate();
 
-    if (!USER?.token) {
-        navigate("/login");
-        return null;
-    }
 
     if (props.open) {
         if (!open) {

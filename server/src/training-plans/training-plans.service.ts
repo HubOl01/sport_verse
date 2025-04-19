@@ -45,6 +45,11 @@ export class TrainingPlansService {
           },
         },
         StatusTraining: true,
+        _count: {
+          select: {
+            LikeTraining: true,
+          },
+        },
       },
       orderBy: {
         id: 'desc',
@@ -123,12 +128,60 @@ export class TrainingPlansService {
           },
         },
         StatusTraining: true,
+        _count: {
+          select: {
+            LikeTraining: true,
+          },
+        },
       },
       orderBy: {
         id: 'desc',
       },
     });
   }
+  // findAllPublicUser(idUser: number) {
+  //   return this.prisma.trainingPlan.findMany({
+  //     where: { isPrivate: 0, userId: idUser },
+  //     include: {
+  //       user: {
+  //         select: {
+  //           email: true,
+  //           username: true,
+  //           profile: {
+  //             select: {
+  //               url_avatar: true,
+  //               status: true,
+  //             },
+  //           },
+  //         },
+  //       },
+  //       statusPublish: true,
+  //       sportType: true,
+  //       parentUser: {
+  //         select: {
+  //           email: true,
+  //           username: true,
+  //           profile: {
+  //             select: {
+  //               url_avatar: true,
+  //               status: true,
+  //             },
+  //           },
+  //         },
+  //       },
+  //       PlanExercise: {
+  //         include: {
+  //           exercise: true,
+  //         },
+  //       },
+  //       StatusTraining: true,
+  //     },
+  //     orderBy: {
+  //       id: 'desc',
+  //     },
+  //   });
+  // }
+
   findAllPublicUser(idUser: number) {
     return this.prisma.trainingPlan.findMany({
       where: { isPrivate: 0, userId: idUser },
@@ -165,9 +218,16 @@ export class TrainingPlansService {
           },
         },
         StatusTraining: true,
+        _count: {
+          select: {
+            LikeTraining: true,
+          },
+        },
       },
       orderBy: {
-        id: 'desc',
+        LikeTraining: {
+          _count: 'desc',
+        },
       },
     });
   }
@@ -208,6 +268,11 @@ export class TrainingPlansService {
           },
         },
         StatusTraining: true,
+        _count: {
+          select: {
+            LikeTraining: true,
+          },
+        },
       },
       orderBy: {
         id: 'desc',
@@ -258,6 +323,11 @@ export class TrainingPlansService {
           },
         },
         StatusTraining: true,
+        _count: {
+          select: {
+            LikeTraining: true,
+          },
+        },
       },
     });
   }

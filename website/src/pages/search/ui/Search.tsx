@@ -15,10 +15,6 @@ export default function Search() {
     const navigate = useNavigate();
     const { user: USER } = useAuth();
 
-    if (!USER?.token) {
-        navigate("/login");
-        return null;
-    }
 
     const filteredUsers = data?.filter((user) =>
         user.username.toLowerCase().includes(searchStr.toLowerCase()) ||
@@ -70,6 +66,7 @@ export default function Search() {
                     await queryClient.invalidateQueries(['users']);
                 }
                 return (<ListItem
+                    key={user.id}
                     className="mr-2 ml-2 w-screen max-w-screen-sm mb-5"
                     alignItems="flex-start"
                     sx={{

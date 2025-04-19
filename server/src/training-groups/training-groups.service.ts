@@ -138,6 +138,8 @@ export class TrainingGroupsService {
                   select: {
                     url_avatar: true,
                     status: true,
+                    role: true,
+                    name: true,
                   },
                 },
               },

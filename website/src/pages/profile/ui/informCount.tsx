@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material"
 
 interface InformCountProps {
-    count: string
+    count: number
     title: string
     onClick?: () => void
 }

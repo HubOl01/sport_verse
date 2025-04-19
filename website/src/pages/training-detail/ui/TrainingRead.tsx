@@ -208,7 +208,6 @@ export default function TrainingDetail() {
               sx={{ mr: 2 }}
               onClick={() => {
                 navigate(-1);
-                navigate(`/training`);
               }}
             >
               <ArrowBackIcon />

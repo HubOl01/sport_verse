@@ -3,18 +3,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import LockOutlineIcon from '@mui/icons-material/LockOutlined';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
-import { useAuth } from "../../../shared/utils/useAuth";
+import { useAuthLog } from "../../../shared/utils/useAuth";
 import { useQuery } from "react-query";
 import { TrainingGroupService } from "../../../shared/api/trainingGroups.service";
 import { ITrainingGroup } from "../../../shared/model/ITrainingGroup";
 import CardTraining from "../../training/ui/cardTraining";
 import MyButton from "../../../components/MyButton";
+import { useState } from "react";
+import { DialogParticipantList } from "./dialogParticipants";
 
 export default function GroupDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data } = useQuery<ITrainingGroup>(["group", id], async () => await TrainingGroupService.get(id!), { enabled: !!id })
-  const { user: USER } = useAuth();
+  const { user: USER } = useAuthLog();
+  const [dialogPart, setDialogPart] = useState(false);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <AppBar position="static" color="transparent" elevation={0}>
@@ -52,7 +55,7 @@ export default function GroupDetail() {
             borderBottom: { xs: "2px solid rgba(0,0,0,0.1)", md: "0px" },
             zIndex: 1,
             height: "100%",
-            width: { xs: '100%', sm: '35%' },
+            width: { xs: '100%', sm: '28%' },
             // maxWidth: { sm: '400px' },
           }}>
           <div style={{
@@ -77,24 +80,31 @@ export default function GroupDetail() {
             <Typography variant="h6" color="text.secondary">
               {data?.desc}
             </Typography>
-            {data ? <AvatarGroup
-              sx={{
-                justifyContent: "start",
-              }}
-              total={data.athletes?.length}
-              renderSurplus={(surplus) => <span
-              >+{surplus}
-              </span>}
-              max={8}
-            >
-              {data!.athletes?.map((athlete) => (
-                <Avatar
-                  key={athlete.athlete!.id}
-                  alt={athlete.athlete!.profile?.name}
-                  src={athlete.athlete!.profile?.url_avatar}
-                />
-              ))}
-            </AvatarGroup> : <></>}
+            {data ?
+              <>
+                <AvatarGroup
+                  onClick={() => setDialogPart(true)}
+                  sx={{
+                    justifyContent: "start",
+                    cursor: "pointer",
+                  }}
+                  total={data.athletes?.length}
+                  renderSurplus={(surplus) => <span
+                  >+{surplus}
+                  </span>}
+                  max={8}
+                >
+                  {data!.athletes?.map((athlete) => (
+                    <Avatar
+                      key={athlete.athlete!.id}
+                      alt={athlete.athlete!.profile?.name}
+                      src={athlete.athlete!.profile?.url_avatar}
+                    />
+                  ))}
+                </AvatarGroup>
+                <DialogParticipantList keepMounted={false} open={dialogPart} groupId={Number(id)} onClose={() => setDialogPart(false)} />
+              </>
+              : <></>}
           </div>
 
         </Box>
@@ -108,7 +118,7 @@ export default function GroupDetail() {
 
         >
           {
-            Array.isArray(data!.planInGroups) && data!.planInGroups?.length > 0 ?
+            data && Array.isArray(data!.planInGroups) && data!.planInGroups?.length > 0 ?
               data!.planInGroups?.map((planInGroup) => (
                 <>
                   <>{planInGroup.title}</>

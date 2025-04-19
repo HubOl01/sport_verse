@@ -1,9 +1,9 @@
-import { Avatar, Box, Card, IconButton } from '@mui/material'
+import { Avatar, Box, Card, Grid2, IconButton, Typography } from '@mui/material'
 import styles from './Profile.module.scss'
 import ListTile from './ListTile'
 import { useEffect, useState } from 'react';
 import { DialogStatus } from './dialog';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from 'react-query';
 import { IUser } from '../../../shared/model/IUser';
 import { UserService } from '../../../shared/api/User.service';
@@ -17,6 +17,11 @@ import { SubscriptionService } from '../../../shared/api/subscriptions.service';
 import InformCount from './informCount';
 import { getPluralForm } from '../../../shared/utils/getPluralForm';
 import { DialogSubscriptionList } from './dialogSubsciption';
+import { ILikeModel } from '../../../shared/model/ILikeModel';
+import { LikeTrainingService } from '../../../shared/api/likeTraining.service';
+import CardTraining from '../../training/ui/cardTraining';
+import { ITraining } from '../../../shared/model/ITraining';
+import { TrainingService } from '../../../shared/api/training.service';
 
 export default function Profile() {
   const queryClient = useQueryClient();
@@ -34,17 +39,26 @@ export default function Profile() {
     () => UserService.getUsername(username!),
     { enabled: !!username }
   );
+  const { data: likePlans } = useQuery<ILikeModel[]>(
+    ['likePlans', data?.id!],
+    () => LikeTrainingService.getUser((data?.id!).toString()),
+    { enabled: !!data?.id! }
+  );
+  const { data: myPlans } = useQuery<ITraining[]>(
+    ['myPlans', data?.id!],
+    () => TrainingService.getAllPublicUser((data?.id!).toString()),
+    { enabled: !!data?.id! }
+  );
+  const { data: likeCount } = useQuery<number>(
+    ['likeCount', data?.id!],
+    () => LikeTrainingService.getCountUser((data?.id!).toString()),
+    { enabled: !!data?.id! }
+  );
   useEffect(() => {
     queryClient.invalidateQueries(['user', username]);
   }, [data]);
 
   const { user: USER } = useAuth();
-  const navigate = useNavigate();
-
-  if (!USER?.token) {
-    navigate("/login");
-    return null;
-  }
 
   const handleClick = () => {
     setOpen(true);
@@ -87,47 +101,48 @@ export default function Profile() {
       }} profile={data?.profile} />
       :
 
-      <div className={styles.background}>
-        {USER?.username === username ?
-          <IconButton
-            aria-label="edit"
-            onClick={handleEditClick}
+      <div>
+        <div className={styles.background}>
+          {USER?.username === username ?
+            <IconButton
+              aria-label="edit"
+              onClick={handleEditClick}
+              sx={{
+                position: 'absolute',
+                top: "70px",
+                right: "20px",
+              }}
+            >
+              <EditIcon
+                sx={{
+                  color: "white",
+                }} />
+            </IconButton>
+            : <></>
+          }
+          <Box
             sx={{
-              position: 'absolute',
-              top: "70px",
-              right: "20px",
+              width: "110px",
+              height: "110px",
+              borderRadius: "50%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              top: "45px",
+              left: "45px",
+              backgroundColor: "rgba(255, 255, 255)",
             }}
           >
-            <EditIcon
+            <Avatar
+              src={data?.profile?.url_avatar || undefined}
               sx={{
-                color: "white",
-              }} />
-          </IconButton>
-          : <></>
-        }
-
-        <Box
-          sx={{
-            width: "110px",
-            height: "110px",
-            borderRadius: "50%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-            top: "45px",
-            left: "45px",
-            backgroundColor: "rgba(255, 255, 255)",
-          }}
-        >
-          <Avatar
-            src={data?.profile?.url_avatar || undefined}
-            sx={{
-              width: 100,
-              height: 100,
-            }}>
-          </Avatar>
-        </Box>
+                width: 100,
+                height: 100,
+              }}>
+            </Avatar>
+          </Box>
+        </div>
 
         <div className={styles.backgroundText}>
           <div className='flex'>
@@ -179,8 +194,9 @@ export default function Profile() {
                   />
                 </div>
           }
-
         </div>
+
+
         <div style={{
           display: 'grid',
           marginTop: USER.username === data?.username ? '-30px' : '-50px',
@@ -189,7 +205,7 @@ export default function Profile() {
           gap: '10px',
         }}>
           <InformCount
-            count={data?.subscriptions.length.toString()!}
+            count={data?.subscriptions.length!}
             title={getPluralForm(data?.subscriptions.length!, ["Подписка", "Подписки", "Подписок"])}
             onClick={
               data?.subscriptions.length! < 1 ? undefined :
@@ -200,7 +216,7 @@ export default function Profile() {
           />
 
           <InformCount
-            count={data?.subscribers.length.toString()!}
+            count={data?.subscribers.length!}
             title={getPluralForm(data?.subscribers.length!, ["Подписчик", "Подписчика", "Подписчиков"])}
             onClick={
               data?.subscribers.length! < 1 ? undefined : () => {
@@ -209,17 +225,19 @@ export default function Profile() {
               }}
           />
           <InformCount
-            count={data?.TrainingPlan.length.toString()!}
+            count={data?.TrainingPlan.length!}
             title={getPluralForm(data?.TrainingPlan.length!, ["Созданная тренировка", "Созданные тренировки", "Созданных тренировок"])}
           />
           <InformCount
-            count='0'
-            title={getPluralForm(0, ["лайк", "лайка", "лайков"])}
+            count={likeCount!}
+            title={getPluralForm(likeCount!, ["лайк", "лайка", "лайков"])}
           />
         </div>
         <DialogSubscriptionList keepMounted={false} open={openUsers} userId={data?.id!}
           username={data?.username!}
-          isSubscribers={isSub} onClose={() => setOpenUsers(false)} />
+          onClose={() => setOpenUsers(false)}
+          isSubscribers={isSub} />
+
         <Card
           className="justify-center content-center self-center"
           variant="outlined"
@@ -228,7 +246,7 @@ export default function Profile() {
             borderRadius: '20px',
             marginLeft: "20px",
             marginRight: "20px",
-            marginBottom: "30px",
+            marginBottom: "20px",
           }}
         >
           <div className="self-center p-2 pr-3 pl-3">
@@ -242,6 +260,46 @@ export default function Profile() {
             <ListTile title='Спортивный разряд:' content={data?.profile?.sportCategory ? data?.profile?.sportCategory?.title! : "Нет разряда"} />
           </div>
         </Card>
+        {Number(USER.userId!) !== data?.id && Array.isArray(myPlans) && myPlans.length > 0 ?
+          <div className='mb-5'>
+            <Typography variant='h6' fontWeight={600} sx={{
+              margin: '0px 20px',
+            }}>
+              Созданные тренировочные планы
+            </Typography>
+            <Grid2
+              container spacing={{ xs: 2, md: 3, sm: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}
+            >
+              {myPlans.map((plan) => {
+                return (
+                  <Grid2 key={plan.id} size={{ xs: 2, sm: 4, md: 4 }}>
+                    <CardTraining training={plan!} grid countLikes={plan!._count?.LikeTraining!} />
+                  </Grid2>)
+              })
+              }
+            </Grid2>
+          </div>
+          : <></>}
+        {Array.isArray(likePlans) && likePlans.length > 0 ?
+          <div className='mb-5'>
+            <Typography variant='h6' fontWeight={600} sx={{
+              margin: '0px 20px',
+            }}>
+              Понравившиеся тренировочные планы
+            </Typography>
+            <Grid2
+              container spacing={{ xs: 2, md: 3, sm: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}
+            >
+              {likePlans.map((like) => {
+                return (
+                  <Grid2 key={like.id} size={{ xs: 2, sm: 4, md: 4 }}>
+                    <CardTraining training={like.trainingPlan!} grid countLikes={like.trainingPlan!._count?.LikeTraining!} />
+                  </Grid2>)
+              })
+              }
+            </Grid2>
+          </div>
+          : <></>}
       </div>
   )
 }

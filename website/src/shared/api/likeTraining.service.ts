@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { apiLike, apiLikeCount } from "../config";
 import { api } from ".";
 import { ILikeModel } from "../model/ILikeModel";
-import { apiLikeUser } from "../config/backend";
+import { apiLikeCountUser, apiLikeUser } from "../config/backend";
 
 export const LikeTrainingService = {
   async getAll(): Promise<ILikeModel[]> {
@@ -33,11 +33,9 @@ export const LikeTrainingService = {
       throw new Error(message);
     }
   },
-  async getUser(idUser: string): Promise<ILikeModel> {
+  async getUser(idUser: string): Promise<ILikeModel[]> {
     try {
-      const response = await api.get<ILikeModel>(
-        `${apiLikeUser}/${idUser}`
-      );
+      const response = await api.get<ILikeModel[]>(`${apiLikeUser}/${idUser}`);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -50,9 +48,7 @@ export const LikeTrainingService = {
   },
   async getCount(idPlan: string): Promise<number> {
     try {
-      const response = await api.get<number>(
-        `${apiLikeCount}/${idPlan}`
-      );
+      const response = await api.get<number>(`${apiLikeCount}/${idPlan}`);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -60,6 +56,19 @@ export const LikeTrainingService = {
         typeof err.response?.data === "string"
           ? err.response.data
           : "Произошла ошибка при загрузке count";
+      throw new Error(message);
+    }
+  },
+  async getCountUser(idUser: string): Promise<number> {
+    try {
+      const response = await api.get<number>(`${apiLikeCountUser}/${idUser}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке count user";
       throw new Error(message);
     }
   },
