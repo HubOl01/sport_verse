@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { apiLike, apiLikeCount } from "../config";
 import { api } from ".";
 import { ILikeModel } from "../model/ILikeModel";
+import { apiLikeUser } from "../config/backend";
 
 export const LikeTrainingService = {
   async getAll(): Promise<ILikeModel[]> {
@@ -21,6 +22,21 @@ export const LikeTrainingService = {
     try {
       const response = await api.get<ILikeModel>(
         `${apiLike}/training/${idPlan}/user/${idUser}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке get";
+      throw new Error(message);
+    }
+  },
+  async getUser(idUser: string): Promise<ILikeModel> {
+    try {
+      const response = await api.get<ILikeModel>(
+        `${apiLikeUser}/${idUser}`
       );
       return response.data;
     } catch (error) {

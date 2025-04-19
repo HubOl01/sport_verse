@@ -15,10 +15,6 @@ export default function GroupDetail() {
   const navigate = useNavigate();
   const { data } = useQuery<ITrainingGroup>(["group", id], async () => await TrainingGroupService.get(id!), { enabled: !!id })
   const { user: USER } = useAuth();
-  if (!USER?.token) {
-    navigate("/login");
-    return null;
-  }
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <AppBar position="static" color="transparent" elevation={0}>

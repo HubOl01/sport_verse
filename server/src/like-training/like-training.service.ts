@@ -18,7 +18,9 @@ export class LikeTrainingService {
     return this.prisma.likeTraining.findUnique({ where: { id: id } });
   }
   findLikeCount(triningId: number) {
-    return this.prisma.likeTraining.count({ where: { trainingPlanId: triningId } });
+    return this.prisma.likeTraining.count({
+      where: { trainingPlanId: triningId },
+    });
   }
   findPlanUser(idUser: number, idPlan: number) {
     return this.prisma.likeTraining.findUnique({
@@ -26,6 +28,51 @@ export class LikeTrainingService {
         userId_trainingPlanId: {
           userId: idUser,
           trainingPlanId: idPlan,
+        },
+      },
+    });
+  }
+  findAllUser(idUser: number) {
+    return this.prisma.likeTraining.findMany({
+      where: {
+        userId: idUser,
+      },
+      include: {
+        trainingPlan: {
+          include: {
+            user: {
+              select: {
+                email: true,
+                username: true,
+                profile: {
+                  select: {
+                    url_avatar: true,
+                    status: true,
+                  },
+                },
+              },
+            },
+            statusPublish: true,
+            sportType: true,
+            parentUser: {
+              select: {
+                email: true,
+                username: true,
+                profile: {
+                  select: {
+                    url_avatar: true,
+                    status: true,
+                  },
+                },
+              },
+            },
+            PlanExercise: {
+              include: {
+                exercise: true,
+              },
+            },
+            StatusTraining: true,
+          },
         },
       },
     });

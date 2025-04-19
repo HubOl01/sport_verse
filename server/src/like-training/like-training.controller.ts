@@ -48,6 +48,11 @@ export class LikeTrainingController {
   ) {
     return this.likeTrainingService.findPlanUser(+userId, +planId);
   }
+  @Get('/training/user/:userId')
+  @ApiOkResponse()
+  findAllUser(@Param('userId') userId: string) {
+    return this.likeTrainingService.findAllUser(+userId);
+  }
 
   @Patch(':id')
   @ApiCreatedResponse()

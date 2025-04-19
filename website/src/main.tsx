@@ -2,14 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
-import Routers from './shared/router/Routers'
-import Header from './shared/ui/Header/Header'
 import './tailwind.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import LeftBar from './shared/ui/LeftBar/LeftBar'
-import LeftBarAdmin from './shared/ui/LeftBar/LeftBarAdmin'
-import { CurrentRole, Roles } from './shared/data/roles'
-import { isAuthenticated } from './shared/api/authService'
+import { AppLayout } from './AppLayout'
+import { AuthProvider } from './shared/utils/useAuth';
 
 const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -17,26 +13,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <div className='flex flex-col h-full'>
-          {location.pathname !== '/login' && location.pathname !== '/register' ? <Header /> : <></>}
-
-          <div className='sm:flex flex-1 sm:overflow-hidden'>
-            {location.pathname !== '/login' && location.pathname !== '/register' ?
-              isAuthenticated() ?
-                (
-                  <div className='w-full max-sm:max-h-[200px] sm:w-1/6 bg-gray-900 overflow-y-auto' style={{ minWidth: "300px" }}>
-                    {CurrentRole === Roles.ADMIN ? <LeftBarAdmin /> : <LeftBar />}
-                  </div>
-                ) : <></> : <></>}
-            <div className={`flex-1 overflow-y-auto ${location.pathname !== '/login' && location.pathname !== '/register'}`}>
-
-              <Routers></Routers>
-            </div>
-
-          </div>
-        </div>
+        <AuthProvider>
+          <AppLayout />
+        </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
-
   </React.StrictMode >,
 )

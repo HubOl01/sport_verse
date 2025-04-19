@@ -5,15 +5,24 @@ import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./Training.module.scss";
 import { useState } from "react";
 import ToggleTraining from "../../../components/ToggleTraining";
+import { useAuth } from "../../../shared/utils/useAuth";
+import { useNavigate } from "react-router-dom";
 
-export default function Training() {
+interface TrainingProps {
+  isPrivate?: boolean
+}
+export default function Training(props: TrainingProps) {
+  const { user: USER } = useAuth();
+  const navigate = useNavigate();
   const { data: trainingPlansPublicData } = useQuery(['trainingPlansPublic'], () => TrainingService.getAllPublic()
   )
-  const { data: trainingPlansPrivateData } = useQuery(['trainingPlansPrivate'], () => TrainingService.getAllPrivate(1)
+  const { data: trainingPlansPrivateData } = useQuery(['trainingPlansPrivate'], () => TrainingService.getAllPrivate(Number(USER.userId!)),
+    { enabled: !!USER.token }
   )
-  const [alignment, setAlignment] = useState('public');
+  const [alignment, setAlignment] = useState(props.isPrivate ? 'private' : 'public');
 
   const handleAlignmentChange = (newAlignment: string) => {
+    navigate(`/training/${newAlignment}`);
     setAlignment(newAlignment);
   };
   // if (isLoading) return <p className={styles.text}>Загрузка...</p>;
@@ -31,7 +40,7 @@ export default function Training() {
           <p className={styles.text}>Нет опубликованных планов</p>
         ) : (Array.isArray(trainingPlansPrivateData) && trainingPlansPrivateData.length > 0 ? (
           trainingPlansPrivateData.map((plan: ITraining) => (
-            <CardTraining key={plan.id} training={plan} />
+            <CardTraining key={plan.id} training={plan} isPrivateUser={alignment !== 'public'} />
           ))
         ) : (
           <p className={styles.text}>Нет планов</p>

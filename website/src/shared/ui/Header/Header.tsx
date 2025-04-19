@@ -35,7 +35,10 @@ export default function Header() {
                 navigate("/training");
                 break;
             case "logout":
-                logout()
+                {
+                    logout();
+                    navigate("/login");
+                }
                 break;
             default:
                 // navigate("/");

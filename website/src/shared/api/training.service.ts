@@ -51,6 +51,21 @@ export const TrainingService = {
       throw new Error(message);
     }
   },
+  async getAllPublicUser(idUser: string): Promise<ITraining[]> {
+    try {
+      const response = await api.get<ITraining[]>(
+        `${apiTrainingPublic}/${idUser}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке всех планов";
+      throw new Error(message);
+    }
+  },
 
   async get(id: string): Promise<ITraining> {
     try {

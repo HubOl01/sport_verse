@@ -45,7 +45,6 @@ export default function TrainingDetail() {
   const [sportTypeId, setSportTypeId] = useState(1);
 
   const { user: USER } = useAuth();
-
   // if (!USER?.token) {
   //   navigate("/login");
   //   return null;
@@ -75,11 +74,6 @@ export default function TrainingDetail() {
   }, [likeData]);
 
 
-  // const { data: planExercisesData } = useQuery(
-  //   ['planExercises', id],
-  //   () => PlanExerciseService.getAllPlan(trainingData?.id!.toString() ?? ""),
-  //   { enabled: !!trainingData }
-  // );
 
   if (isLoading) return <p className={styles.text}>Загрузка...</p>;
   if (error) return <p className={styles.text}>Произошла ошибка при загрузке данных.</p>;
@@ -195,159 +189,168 @@ export default function TrainingDetail() {
     }
   };
 
-
+  if (!USER?.token) {
+    navigate("/login");
+    return null;
+  }
 
   return (
-    <Box sx={{ position: 'relative', minHeight: '100vh' }}>
-      {/* Шапка (AppBar) */}
-      <AppBar position="static" color="transparent" elevation={0}>
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={() => {
-              navigate(-1);
-              navigate(`/training`);
-            }}
-          >
-            <ArrowBackIcon />
-          </IconButton>
-          <Box sx={{ flexGrow: 1 }}></Box>
-          <MyButton onClick={handleCopyPlan} label={"Сделать себе копию"}
-            style={{
-              fontSize: "12px",
-            }}
-          />
-          <IconButton
-            edge="end"
-            sx={{ ml: 2 }}
-            onClick={() => setEdit(!edit)}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            edge="end"
-            sx={{ ml: 2, color: "red" }}
-            onClick={handleDelete}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-
-      {/* Основной контент */}
-      <Box sx={{
-        padding: '1rem', paddingBottom: '80px',
-      }}>
-        {edit ? (
-          <TrainingEdit trainingPlanId={Number(id)} onClickExit={() => {
-            setEdit(false);
-            queryClient.invalidateQueries(['trainingDetail', id]);
-            // window.location.reload();
-          }} />
-        ) : (
-          <div className="mr-5 ml-5">
-            {trainingData.isPrivate === 1 ?
-              <LockOutlineIcon sx={{
-                marginRight: '0.5rem',
-                padding: '0px',
-                margin: '0px',
-              }} /> : <></>
-              // <Chip label={trainingData.statusPublish!.title} />
-            }
-            {
-              trainingData.parentUserId !== null ?
-                <Typography variant="body2" sx={{
-                  fontWeight: 600,
-                }}>Автор: {trainingData.parentUser?.username ?? "Неизвестный"}</Typography>
-                : <></>
-            }
-            <h1>{trainingData.title}</h1>
-            <p>Вид спорта: {trainingData.sportType!.title}</p>
-            <p>Описание: {trainingData.description}</p>
-            <div className={`${styles.name} mb-5`}>Упражнения</div>
-            <div>
-              {Array.isArray(trainingData.PlanExercise) && trainingData.PlanExercise!.length > 0 ? (
-                <GroupedExercises planExercises={trainingData.PlanExercise ?? []} />
-                // planExercisesData.map((exercise, i) => (
-                // <ExerciseCard key={exercise.id} exerciseId={exercise.exerciseId} index={i + 1} planExerciseId={exercise.id!} />
-                // )
-                // )
-              ) : (
-                <p>Упражнений пока нет.</p>
-              )}
-            </div>
-            <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>
-            {
-              trainingData.isPrivate === 0 &&
-                comment ?
-                <div>
-                  <h2>Комментарии: </h2>
-                  <Comments idTraining={id!} />
-                </div>
-                : <></>
-            }
-          </div>
-        )}
-      </Box>
-      {trainingData.isPrivate === 1 || edit ? <></> :
-        <Box
-          className="w-full"
-          sx={{
-            position: 'fixed',
-            bottom: 0,
-            right: 0,
-            // maxWidth: `calc(100% - 300px)`,
-            maxWidth: { xs: '100%', sm: 'calc(100% - 300px)' },
-            backgroundColor: '#fff',
-            boxShadow: '0 -1px 5px rgba(0,0,0,0.1)',
-          }}
-        >
-          <CardActions
-            sx={{
-              justifyContent: "space-around",
-              alignItems: "center",
-              padding: '0.5rem'
-            }}
-          >
-            <div className="flex items-center">
-              <IconButton aria-label="like" onClick={handleLikeClick}>
-                {like ? <ThumbUpOn sx={{
-                  color: ColorBackground
-                }} /> : <ThumbUpOff />}
-              </IconButton>
-              <Typography variant="body1" sx={{
-                color: like ? ColorBackground : "#000",
-                fontWeight: like ? 600 : 400,
-              }}>
-                {likesCountData}
-              </Typography>
-            </div>
-
-            <IconButton aria-label="comment" onClick={handleCommentClick}>
-              {comment ? <BiSolidCommentDetail size={24} style={{
-                color: ColorBackground
-              }} /> : <BiCommentDetail size={24} />}
+    trainingData?.isPrivate === 1 && Number(USER.userId!) !== trainingData?.userId ? <p style={{ textAlign: 'center' }}>Извините, но доступ к этому плану закрыт</p> :
+      <Box sx={{ position: 'relative', minHeight: '100vh' }}>
+        {/* Шапка (AppBar) */}
+        <AppBar position="static" color="transparent" elevation={0}>
+          <Toolbar>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={() => {
+                navigate(-1);
+                navigate(`/training`);
+              }}
+            >
+              <ArrowBackIcon />
             </IconButton>
-
-            <IconButton aria-label="share" onClick={handleShareClick}>
-              {share ? <PiShareFatFill size={24} style={{
-                color: ColorBackground
-              }} /> : <PiShareFat size={24} />}
-            </IconButton>
-            <DialogShare
-              keepMounted
-              value={value}
-              open={dialogOpen}
-              onClose={handleCloseShareDialog}
+            <Box sx={{ flexGrow: 1 }}></Box>
+            <MyButton onClick={handleCopyPlan} label={"Сделать себе копию"}
+              style={{
+                fontSize: "12px",
+              }}
             />
-          </CardActions>
+            {Number(USER.userId!) === trainingData.userId ?
+              <>
+                <IconButton
+                  edge="end"
+                  sx={{ ml: 2 }}
+                  onClick={() => setEdit(!edit)}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  edge="end"
+                  sx={{ ml: 2, color: "red" }}
+                  onClick={handleDelete}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </>
+              : <></>
+            }
+          </Toolbar>
+        </AppBar>
+
+        {/* Основной контент */}
+        <Box sx={{
+          padding: '1rem', paddingBottom: '80px',
+        }}>
+          {edit ? (
+            <TrainingEdit trainingPlanId={Number(id)} onClickExit={() => {
+              setEdit(false);
+              queryClient.invalidateQueries(['trainingDetail', id]);
+              // window.location.reload();
+            }} />
+          ) : (
+            <div className="mr-5 ml-5">
+              {trainingData.isPrivate === 1 ?
+                <LockOutlineIcon sx={{
+                  marginRight: '0.5rem',
+                  padding: '0px',
+                  margin: '0px',
+                }} /> : <></>
+                // <Chip label={trainingData.statusPublish!.title} />
+              }
+              {
+                trainingData.parentUserId !== null ?
+                  <Typography variant="body2" sx={{
+                    fontWeight: 600,
+                  }}>Автор: {trainingData.parentUser?.username ?? "Неизвестный"}</Typography>
+                  : <></>
+              }
+              <h1>{trainingData.title}</h1>
+              <p>Вид спорта: {trainingData.sportType!.title}</p>
+              <p>Описание: {trainingData.description}</p>
+              <div className={`${styles.name} mb-5`}>Упражнения</div>
+              <div>
+                {Array.isArray(trainingData.PlanExercise) && trainingData.PlanExercise!.length > 0 ? (
+                  <GroupedExercises planExercises={trainingData.PlanExercise ?? []} />
+                  // planExercisesData.map((exercise, i) => (
+                  // <ExerciseCard key={exercise.id} exerciseId={exercise.exerciseId} index={i + 1} planExerciseId={exercise.id!} />
+                  // )
+                  // )
+                ) : (
+                  <p>Упражнений пока нет.</p>
+                )}
+              </div>
+              <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>
+              {
+                trainingData.isPrivate === 0 &&
+                  comment ?
+                  <div>
+                    <h2>Комментарии: </h2>
+                    <Comments idTraining={id!} />
+                  </div>
+                  : <></>
+              }
+            </div>
+          )}
         </Box>
-      }
-    </Box>
+        {trainingData.isPrivate === 1 || edit ? <></> :
+          <Box
+            className="w-full"
+            sx={{
+              position: 'fixed',
+              bottom: 0,
+              right: 0,
+              // maxWidth: `calc(100% - 300px)`,
+              maxWidth: { xs: '100%', sm: 'calc(100% - 300px)' },
+              backgroundColor: '#fff',
+              boxShadow: '0 -1px 5px rgba(0,0,0,0.1)',
+            }}
+          >
+            <CardActions
+              sx={{
+                justifyContent: "space-around",
+                alignItems: "center",
+                padding: '0.5rem'
+              }}
+            >
+              <div className="flex items-center">
+                <IconButton aria-label="like" onClick={handleLikeClick}>
+                  {like ? <ThumbUpOn sx={{
+                    color: ColorBackground
+                  }} /> : <ThumbUpOff />}
+                </IconButton>
+                <Typography variant="body1" sx={{
+                  color: like ? ColorBackground : "#000",
+                  fontWeight: like ? 600 : 400,
+                }}>
+                  {likesCountData}
+                </Typography>
+              </div>
+
+              <IconButton aria-label="comment" onClick={handleCommentClick}>
+                {comment ? <BiSolidCommentDetail size={24} style={{
+                  color: ColorBackground
+                }} /> : <BiCommentDetail size={24} />}
+              </IconButton>
+
+              <IconButton aria-label="share" onClick={handleShareClick}>
+                {share ? <PiShareFatFill size={24} style={{
+                  color: ColorBackground
+                }} /> : <PiShareFat size={24} />}
+              </IconButton>
+              <DialogShare
+                keepMounted
+                value={value}
+                open={dialogOpen}
+                onClose={handleCloseShareDialog}
+              />
+            </CardActions>
+          </Box>
+        }
+      </Box>
   );
 }
 
@@ -422,10 +425,10 @@ async function copyTrainingPlan(
           duration: item.alignment === "time" ?
             item.alignmentTime === 'hour' ? (parseInt(item.countExercise) * 60 * 60) : item.alignmentTime === 'minute' ? (parseInt(item.countExercise) * 60) : (parseInt(item.countExercise))
             : undefined,
-            distance: item.alignment === "distance" ?
+          distance: item.alignment === "distance" ?
             item.alignmentDistance === 'km' ?
-                parseFloat(item.countExercise) * 1000 :
-                parseFloat(item.countExercise) : undefined,
+              parseFloat(item.countExercise) * 1000 :
+              parseFloat(item.countExercise) : undefined,
           weight: item.alignment === "weight" ?
             parseInt(item.countExercise)
             : undefined,

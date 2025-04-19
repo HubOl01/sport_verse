@@ -50,6 +50,18 @@ export class UsersController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
+  @Patch('/admin/:id')
+  @ApiCreatedResponse({ type: UserEntity })
+  updateAdmin(@Param('id') id: string) {
+    return this.usersService.updateAdmin(+id);
+  }
+
+  @Patch('/user/:id')
+  @ApiCreatedResponse({ type: UserEntity })
+  updateUser(@Param('id') id: string) {
+    return this.usersService.updateUser(+id);
+  }
+
   @Delete(':id')
   @ApiOkResponse({ type: UserEntity })
   remove(@Param('id') id: string) {

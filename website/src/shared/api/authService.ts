@@ -19,6 +19,7 @@ export async function loginAuth(email: string, password: string) {
     localStorage.setItem("token", data.access_token);
     localStorage.setItem("userId", data.id);
     localStorage.setItem("username", data.username);
+    localStorage.setItem("statusUser", data.statusUser);
     return data;
   } catch (error) {
     console.error("Ошибка при входе:", error);
@@ -29,13 +30,14 @@ export async function loginAuth(email: string, password: string) {
 export async function registerAuth(
   email: string,
   username: string,
-  password: string
+  password: string,
+  statusUser: string,
 ) {
   try {
     const response = await fetch(`${apiHost}${apiAuthRegister}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, username, password }),
+      body: JSON.stringify({ email, username, password, statusUser }),
     });
 
     const data = await response.json();
@@ -47,6 +49,7 @@ export async function registerAuth(
     localStorage.setItem("token", data.access_token);
     localStorage.setItem("userId", data.id);
     localStorage.setItem("username", data.username);
+    localStorage.setItem("statusUser", data.statusUser);
     return data;
   } catch (error) {
     console.error("Ошибка при регистрации:", error);
@@ -58,6 +61,7 @@ export function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("userId");
   localStorage.removeItem("username");
+  localStorage.removeItem("statusUser");
 }
 
 export function getToken() {

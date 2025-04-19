@@ -1,6 +1,6 @@
 export var apiHost = "http://localhost:3000";
 export var apiTraining = "/training-plans";
-export var apiTrainingPrivate = "/training-plans/findAllPrivate";
+export var apiTrainingPrivate = "/training-plans/findAllUser";
 export var apiTrainingPublic = "/training-plans/findAllPublic";
 export var apiTrainingGetIdFirst = "/training-plans/getIdFirst";
 export var apiProfile = "/profiles";
@@ -34,6 +34,7 @@ export var apiCommentTraining = "/comment-training/training";
 export var apiCommentTrainingCount = "/comment-training/training/count";
 export var apiLike = "/like-training";
 export var apiLikeCount = "/like-training/likesCount";
+export var apiLikeUser = "/like-training/training/user/";
 export var apiSportCategories = "/sport-categories";
 export var apiTrainingGroups = "/training-groups";
 export var apiTrainingGroupsSearch = "/training-groups/search";
