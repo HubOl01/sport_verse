@@ -4,7 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ITrainingGroup } from "../../../shared/model/ITrainingGroup";
 import MyTextField from "../../../components/MyTextField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LockOutlineIcon from '@mui/icons-material/LockOutlined';
 import { DialogAthletesList } from "./dialogAthletes";
 import { IUser } from "../../../shared/model/IUser";
@@ -16,6 +16,7 @@ import { DialogSportType } from "../../training-new/ui/dialogTypeSport";
 import { ISportType } from "../../../shared/model/ISportType";
 import { AthleteInGroupService } from "../../../shared/api/athleteInGroup.service";
 import { useQueryClient } from 'react-query';
+import { IAthleteInGroup } from "../../../shared/model/IAthleteInGroup";
 
 interface GroupEditProps {
     onClose: () => void;
@@ -24,14 +25,23 @@ interface GroupEditProps {
 }
 export default function GroupEdit(props: GroupEditProps) {
     const queryClient = useQueryClient();
-    const [titleGroup, setTitleGroup] = useState<string>('')
-    const [descGroup, setDescGroup] = useState<string>('')
-    const [isPrivate, setIsPrivate] = useState(false)
+    const [titleGroup, setTitleGroup] = useState<string>(props.trainingGroup?.title ?? '')
+    const [descGroup, setDescGroup] = useState<string>(props.trainingGroup?.desc ?? '')
+    const [isPrivate, setIsPrivate] = useState(props.trainingGroup?.isPrivate ? props.trainingGroup?.isPrivate === 1 ? true : false : false)
     const [openDialog, setOpenDialog] = useState(false)
     const [openSportType, setOpenSportType] = useState(false)
     // const [value, setValue] = useState<string>('');
-    const [valueSportType, setValueSportType] = useState<ISportType>({ id: 0, title: '', image: null });
+    const [valueSportType, setValueSportType] = useState<ISportType>(props.trainingGroup?.sportType ?? { id: 0, title: '', image: null });
     const [athletes, setAthletes] = useState<IUser[]>([])
+    useEffect(() => {
+        if (props.trainingGroup?.athletes) {
+            const userList: IUser[] = props.trainingGroup.athletes
+                .map((item: IAthleteInGroup) => item.athlete)
+                .filter((athlete): athlete is IUser => athlete !== undefined && athlete !== null);
+
+            setAthletes(userList);
+        }
+    }, [props.trainingGroup]);
     const { user: USER } = useAuth();
     const navigate = useNavigate();
 
@@ -52,12 +62,50 @@ export default function GroupEdit(props: GroupEditProps) {
                     athleteId: athlete.id!,
                 })
             }
+            queryClient.invalidateQueries(["group", props.trainingGroup!.id]);
             queryClient.invalidateQueries('groups');
             props.onClose();
         } catch (error) {
             console.error('Ошибка при создании группы:', error);
         }
     }
+    async function updateTrainingGroup() {
+        if (!props.trainingGroup?.id) return;
+
+        try {
+            await TrainingGroupService.update(props.trainingGroup.id.toString(), {
+                title: titleGroup,
+                desc: descGroup,
+                trainerId: Number(USER.userId),
+                sportTypeId: valueSportType.id,
+                isPrivate: isPrivate ? 1 : 0,
+            });
+
+            const oldAthleteIds = new Set((props.trainingGroup.athletes ?? []).map(a => a.athleteId));
+            const newAthleteIds = new Set(athletes.map(a => a.id));
+
+            for (const athlete of athletes) {
+                if (!oldAthleteIds.has(athlete.id!)) {
+                    await AthleteInGroupService.create({
+                        trainingGroupId: props.trainingGroup.id,
+                        athleteId: athlete.id!,
+                    });
+                }
+            }
+
+            for (const old of props.trainingGroup.athletes ?? []) {
+                if (!newAthleteIds.has(old.athleteId)) {
+                    await AthleteInGroupService.delete((old.id!).toString());
+                }
+            }
+            queryClient.invalidateQueries(["group", (props.trainingGroup!.id)!.toString()]);
+            queryClient.invalidateQueries('groups');
+            props.onClose();
+        } catch (error) {
+            console.error('Ошибка при обновлении группы:', error);
+        }
+    }
+
     const handleClickSportType = () => {
         setOpenSportType(true);
     };
@@ -88,18 +136,15 @@ export default function GroupEdit(props: GroupEditProps) {
                         <ArrowBackIcon />
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }}></Box>
-                    {/* <IconButton
-            edge="end"
-            sx={{ ml: 2 }}
-            onClick={() => setEdit(!edit)}
-          >
-            <EditIcon />
-          </IconButton> */}
                     {props.trainingGroup ? <IconButton
                         edge="end"
                         sx={{ ml: 2, color: "red" }}
-                        onClick={() => { }}
-                    >
+                        onClick={() => {
+                            TrainingGroupService.delete(props.trainingGroup!.id!.toString());
+                            queryClient.invalidateQueries(["group", (props.trainingGroup!.id)!.toString()]);
+                            queryClient.invalidateQueries('groups');
+                            navigate(-1);
+                        }}>
                         <DeleteIcon />
                     </IconButton> : null}
                 </Toolbar>
@@ -228,7 +273,11 @@ export default function GroupEdit(props: GroupEditProps) {
                             if (titleGroup === '' && descGroup === '' && athletes.length === 0 && valueSportType.id === 0) {
                                 alert('Заполните все поля');
                             } else {
-                                createTrainingGroup();
+                                if (props.trainingGroup) {
+                                    updateTrainingGroup();
+                                } else {
+                                    createTrainingGroup();
+                                }
                             }
                         }
                     }

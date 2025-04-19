@@ -52,4 +52,9 @@ export class AthleteInGroupsController {
   remove(@Param('id') id: string) {
     return this.athleteInGroupsService.remove(+id);
   }
+  @Delete('/user/:userId')
+  @ApiOkResponse({ type: AthleteInGroupEntity })
+  removeUser(@Param('userId') userId: string) {
+    return this.athleteInGroupsService.removeUser(+userId);
+  }
 }

@@ -16,7 +16,7 @@ export default function Training(props: TrainingProps) {
   const navigate = useNavigate();
   const { data: trainingPlansPublicData } = useQuery(['trainingPlansPublic'], () => TrainingService.getAllPublic()
   )
-  const { data: trainingPlansPrivateData } = useQuery(['trainingPlansPrivate'], () => TrainingService.getAllPrivate(Number(USER.userId!)),
+  const { data: trainingPlansPrivateData } = useQuery(['trainingPlansPrivate'], () => TrainingService.getAllUser(Number(USER.userId!)),
     { enabled: !!USER.token }
   )
   const [alignment, setAlignment] = useState(props.isPrivate ? 'private' : 'public');

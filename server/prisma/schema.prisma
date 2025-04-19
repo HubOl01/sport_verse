@@ -103,30 +103,37 @@ model ProfileSportType {
 }
 
 model TrainingPlan {
-  id               Int               @id @default(autoincrement())
-  title            String
-  statusPublishId  Int               @default(1)
-  isPrivate        Int?              @default(1)
-  description      String?
-  date_created     DateTime?         @default(now())
-  userId           Int
-  date_start       DateTime?         @default(now())
-  date_end         DateTime?         @default(now())
-  parentUserId     Int?
-  trainingGroupId  Int?
-  statusTrainingId Int
-  sportTypeId      Int
-  statusPublish    StatusPublish?    @relation(fields: [statusPublishId], references: [id])
-  sportType        SportType         @relation(fields: [sportTypeId], references: [id])
-  user             User              @relation(fields: [userId], references: [id])
-  parentUser       User?             @relation("parentUser", fields: [parentUserId], references: [id])
-  PlanExercise     PlanExercise[]
-  StatusTraining   StatusTraining    @relation(fields: [statusTrainingId], references: [id])
-  TrainingResult   TrainingResult[]
-  LikeTraining     LikeTraining[]
-  CommentTraining  CommentTraining[]
-  ViewsTraining    ViewsTraining[]
-  PlanInGroup      PlanInGroup[]
+  id                  Int               @id @default(autoincrement())
+  title               String
+  statusPublishId     Int               @default(1)
+  isPrivate           Int?              @default(1)
+  description         String?
+  date_created        DateTime?         @default(now())
+  userId              Int
+  date_start          DateTime?         @default(now())
+  date_end            DateTime?         @default(now())
+  parentUserId        Int?
+  parentPlanId        Int?
+  parentGroupId       Int?
+  parentPlanInGroupId Int?
+  statusTrainingId    Int
+  sportTypeId         Int
+  statusPublish       StatusPublish?    @relation(fields: [statusPublishId], references: [id])
+  sportType           SportType         @relation(fields: [sportTypeId], references: [id])
+  user                User              @relation(fields: [userId], references: [id])
+  parentUser          User?             @relation("parentUser", fields: [parentUserId], references: [id], onDelete: SetNull)
+  parentPlan          TrainingPlan?     @relation("parentPlan", fields: [parentPlanId], references: [id], onDelete: SetNull)
+  parentGroup         TrainingGroup?    @relation("parentGroup", fields: [parentGroupId], references: [id], onDelete: SetNull)
+  parentPlanInGroup   PlanInGroup?      @relation("parentPlanInGroup", fields: [parentPlanInGroupId], references: [id], onDelete: SetNull)
+  PlanExercise        PlanExercise[]
+  StatusTraining      StatusTraining    @relation(fields: [statusTrainingId], references: [id])
+  TrainingResult      TrainingResult[]
+  LikeTraining        LikeTraining[]
+  CommentTraining     CommentTraining[]
+  ViewsTraining       ViewsTraining[]
+  PlanInGroup         PlanInGroup[]
+
+  TrainingPlan TrainingPlan[] @relation("parentPlan")
 }
 
 model PlanExercise {
@@ -204,23 +211,25 @@ model TrainingGroup {
   createdAt   DateTime @default(now())
 
   // Связь с тренером (один тренер на группу)
-  trainer     User             @relation("Trainers", fields: [trainerId], references: [id])
-  sportType   SportType?       @relation(fields: [sportTypeId], references: [id])
+  trainer      User             @relation("Trainers", fields: [trainerId], references: [id])
+  sportType    SportType?       @relation(fields: [sportTypeId], references: [id])
   // Связь со спортсменами (многие спортсмены в одной группе)
-  athletes    AthleteInGroup[]
-  PlanInGroup PlanInGroup[]
-  JoinRequest JoinRequest[]
+  athletes     AthleteInGroup[]
+  PlanInGroup  PlanInGroup[]
+  JoinRequest  JoinRequest[]
+  TrainingPlan TrainingPlan[]   @relation("parentGroup")
 }
 
 model PlanInGroup {
-  id      Int           @id @default(autoincrement())
-  title   String?
-  desc    String?
-  planAt  DateTime      @default(now())
-  planId  Int
-  groupId Int
-  plan    TrainingPlan  @relation(fields: [planId], references: [id])
-  group   TrainingGroup @relation(fields: [groupId], references: [id])
+  id           Int            @id @default(autoincrement())
+  title        String?
+  desc         String?
+  planAt       DateTime       @default(now())
+  planId       Int
+  groupId      Int
+  plan         TrainingPlan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+  group        TrainingGroup  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  TrainingPlan TrainingPlan[] @relation("parentPlanInGroup")
 }
 
 model AthleteInGroup {
@@ -230,8 +239,8 @@ model AthleteInGroup {
   joinedAt        DateTime @default(now())
 
   // Связи
-  trainingGroup TrainingGroup @relation(fields: [trainingGroupId], references: [id])
-  athlete       User          @relation(fields: [athleteId], references: [id])
+  trainingGroup TrainingGroup @relation(fields: [trainingGroupId], references: [id], onDelete: Cascade)
+  athlete       User          @relation(fields: [athleteId], references: [id], onDelete: Cascade)
 
   @@unique([trainingGroupId, athleteId]) // Уникальность пары (группа, спортсмен)
 }

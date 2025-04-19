@@ -2,7 +2,8 @@ import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/m
 import { INewModel } from "../../../shared/model/INewModel";
 import { useNavigate } from "react-router-dom";
 import { ColorBackground } from "../../../shared/styles/colors";
-import { CurrentRole, Roles } from "../../../shared/data/roles";
+import { Roles } from "../../../shared/data/roles";
+import { useAuth } from "../../../shared/utils/useAuth";
 
 interface NewProps {
     newModel: INewModel,
@@ -10,6 +11,7 @@ interface NewProps {
     isClick?: boolean
 }
 export default function CardNew({ newModel, grid, isClick = true }: NewProps) {
+    const { user: USER } = useAuth();
     const navigate = useNavigate();
     const formattedDateCreated = new Date(newModel.date!).toLocaleString("ru-RU", {
         day: "2-digit",
@@ -26,7 +28,7 @@ export default function CardNew({ newModel, grid, isClick = true }: NewProps) {
                         width: "100%",
                     }}
                 >
-                    <CardActionArea onClick={isClick ? (() => navigate(grid ? `/news/${newModel.id}` : CurrentRole === Roles.ADMIN ? `/admin/news/${newModel.id}` : `/news/${newModel.id}`)) : undefined}
+                    <CardActionArea onClick={isClick ? (() => navigate(grid ? `/news/${newModel.id}` : USER.statusUser === Roles.ADMIN ? `/admin/news/${newModel.id}` : `/news/${newModel.id}`)) : undefined}
                         sx={{
                             cursor: isClick ? "pointer" : "default",
                             pointerEvents: isClick ? "auto" : "none",

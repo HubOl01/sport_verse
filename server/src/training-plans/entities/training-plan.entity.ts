@@ -10,9 +10,11 @@ export class TrainingPlanEntity implements TrainingPlan {
   date_created: Date;
   userId: number;
   parentUserId: number;
+  parentPlanId: number;
+  parentGroupId: number;
+  parentPlanInGroupId: number;
   date_start: Date;
   date_end: Date;
   statusTrainingId: number;
   sportTypeId: number;
-  trainingGroupId: number;
 }

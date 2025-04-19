@@ -14,7 +14,7 @@ export interface ITrainingGroup {
   isPrivate?: number;
 
   trainer?: IUser;
-  planInGroups?: IPlanInGroup[];
+  PlanInGroup?: IPlanInGroup[];
   athletes?: IAthleteInGroup[];
   sportType?: ISportType;
   joinRequest?: IJoinRequest[];

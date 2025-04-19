@@ -28,4 +28,11 @@ export class AthleteInGroupsService {
   remove(id: number) {
     return this.prisma.athleteInGroup.delete({ where: { id } });
   }
+  removeUser(idUser: number) {
+    return this.prisma.athleteInGroup.deleteMany({
+      where: {
+        athleteId: idUser,
+      },
+    });
+  }
 }

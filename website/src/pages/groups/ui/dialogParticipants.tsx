@@ -16,7 +16,7 @@ interface dialogListProps {
 }
 
 export function DialogParticipantList(props: dialogListProps) {
-    const { onClose, open, ...other } = props;
+    const { onClose, open, groupId, ...other } = props;
     // const queryClient = useQueryClient();
     const { data } = useQuery<ITrainingGroup>(["group", props.groupId], async () => await TrainingGroupService.get((props.groupId!).toString()), { enabled: !!props.groupId })
     const { user: USER } = useAuth();

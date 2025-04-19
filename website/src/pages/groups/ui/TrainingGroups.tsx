@@ -23,6 +23,7 @@ export default function TrainingGroups() {
       <>
         <div style={{
           width: "100%",
+          // minWidth: "100%",
           display: "flex",
           justifyContent: "flex-end",
           padding: "10px",
@@ -50,16 +51,18 @@ export default function TrainingGroups() {
           </div>
 
           <Grid2
-            className="mt-3"
-            container spacing={{ xs: 2, md: 3, sm: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}
+            className="flex w-screen max-w-screen-sm justify-center items-center mt-3"
+            container spacing={{ xs: 2, sm: 2, md: 2, }} columns={{ xs: 1, sm: 2, md: 2 }}
           >
             {Array.isArray(data) && data.length > 0 ? (
               data.map((item, index) => (
-                <Grid2 key={index} size={{ xs: 6, sm: 6, md: 6 }}>
+                <Grid2 key={index} size={{ xs: 1, sm: 1, md: 1 }}
+                  sx={{
+                    width: "100%",
+                  }} >
                   <Card onClick={() => navigate(`/group/${item.id}`)}
                     sx={{
                       width: "100%",
-                      maxWidth: "800px",
                       borderRadius: "30px"
                     }}>
                     <CardActionArea>

@@ -30,6 +30,7 @@ import { useAuth } from "../../../shared/utils/useAuth";
 
 export default function TrainingDetail() {
   const { id } = useParams();
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -72,7 +73,6 @@ export default function TrainingDetail() {
       setLike(false);
     }
   }, [likeData]);
-
 
 
   if (isLoading) return <p className={styles.text}>Загрузка...</p>;
@@ -140,6 +140,7 @@ export default function TrainingDetail() {
         arr,
         sportTypeId!,
         trainingData.userId,
+        trainingData.id!,
         navigate,
         queryClient
       )
@@ -360,6 +361,7 @@ async function copyTrainingPlan(
   arr: any[],
   sportTypeId: number,
   parentUserId: number,
+  parentPlanId: number,
   navigate: NavigateFunction,
   queryClient: QueryClient) {
   try {
@@ -375,6 +377,7 @@ async function copyTrainingPlan(
       description: description,
       userId: Number(USER.userId!),
       parentUserId: parentUserId,
+      parentPlanId: parentPlanId,
       statusTrainingId: 1,
       isPrivate: 1,
       sportTypeId: sportTypeId,

@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { api } from ".";
 import { apiAthleteInGroups } from "../config";
 import { IAthleteInGroup } from "../model/IAthleteInGroup";
+import { apiAthleteInGroupsUser } from "../config/backend";
 
 export const AthleteInGroupService = {
   async getAll(): Promise<IAthleteInGroup[]> {
@@ -69,6 +70,21 @@ export const AthleteInGroupService = {
     try {
       const response = await api.delete<IAthleteInGroup>(
         `${apiAthleteInGroups}/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при удалении AthleteInGroup";
+      throw new Error(message);
+    }
+  },
+  async deleteUser(idUser: string): Promise<IAthleteInGroup> {
+    try {
+      const response = await api.delete<IAthleteInGroup>(
+        `${apiAthleteInGroupsUser}/${idUser}`
       );
       return response.data;
     } catch (error) {

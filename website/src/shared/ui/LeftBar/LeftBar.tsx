@@ -27,7 +27,7 @@ export default function LeftBar() {
         index: number,
     ) => {
         setSelectedIndex(index);
-        navigate(itemsBar[index].id === 4 ? `${itemsBar[index].link}/${user.username}` : itemsBar[index].link)
+        navigate(itemsBar[index].id === 5 ? `${itemsBar[index].link}/${user.username}` : itemsBar[index].link)
     };
 
 

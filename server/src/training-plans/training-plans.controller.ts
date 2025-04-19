@@ -68,6 +68,41 @@ export class TrainingPlansController {
     return this.trainingPlansService.update(+id, updateTrainingPlanDto);
   }
 
+  @Post(
+    'copy/:parentGroupId/:parentPlanInGroupId/:originalPlanId/:targetUserId',
+  )
+  @ApiCreatedResponse()
+  copyPlanToUser(
+    @Param('originalPlanId') originalPlanId: string,
+    @Param('targetUserId') targetUserId: string,
+    @Param('parentGroupId') parentGroupId: string,
+    @Param('parentPlanInGroupId') parentPlanInGroupId: string,
+  ) {
+    return this.trainingPlansService.copyPlanToUser(
+      +originalPlanId,
+      +targetUserId,
+      +parentGroupId,
+      +parentPlanInGroupId,
+    );
+  }
+  @Get(
+    'check/:parentGroupId/:parentPlanInGroupId/:originalPlanId/:targetUserId',
+  )
+  @ApiOkResponse()
+  checkExistingPlan(
+    @Param('originalPlanId') originalPlanId: string,
+    @Param('targetUserId') targetUserId: string,
+    @Param('parentGroupId') parentGroupId: string,
+    @Param('parentPlanInGroupId') parentPlanInGroupId: string,
+  ) {
+    return this.trainingPlansService.checkExistingPlan(
+      +originalPlanId,
+      +targetUserId,
+      +parentGroupId,
+      +parentPlanInGroupId,
+    );
+  }
+
   @Delete(':id')
   @ApiOkResponse()
   remove(@Param('id') id: string) {

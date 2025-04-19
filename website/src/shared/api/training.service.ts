@@ -8,6 +8,7 @@ import {
   apiTrainingPublic,
 } from "../config";
 import { PlanExerciseService } from "./planExercise.service";
+import { apiTrainingCheck, apiTrainingCopy } from "../config/backend";
 
 export const TrainingService = {
   async getAll(): Promise<ITraining[]> {
@@ -23,7 +24,7 @@ export const TrainingService = {
       throw new Error(message);
     }
   },
-  async getAllPrivate(idUser: number): Promise<ITraining[]> {
+  async getAllUser(idUser: number): Promise<ITraining[]> {
     try {
       const response = await api.get<ITraining[]>(
         `${apiTrainingPrivate}/${idUser}`
@@ -103,6 +104,47 @@ export const TrainingService = {
         typeof err.response?.data === "string"
           ? err.response.data
           : `Произошла ошибка при создании нового тренировочного плана`;
+      throw new Error(message);
+    }
+  },
+  async apiTrainingCheck(
+    parentGroupId: string,
+    parentPlanInGroupId: string,
+    originalPlanId: string,
+    targetUserId: string
+  ): Promise<ITraining> {
+    try {
+      const response = await api.get<ITraining>(
+        `${apiTrainingCheck}/${parentGroupId}/${parentPlanInGroupId}/${originalPlanId}/${targetUserId}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при просмотре копии`;
+      throw new Error(message);
+    }
+  },
+
+  async copy(
+    parentGroupId: string,
+    parentPlanInGroupId: string,
+    originalPlanId: string,
+    targetUserId: string
+  ): Promise<ITraining> {
+    try {
+      const response = await api.post<ITraining>(
+        `${apiTrainingCopy}/${parentGroupId}/${parentPlanInGroupId}/${originalPlanId}/${targetUserId}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при создании копии тренировочного плана`;
       throw new Error(message);
     }
   },
