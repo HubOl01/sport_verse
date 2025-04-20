@@ -78,15 +78,6 @@ export default function TrainingGroups() {
                         </Typography>
                       </CardContent>
                       <CardActions disableSpacing>
-                        {/* <AvatarGroup
-                          renderSurplus={(surplus) => <span>+{surplus.toString()[0]}k</span>}
-                          total={4251}
-                        // spacing="small"
-                        >
-                          {item.athletes?.map((athlete) => (
-                            <Avatar alt={athlete.athlete.profile?.name} src={athlete.athlete.profile?.url_avatar} />
-                          ))}
-                        </AvatarGroup> */}
                         <AvatarGroup
                           total={item.athletes?.length}
                           sx={{
@@ -101,7 +92,6 @@ export default function TrainingGroups() {
                             +{surplus}
                           </span>}
                           max={4}
-                        // spacing="small"
                         >
                           {item.athletes?.map((athlete) => (
                             <Avatar

@@ -270,7 +270,7 @@ export default function GroupEdit(props: GroupEditProps) {
                 }}
                     onClick={
                         () => {
-                            if (titleGroup === '' && descGroup === '' && athletes.length === 0 && valueSportType.id === 0) {
+                            if (titleGroup === '' || descGroup === '' || athletes.length === 0 || valueSportType.id === 0) {
                                 alert('Заполните все поля');
                             } else {
                                 if (props.trainingGroup) {

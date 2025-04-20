@@ -13,6 +13,7 @@ import { DialogParticipantList } from "./dialogParticipants";
 import GroupEdit from "./GroupEdit";
 import PlanInGroupEdit from "./PlanInGroupEdit";
 import CardPlanContent from "./cardPlanContent";
+import { IPlanInGroup } from "../../../shared/model/IPlanInGroup";
 
 export default function GroupDetail() {
   const { id } = useParams();
@@ -22,9 +23,10 @@ export default function GroupDetail() {
   const [dialogPart, setDialogPart] = useState(false);
   const [isEditGroup, setIsEditGroup] = useState(false)
   const [isEditPlanInGroup, setIsEditPlanInGroup] = useState(false)
+  const [planInGroupClick, setPlanInGroupClick] = useState<IPlanInGroup | undefined>()
 
   return (
-    isEditPlanInGroup ? <PlanInGroupEdit onClose={() => { setIsEditPlanInGroup(false) }} trainingGroup={data!} /> :
+    isEditPlanInGroup ? <PlanInGroupEdit onClose={() => { setIsEditPlanInGroup(false) }} trainingGroup={data!} planInGroup={planInGroupClick} /> :
       isEditGroup ? <GroupEdit onClose={() => setIsEditGroup(false)} trainingGroup={data} /> :
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <AppBar position="static" color="transparent" elevation={0}>
@@ -41,7 +43,10 @@ export default function GroupDetail() {
               </IconButton>
               <Box sx={{ flexGrow: 1 }}></Box>
               {USER.userId === data?.trainerId!.toString() ? <MyButton
-                onClick={() => { setIsEditPlanInGroup(true) }} label={"Добавить тренировку"}
+                onClick={() => {
+                  setPlanInGroupClick(undefined)
+                  setIsEditPlanInGroup(true)
+                }} label={"Добавить тренировку"}
                 style={{ textTransform: "none", marginRight: "10px" }}
               /> : null}
               {USER.userId === data?.trainerId!.toString() ? <IconButton
@@ -124,7 +129,12 @@ export default function GroupDetail() {
               {
                 data && Array.isArray(data!.PlanInGroup) && data!.PlanInGroup?.length > 0 ?
                   data!.PlanInGroup?.map((planInGroup) => (
-                    <CardPlanContent key={planInGroup.id!} planInGroup={planInGroup} />
+                    <CardPlanContent key={planInGroup.id!} planInGroup={planInGroup}
+                      onEdit={() => {
+                        setPlanInGroupClick(planInGroup);
+                        setIsEditPlanInGroup(true);
+                      }}
+                    />
                   )) : <div className="w-full text-center">
                     <Typography variant="subtitle1" padding={2}>
                       Пока не созданы планы тренировок

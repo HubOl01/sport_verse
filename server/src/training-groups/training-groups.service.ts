@@ -185,6 +185,7 @@ export class TrainingGroupsService {
               },
             },
           },
+          orderBy: [{ planAt: 'desc' }, { id: 'desc' }],
         },
       },
     });

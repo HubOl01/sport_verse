@@ -289,7 +289,7 @@ export default function TrainingEdit() {
         }}
           onClick={
             () => {
-              if (title === '' && description === '' && arr.length === 0 && valueSportType.id === 0) {
+              if (title === '' || description === '' || arr.length === 0 || valueSportType.id === 0) {
                 alert('Заполните все поля');
               } else {
                 createTrainingPlan(title, description, isPrivate, arr, Number(USER.userId), valueSportType, navigate);
@@ -371,10 +371,10 @@ async function createTrainingPlan(
                 : parseInt(item.countExercise)
             : undefined,
 
-            distance: item.alignment === "distance" ?
+          distance: item.alignment === "distance" ?
             item.alignmentDistance === 'km' ?
-                parseFloat(item.countExercise) * 1000 :
-                parseFloat(item.countExercise) : undefined,
+              parseFloat(item.countExercise) * 1000 :
+              parseFloat(item.countExercise) : undefined,
           weight: item.alignment === "weight" ?
             item.countExercise
             : undefined,

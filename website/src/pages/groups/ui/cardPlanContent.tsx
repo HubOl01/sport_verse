@@ -1,12 +1,15 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, CardContent, IconButton, Typography } from "@mui/material";
 import { IPlanInGroup } from "../../../shared/model/IPlanInGroup";
 import CardTrainingInGroup from "./cardTrainingInGroup";
 import { TrainingService } from "../../../shared/api/training.service";
 import { useAuth } from "../../../shared/utils/useAuth";
 import { useNavigate } from "react-router-dom";
+import EditIcon from '@mui/icons-material/Edit';
+
 
 interface CardPlanContentProps {
     planInGroup: IPlanInGroup;
+    onEdit: () => void;
 }
 
 export default function CardPlanContent(props: CardPlanContentProps) {
@@ -61,8 +64,16 @@ export default function CardPlanContent(props: CardPlanContentProps) {
                 <CardContent sx={{
                     padding: "10px 15px 10px 15px",
                 }}>
-                    <Typography className="flex items-center" gutterBottom variant="h5" fontWeight={600} component="div">
+                    <Typography className="flex items-start" gutterBottom variant="h5" fontWeight={600} component="div">
                         {props.planInGroup?.title}
+                        {Number(USER.userId!) === props.planInGroup.plan?.userId ?
+                            <>
+                                <Box sx={{ flexGrow: 1 }}></Box>
+                                <IconButton onClick={props.onEdit}>
+                                    <EditIcon fontSize="small" />
+                                </IconButton>
+                            </> : null
+                        }
                     </Typography>
                     <Typography variant="body1" color="text.secondary" gutterBottom>
                         {props.planInGroup?.desc}

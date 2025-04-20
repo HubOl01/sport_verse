@@ -486,42 +486,6 @@ async function updateTrainingPlan(
                                     "кг." :
                                     'раз.',
                     });
-                    // await ExerciseSetService.create({
-                    //     planExerciseId: planExercise.id!,
-                    //     duration:
-                    //         item.alignment === "time"
-                    //             ? item.alignmentTime === "hour"
-                    //                 ? BigInt(item.countExercise * 60 * 60)
-                    //                 : item.alignmentTime === "minute"
-                    //                     ? BigInt(item.countExercise * 60)
-                    //                     : BigInt(item.countExercise)
-                    //             : undefined,
-                    //     distance: item.alignment === "distance" ? parseInt(item.countExercise) : undefined,
-                    //     weight:
-                    //         item.alignment === "weight"
-                    //             ? item.alignmentDistance === "km"
-                    //                 ? item.countExercise * 1000
-                    //                 : item.countExercise
-                    //             : undefined,
-                    //     repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
-                    //     calories_burned: undefined,
-                    //     route_gpx: undefined,
-                    //     stringType: item.alignment,
-                    //     stringUnit:
-                    //         item.alignment === "distance"
-                    //             ? item.alignmentDistance === "km"
-                    //                 ? "км."
-                    //                 : "м."
-                    //             : item.alignment === "time"
-                    //                 ? item.alignmentTime === "hour"
-                    //                     ? "ч."
-                    //                     : item.alignmentTime === "minute"
-                    //                         ? "мин."
-                    //                         : "сек."
-                    //                 : item.alignment === "weight" ?
-                    //                     "кг."
-                    //                     : "раз.",
-                    // });
                     console.log("item.alignment: ", item.alignment);
                     console.log("Plan created:", trainingPlan);
                     // navigate(`/training`); // Используем navigate здесь

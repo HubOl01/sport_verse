@@ -30,7 +30,7 @@ export default function PlanInGroupEdit(props: GroupEditProps) {
     const [titlePlan, setTitlePlan] = useState<string>(props.planInGroup?.title ?? '')
     const [descPlan, setDescPlan] = useState<string>(props.planInGroup?.desc ?? '')
     const [openDialog, setOpenDialog] = useState(false)
-    const [dateStart, setDateStart] = useState<Date | null>(props.planInGroup?.planAt ?? new Date());
+    const [dateStart, setDateStart] = useState<Date>(props.planInGroup?.planAt! ?? new Date());
     const [trainingPlanSelect, setTrainingPlanSelect] = useState<ITraining | undefined>(props.planInGroup?.plan! ?? undefined);
 
     const { user: USER } = useAuth();
@@ -122,7 +122,7 @@ export default function PlanInGroupEdit(props: GroupEditProps) {
                     </div>
                     <div className={`${styles.title_about_content}`}>
                         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
-                            <MyDatePicker label={'Укажите дату'} value={dateStart}
+                            <MyDatePicker label={'Укажите дату'} value={dateStart instanceof Date ? dateStart : new Date(dateStart)}
                                 onChange={(newValue) => { setDateStart(newValue!) }} />
                         </LocalizationProvider>
                     </div>
@@ -152,7 +152,7 @@ export default function PlanInGroupEdit(props: GroupEditProps) {
                 }}
                     onClick={
                         () => {
-                            if (titlePlan === '' && descPlan === '' && trainingPlanSelect === undefined) {
+                            if (titlePlan === '' || trainingPlanSelect === undefined) {
                                 alert('Заполните все поля');
                             } else {
                                 if (props.planInGroup) {
