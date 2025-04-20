@@ -67,7 +67,7 @@ export default function Search() {
                 }
                 return (<ListItem
                     key={user.id}
-                    className="mr-2 ml-2 w-screen max-w-screen-sm mb-5"
+                    className="mr-2 ml-2 w-screen max-w-screen-sm"
                     alignItems="flex-start"
                     sx={{
                         width: "100%"

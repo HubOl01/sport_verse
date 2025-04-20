@@ -31,7 +31,7 @@ export default function CardTrainingInGroup({ training, onClick, isContent = fal
                         <Typography className="flex items-center" gutterBottom variant="h6" component="div">
                             {training.title}
                         </Typography>
-                        <Chip className="mb-2" label={training.sportType!.title} />
+                        <Chip className="mb-2" label={training.sportType!.title} size="small" />
                         <Typography variant="body2" color="text.secondary">
                             {training.description}
                         </Typography>

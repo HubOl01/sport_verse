@@ -25,13 +25,12 @@ export default function CardTraining({ training, isPrivateUser, grid, countLikes
                 sx={{
                     // width: "800px",
                     width: "100%",
-                    maxWidth: grid ? "100%" : "800px",
+                    maxWidth: grid ? "100%" : "600px",
                     borderRadius: "30px"
                 }}>
                 <CardActionArea>
                     <CardContent sx={{
                         padding: countLikes ? grid ? "10px 15px" : "15px 20px" : null,
-                        // margin: 0
                     }}>
                         {isPrivateUser ? <></> : <Typography gutterBottom variant="body2" fontWeight={600}>
                             @{training.user?.username}
@@ -43,7 +42,7 @@ export default function CardTraining({ training, isPrivateUser, grid, countLikes
                             }} /> : <></>}
                             {training.title}
                         </Typography>
-                        <Chip className="mb-2" label={training.sportType!.title} />
+                        <Chip className="mb-2" label={training.sportType!.title} size="small" />
                         <Typography variant="body2" color="text.secondary">
                             {training.description}
                         </Typography>

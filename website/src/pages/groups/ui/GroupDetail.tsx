@@ -1,4 +1,4 @@
-import { Box, AppBar, Toolbar, IconButton, Typography, AvatarGroup, Avatar } from "@mui/material";
+import { Box, AppBar, Toolbar, IconButton, Typography, AvatarGroup, Avatar, Chip, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import LockOutlineIcon from '@mui/icons-material/LockOutlined';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -14,6 +14,8 @@ import GroupEdit from "./GroupEdit";
 import PlanInGroupEdit from "./PlanInGroupEdit";
 import CardPlanContent from "./cardPlanContent";
 import { IPlanInGroup } from "../../../shared/model/IPlanInGroup";
+import React from "react";
+import { IAthleteInGroup } from "../../../shared/model/IAthleteInGroup";
 
 export default function GroupDetail() {
   const { id } = useParams();
@@ -63,14 +65,15 @@ export default function GroupDetail() {
             <Box
               sx={{
                 // width: { xs: '100%', sm: '28%' },
-                maxWidth: '400px',
+                maxWidth: '280px',
+                width: "100%",
                 // padding: 2,
                 boxShadow: { sm: "7px 0 10px -5px rgba(0,0,0,0.1)" },
-                overflowY: 'hidden',
+                overflowY: 'auto',
               }}
             >
               <div style={{
-                padding: "10px 20px",
+                padding: "5px 15px",
               }}>
 
                 <div className="flex items-center">
@@ -81,18 +84,25 @@ export default function GroupDetail() {
                     }} />
                     : <></>
                   }
-                  <Typography variant="subtitle2" fontWeight={600}>
+                  <Typography variant="subtitle2" fontWeight={600} gutterBottom>
                     Автор: {data?.trainer?.profile?.name}
                   </Typography>
                 </div>
-                <Typography variant="h4">
+                <Typography variant="h4"
+                  lineHeight={1}
+                  fontSize={32}
+                  gutterBottom>
                   {data?.title}
                 </Typography>
-                <Typography variant="h6" color="text.secondary">
+                <Typography variant="h6" color="text.secondary" gutterBottom>
                   {data?.desc}
                 </Typography>
-                {data ?
+                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                  Вид спорта: {data?.sportType?.title}
+                </Typography>
+                {/* {data ?
                   <>
+                   
                     <AvatarGroup
                       onClick={() => setDialogPart(true)}
                       sx={{
@@ -115,9 +125,70 @@ export default function GroupDetail() {
                     </AvatarGroup>
                     <DialogParticipantList keepMounted={false} open={dialogPart} groupId={Number(id)} onClose={() => setDialogPart(false)} />
                   </>
-                  : <></>}
+                  : <></>} */}
               </div>
+              <List>
+                <Typography className="pl-3 pr-3" variant="h6" fontWeight={600}>
+                  Участники группы:
+                </Typography>
+                {Array.isArray(data?.athletes) && data?.athletes.length > 0 ?
+                  data?.athletes.map((athlete: IAthleteInGroup) =>
+                    <ListItem
+                      key={athlete.id}
+                      className="w-screen max-w-screen-sm"
+                      alignItems="flex-start"
+                      sx={{
+                        width: "100%"
+                      }}
+                      disablePadding
 
+                    ><ListItemButton
+                      onClick={() => {
+                        navigate(`/profile/${athlete.athlete?.username}`)
+                      }}
+                    >
+                        <ListItemAvatar>
+                          <Avatar alt="avatar" src={athlete.athlete!.profile?.url_avatar} />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <>
+                              {
+                                USER.username === athlete.athlete!.username ?
+                                  <>
+                                    {athlete.athlete!.profile?.name} (Вы)
+                                  </>
+                                  :
+                                  <>
+                                    {athlete.athlete!.profile?.name}
+                                  </>
+                              }
+                              <Chip label={athlete.athlete!.profile?.role?.title} variant="outlined" size="small" sx={{
+                                marginLeft: "10px",
+                                fontSize: "12px",
+                              }} />
+                            </>
+                          }
+                          secondary={<React.Fragment>
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              sx={{ color: 'text.secondary', display: 'inline' }}
+                            >
+                              @{athlete.athlete!.username}
+                            </Typography>
+                          </React.Fragment>}
+                        />
+                      </ListItemButton>
+
+                      <Divider />
+                    </ListItem>
+                  )
+                  : <p style={{
+                    textAlign: "center",
+                  }}>Нет участников группы</p>}
+
+              </List>
             </Box>
             <Box
               sx={{

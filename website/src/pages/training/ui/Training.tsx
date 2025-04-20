@@ -7,6 +7,7 @@ import { useState } from "react";
 import ToggleTraining from "../../../components/ToggleTraining";
 import { useAuth } from "../../../shared/utils/useAuth";
 import { useNavigate } from "react-router-dom";
+import { Box } from "@mui/material";
 
 interface TrainingProps {
   isPrivate?: boolean
@@ -28,24 +29,26 @@ export default function Training(props: TrainingProps) {
   // if (isLoading) return <p className={styles.text}>Загрузка...</p>;
   // if (error) return <p className={styles.text}>Произошла ошибка при загрузке данных.</p>;
   return (
-    <div>
+    <Box sx={{
+      position: 'relative',
+      justifyContent: 'center',
+      justifyItems: 'stretch',
+      width: "100%",
+    }}>
       <ToggleTraining alignment={alignment} handleAlignmentChange={(newAlignment) => { handleAlignmentChange(newAlignment) }} />
-      <div>
-
-        {alignment === "public" ? Array.isArray(trainingPlansPublicData) && trainingPlansPublicData.length > 0 ? (
-          trainingPlansPublicData.map((plan: ITraining) => (
-            <CardTraining key={plan.id} training={plan} countLikes={plan._count?.LikeTraining} />
-          ))
-        ) : (
-          <p className={styles.text}>Нет опубликованных планов</p>
-        ) : (Array.isArray(trainingPlansPrivateData) && trainingPlansPrivateData.length > 0 ? (
-          trainingPlansPrivateData.map((plan: ITraining) => (
-            <CardTraining key={plan.id} training={plan} isPrivateUser={alignment !== 'public'} />
-          ))
-        ) : (
-          <p className={styles.text}>Нет планов</p>
-        ))}
-      </div>
-    </div>
+      {alignment === "public" ? Array.isArray(trainingPlansPublicData) && trainingPlansPublicData.length > 0 ? (
+        trainingPlansPublicData.map((plan: ITraining) => (
+          <CardTraining key={plan.id} training={plan} countLikes={plan._count?.LikeTraining} />
+        ))
+      ) : (
+        <p className={styles.text}>Нет опубликованных планов</p>
+      ) : (Array.isArray(trainingPlansPrivateData) && trainingPlansPrivateData.length > 0 ? (
+        trainingPlansPrivateData.map((plan: ITraining) => (
+          <CardTraining key={plan.id} training={plan} isPrivateUser={alignment !== 'public'} />
+        ))
+      ) : (
+        <p className={styles.text}>Нет планов</p>
+      ))}
+    </Box>
   )
 }

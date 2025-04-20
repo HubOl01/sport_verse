@@ -94,7 +94,7 @@ export function DialogSubscriptionList(props: dialogListProps) {
                             return (
                                 <ListItem
                                     key={subscription.id}
-                                    className="w-screen max-w-screen-sm mb-5"
+                                    className="w-screen max-w-screen-sm"
                                     alignItems="flex-start"
                                     sx={{
                                         width: "100%"
@@ -178,7 +178,7 @@ export function DialogSubscriptionList(props: dialogListProps) {
                             return (
                                 <ListItem
                                     key={subscription.id}
-                                    className="w-screen max-w-screen-sm mb-5"
+                                    className="w-screen max-w-screen-sm"
                                     alignItems="flex-start"
                                     sx={{
                                         width: "100%"
