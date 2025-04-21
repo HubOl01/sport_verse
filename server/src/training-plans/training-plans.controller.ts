@@ -69,16 +69,16 @@ export class TrainingPlansController {
   }
 
   @Post(
-    'copy/:parentGroupId/:parentPlanInGroupId/:originalPlanId/:targetUserId',
+    'copyGroup/:parentGroupId/:parentPlanInGroupId/:originalPlanId/:targetUserId',
   )
   @ApiCreatedResponse()
-  copyPlanToUser(
+  copyPlanToUserGroup(
     @Param('originalPlanId') originalPlanId: string,
     @Param('targetUserId') targetUserId: string,
     @Param('parentGroupId') parentGroupId: string,
     @Param('parentPlanInGroupId') parentPlanInGroupId: string,
   ) {
-    return this.trainingPlansService.copyPlanToUser(
+    return this.trainingPlansService.copyPlanToUserGroup(
       +originalPlanId,
       +targetUserId,
       +parentGroupId,
@@ -86,20 +86,62 @@ export class TrainingPlansController {
     );
   }
   @Get(
-    'check/:parentGroupId/:parentPlanInGroupId/:originalPlanId/:targetUserId',
+    'checkGroup/:parentGroupId/:parentPlanInGroupId/:originalPlanId/:targetUserId',
   )
   @ApiOkResponse()
-  checkExistingPlan(
+  checkExistingPlanGroup(
     @Param('originalPlanId') originalPlanId: string,
     @Param('targetUserId') targetUserId: string,
     @Param('parentGroupId') parentGroupId: string,
     @Param('parentPlanInGroupId') parentPlanInGroupId: string,
   ) {
-    return this.trainingPlansService.checkExistingPlan(
+    return this.trainingPlansService.checkExistingPlanGroup(
       +originalPlanId,
       +targetUserId,
       +parentGroupId,
       +parentPlanInGroupId,
+    );
+  }
+
+  @Post('copyUser/:originalPlanId/:targetUserId')
+  @ApiCreatedResponse()
+  copyPlanToUser(
+    @Param('originalPlanId') originalPlanId: string,
+    @Param('targetUserId') targetUserId: string,
+  ) {
+    return this.trainingPlansService.copyPlanToUser(
+      +originalPlanId,
+      +targetUserId,
+    );
+  }
+  @Get('checkUser/:originalPlanId/:targetUserId')
+  @ApiOkResponse()
+  checkExistingPlanUser(
+    @Param('originalPlanId') originalPlanId: string,
+    @Param('targetUserId') targetUserId: string,
+  ) {
+    return this.trainingPlansService.checkExistingPlanUser(
+      +originalPlanId,
+      +targetUserId,
+    );
+  }
+  @Post('copy/:originalPlanId/:targetUserId')
+  @ApiCreatedResponse()
+  copyPlan(
+    @Param('originalPlanId') originalPlanId: string,
+    @Param('targetUserId') targetUserId: string,
+  ) {
+    return this.trainingPlansService.copyPlan(+originalPlanId, +targetUserId);
+  }
+  @Get('check/:originalPlanId/:targetUserId')
+  @ApiOkResponse()
+  checkExistingPlan(
+    @Param('originalPlanId') originalPlanId: string,
+    @Param('targetUserId') targetUserId: string,
+  ) {
+    return this.trainingPlansService.checkExistingPlan(
+      +originalPlanId,
+      +targetUserId,
     );
   }
 

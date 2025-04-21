@@ -28,13 +28,13 @@ export default function CardPlanContent(props: CardPlanContentProps) {
             if (Number(USER.userId!) === props.planInGroup.plan?.userId!) {
                 navigate(`/training/${props.planInGroup.planId}`)
             } else {
-                await TrainingService.copy(
+                await TrainingService.copyGroup(
                     (props.planInGroup.groupId).toString(),
                     (props.planInGroup.id)!.toString(),
                     (props.planInGroup.planId).toString(),
                     USER.userId!);
 
-                const existingPlan = await TrainingService.apiTrainingCheck(
+                const existingPlan = await TrainingService.apiTrainingCheckGroup(
                     (props.planInGroup.groupId).toString(),
                     (props.planInGroup.id)!.toString(),
                     (props.planInGroup.planId).toString(),

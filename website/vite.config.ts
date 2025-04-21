@@ -4,9 +4,14 @@ import tailwindcss from "tailwindcss";
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    host: "0.0.0.0",
+    port: 5173,
+  },
+
   plugins: [react()],
   optimizeDeps: {
-    include: ['date-fns', '@mui/x-date-pickers'],
+    include: ["date-fns", "@mui/x-date-pickers"],
   },
   css: {
     postcss: {

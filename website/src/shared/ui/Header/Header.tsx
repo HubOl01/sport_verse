@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
-import { Avatar, Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
+import { Avatar, Button, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { IUser } from '../../model/IUser';
@@ -8,12 +8,14 @@ import { UserService } from '../../api/User.service';
 import { useQuery } from 'react-query';
 import { useAuth } from '../../utils/useAuth';
 import { ExitToApp, FitnessCenter, Person, Settings } from '@mui/icons-material';
+import { useSmallScreen } from '../../utils/displaySizes';
 
 export default function Header() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const isSmallScreen = useSmallScreen();
     const { data } = useQuery<IUser>(
         ['profile', user.username],
         () => UserService.getUsername(user.username!),
@@ -66,17 +68,28 @@ export default function Header() {
                 </svg>
             </Link>
             {location.pathname !== '/login' && (
-                <div className="flex items-center gap-10">
-                    <Button className="gap-2" sx={{
-                        color: "#FFFFFF",
-                        borderRadius: "30px",
-                        padding: "8px 15px"
-                    }}
-                        onClick={clickButton}
+                <div className={isSmallScreen ? "flex items-center gap-4" : "flex items-center gap-10"}>
 
-                    >
-                        <AddIcon />
-                        Добавить план</Button>
+                    {
+                        isSmallScreen ?
+                            <IconButton
+                                sx={{
+                                    color: "#FFFFFF",
+                                }}
+                                onClick={clickButton}>
+                                <AddIcon />
+                            </IconButton>
+                            :
+                            <Button className='gap-2' sx={{
+                                color: "#FFFFFF",
+                                borderRadius: "30px",
+                                padding: '8px 15px'
+                            }}
+                                onClick={clickButton}
+                            >
+                                <AddIcon />
+                                Добавить план
+                            </Button>}
 
                     {location.pathname !== '/profile' && (
                         <div>

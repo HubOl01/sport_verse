@@ -1,5 +1,10 @@
 export var apiHost = "http://localhost:3000";
+export var apiHostServer = "http://192.168.3.15:3000";
 export var apiTraining = "/training-plans";
+export var apiTrainingCopyGroup = "/training-plans/copyGroup";
+export var apiTrainingCheckGroup = "/training-plans/checkGroup";
+export var apiTrainingCopyUser = "/training-plans/copyUser";
+export var apiTrainingCheckUser = "/training-plans/checkUser";
 export var apiTrainingCopy = "/training-plans/copy";
 export var apiTrainingCheck = "/training-plans/check";
 export var apiTrainingPrivate = "/training-plans/findAllUser";

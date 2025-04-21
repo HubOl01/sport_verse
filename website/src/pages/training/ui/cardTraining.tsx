@@ -35,6 +35,12 @@ export default function CardTraining({ training, isPrivateUser, grid, countLikes
                         {isPrivateUser ? <></> : <Typography gutterBottom variant="body2" fontWeight={600}>
                             @{training.user?.username}
                         </Typography>}
+                        {training.parentGroup === null ? <></> : <Typography variant="body2" fontWeight={600}>
+                            Группа: {training.parentGroup?.title}
+                        </Typography>}
+                        {training.parentUser === null ? <></> : <Typography gutterBottom variant="body2" fontWeight={600}>
+                            Автор: @{training.parentUser?.username}
+                        </Typography>}
                         <Typography className="flex items-center" gutterBottom variant="h5" component="div">
                             {training.isPrivate === 1 ? <LockOutlineIcon sx={{
                                 height: "20px",

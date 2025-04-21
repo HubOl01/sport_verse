@@ -1,6 +1,7 @@
 import { IPlanExercise } from "./IPlanExercise";
 import { ISportType } from "./ISportType";
 import { StatusPublish } from "./IStatusPublish";
+import { ITrainingGroup } from "./ITrainingGroup";
 import { IUser } from "./IUser";
 
 export interface ITraining {
@@ -23,6 +24,7 @@ export interface ITraining {
   sportType?: ISportType;
   user?: IUser;
   parentUser?: IUser;
+  parentGroup?: ITrainingGroup;
 
   PlanExercise?: IPlanExercise[];
   _count?: {

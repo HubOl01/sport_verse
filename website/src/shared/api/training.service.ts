@@ -8,7 +8,14 @@ import {
   apiTrainingPublic,
 } from "../config";
 import { PlanExerciseService } from "./planExercise.service";
-import { apiTrainingCheck, apiTrainingCopy } from "../config/backend";
+import {
+  apiTrainingCheck,
+  apiTrainingCheckGroup,
+  apiTrainingCheckUser,
+  apiTrainingCopy,
+  apiTrainingCopyGroup,
+  apiTrainingCopyUser,
+} from "../config/backend";
 
 export const TrainingService = {
   async getAll(): Promise<ITraining[]> {
@@ -107,7 +114,7 @@ export const TrainingService = {
       throw new Error(message);
     }
   },
-  async apiTrainingCheck(
+  async apiTrainingCheckGroup(
     parentGroupId: string,
     parentPlanInGroupId: string,
     originalPlanId: string,
@@ -115,7 +122,7 @@ export const TrainingService = {
   ): Promise<ITraining> {
     try {
       const response = await api.get<ITraining>(
-        `${apiTrainingCheck}/${parentGroupId}/${parentPlanInGroupId}/${originalPlanId}/${targetUserId}`
+        `${apiTrainingCheckGroup}/${parentGroupId}/${parentPlanInGroupId}/${originalPlanId}/${targetUserId}`
       );
       return response.data;
     } catch (error) {
@@ -128,7 +135,7 @@ export const TrainingService = {
     }
   },
 
-  async copy(
+  async copyGroup(
     parentGroupId: string,
     parentPlanInGroupId: string,
     originalPlanId: string,
@@ -136,7 +143,7 @@ export const TrainingService = {
   ): Promise<ITraining> {
     try {
       const response = await api.post<ITraining>(
-        `${apiTrainingCopy}/${parentGroupId}/${parentPlanInGroupId}/${originalPlanId}/${targetUserId}`
+        `${apiTrainingCopyGroup}/${parentGroupId}/${parentPlanInGroupId}/${originalPlanId}/${targetUserId}`
       );
       return response.data;
     } catch (error) {
@@ -148,6 +155,78 @@ export const TrainingService = {
       throw new Error(message);
     }
   },
+  async apiTrainingCheckUser(
+    originalPlanId: string,
+    targetUserId: string
+  ): Promise<ITraining> {
+    try {
+      const response = await api.get<ITraining>(
+        `${apiTrainingCheckUser}/${originalPlanId}/${targetUserId}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при просмотре копии`;
+      throw new Error(message);
+    }
+  },
+
+  async copyUser(
+    originalPlanId: string,
+    targetUserId: string
+  ): Promise<ITraining> {
+    try {
+      const response = await api.post<ITraining>(
+        `${apiTrainingCopyUser}/${originalPlanId}/${targetUserId}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при создании копии тренировочного плана`;
+      throw new Error(message);
+    }
+  },
+  async apiTrainingCheck(
+    originalPlanId: string,
+    targetUserId: string
+  ): Promise<ITraining> {
+    try {
+      const response = await api.get<ITraining>(
+        `${apiTrainingCheck}/${originalPlanId}/${targetUserId}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при просмотре копии`;
+      throw new Error(message);
+    }
+  },
+
+  async copy(originalPlanId: string, targetUserId: string): Promise<ITraining> {
+    try {
+      const response = await api.post<ITraining>(
+        `${apiTrainingCopy}/${originalPlanId}/${targetUserId}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при создании копии тренировочного плана`;
+      throw new Error(message);
+    }
+  },
+
   async update(
     trainingPlanId: number,
     training: ITraining
