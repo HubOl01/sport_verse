@@ -1,4 +1,4 @@
-import { Box, AppBar, Toolbar, IconButton, Typography, AvatarGroup, Avatar, Chip, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
+import { Box, AppBar, Toolbar, IconButton, Typography, Avatar, Chip, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import LockOutlineIcon from '@mui/icons-material/LockOutlined';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -9,7 +9,6 @@ import { TrainingGroupService } from "../../../shared/api/trainingGroups.service
 import { ITrainingGroup } from "../../../shared/model/ITrainingGroup";
 import MyButton from "../../../components/MyButton";
 import { useState } from "react";
-import { DialogParticipantList } from "./dialogParticipants";
 import GroupEdit from "./GroupEdit";
 import PlanInGroupEdit from "./PlanInGroupEdit";
 import CardPlanContent from "./cardPlanContent";
@@ -22,7 +21,6 @@ export default function GroupDetail() {
   const navigate = useNavigate();
   const { data } = useQuery<ITrainingGroup>(["group", id], async () => await TrainingGroupService.get(id!), { enabled: !!id })
   const { user: USER } = useAuthLog();
-  const [dialogPart, setDialogPart] = useState(false);
   const [isEditGroup, setIsEditGroup] = useState(false)
   const [isEditPlanInGroup, setIsEditPlanInGroup] = useState(false)
   const [planInGroupClick, setPlanInGroupClick] = useState<IPlanInGroup | undefined>()

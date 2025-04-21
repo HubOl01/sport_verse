@@ -38,7 +38,7 @@ export default function Routers() {
       {USER.statusUser === Roles.ADMIN && (<Route path="/admin/comments/:id" element={<CommentsDetail />} />)}
       {USER.statusUser === Roles.ADMIN && (<Route path="/admin/news/:id" element={<NewsEdit />} />)}
       <Route path="/register" element={<Register />} />
-      <Route path="/training/public" element={<Training />} />
+      <Route path="/training" element={<Training />} />
       <Route path="/training/private" element={<Training isPrivate />} />
       <Route path="/search" element={<Search />} />
       <Route path="/stat" element={<StatPage />} />

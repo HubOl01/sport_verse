@@ -3,10 +3,10 @@ import CardTraining from "./cardTraining";
 import { ITraining } from '../../../shared/model/ITraining';
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./Training.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToggleTraining from "../../../components/ToggleTraining";
 import { useAuth } from "../../../shared/utils/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 
 interface TrainingProps {
@@ -15,15 +15,26 @@ interface TrainingProps {
 export default function Training(props: TrainingProps) {
   const { user: USER } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { data: trainingPlansPublicData } = useQuery(['trainingPlansPublic'], () => TrainingService.getAllPublic()
   )
   const { data: trainingPlansPrivateData } = useQuery(['trainingPlansPrivate'], () => TrainingService.getAllUser(Number(USER.userId!)),
     { enabled: !!USER.token }
   )
-  const [alignment, setAlignment] = useState(props.isPrivate ? 'private' : 'public');
+  const [alignment, setAlignment] = useState(props.isPrivate ? '/private' : '');
+
+  useEffect(() => {
+    if (location.pathname.includes("/private")) {
+      setAlignment("/private");
+    } else {
+      setAlignment("");
+    }
+  }, [location.pathname]);
+
+
 
   const handleAlignmentChange = (newAlignment: string) => {
-    navigate(`/training/${newAlignment}`);
+    navigate(`/training${newAlignment}`);
     setAlignment(newAlignment);
   };
   // if (isLoading) return <p className={styles.text}>Загрузка...</p>;
@@ -36,7 +47,7 @@ export default function Training(props: TrainingProps) {
       width: "100%",
     }}>
       <ToggleTraining alignment={alignment} handleAlignmentChange={(newAlignment) => { handleAlignmentChange(newAlignment) }} />
-      {alignment === "public" ? Array.isArray(trainingPlansPublicData) && trainingPlansPublicData.length > 0 ? (
+      {alignment === "" ? Array.isArray(trainingPlansPublicData) && trainingPlansPublicData.length > 0 ? (
         trainingPlansPublicData.map((plan: ITraining) => (
           <CardTraining key={plan.id} training={plan} countLikes={plan._count?.LikeTraining} />
         ))
@@ -44,7 +55,7 @@ export default function Training(props: TrainingProps) {
         <p className={styles.text}>Нет опубликованных планов</p>
       ) : (Array.isArray(trainingPlansPrivateData) && trainingPlansPrivateData.length > 0 ? (
         trainingPlansPrivateData.map((plan: ITraining) => (
-          <CardTraining key={plan.id} training={plan} isPrivateUser={alignment !== 'public'} />
+          <CardTraining key={plan.id} training={plan} isPrivateUser={alignment !== ''} />
         ))
       ) : (
         <p className={styles.text}>Нет планов</p>

@@ -32,7 +32,7 @@ export default function ToggleTraining(props: ToggleTrainingProps) {
             cursor: "pointer",
             transition: ".2s ease-in-out",
           }}
-          onClick={() => props.handleAlignmentChange("public")}
+          onClick={() => props.handleAlignmentChange("")}
         >
           <Typography
             variant="body1"
@@ -42,7 +42,7 @@ export default function ToggleTraining(props: ToggleTrainingProps) {
               textTransform: "none",
               textAlign: "center",
               userSelect: "none",
-              color: props.alignment === "public" ? ColorBackground : "#000",
+              color: props.alignment === "" ? ColorBackground : "#000",
               transition: ".2s ease-in-out",
             }}
           >
@@ -53,7 +53,7 @@ export default function ToggleTraining(props: ToggleTrainingProps) {
               height: "5px",
               borderRadius: "10px",
               width: "100px",
-              backgroundColor: props.alignment === "public" ? ColorBackground : "transparent",
+              backgroundColor: props.alignment === "" ? ColorBackground : "transparent",
               transition: ".2s ease-in-out",
             }}
           ></div>
@@ -67,7 +67,7 @@ export default function ToggleTraining(props: ToggleTrainingProps) {
             cursor: "pointer",
             transition: ".2s ease-in-out",
           }}
-          onClick={() => props.handleAlignmentChange("private")}
+          onClick={() => props.handleAlignmentChange("/private")}
         >
           <Typography
             variant="body1"
@@ -77,7 +77,7 @@ export default function ToggleTraining(props: ToggleTrainingProps) {
               textTransform: "none",
               textAlign: "center",
               userSelect: "none",
-              color: props.alignment === "private" ? ColorBackground : "#000",
+              color: props.alignment === "/private" ? ColorBackground : "#000",
               transition: ".2s ease-in-out",
             }}
           >
@@ -88,7 +88,7 @@ export default function ToggleTraining(props: ToggleTrainingProps) {
               height: "5px",
               borderRadius: "10px",
               width: "100px",
-              backgroundColor: props.alignment === "private" ? ColorBackground : "transparent",
+              backgroundColor: props.alignment === "/private" ? ColorBackground : "transparent",
               transition: ".2s ease-in-out",
             }}
           ></div>

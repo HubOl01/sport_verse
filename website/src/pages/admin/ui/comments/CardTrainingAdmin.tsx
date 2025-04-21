@@ -37,7 +37,7 @@ export default function CardTrainingAdmin({ training, isLikes = false }: CardTra
             <Card onClick={() => navigate(`/admin/comments/${training.id}`)}
                 sx={{
                     width: "100%",
-                    maxWidth: "800px",
+                    maxWidth: "600px",
                     borderRadius: "30px"
                 }}>
                 <CardActionArea>
@@ -53,7 +53,7 @@ export default function CardTrainingAdmin({ training, isLikes = false }: CardTra
                         <Typography gutterBottom variant="h5" component="div">
                             {training.title}
                         </Typography>
-                        <Chip className="mb-2" label={training.sportType!.title} />
+                        <Chip className="mb-2" label={training.sportType!.title} size="small" />
                         <Typography variant="body2" color="text.secondary">
                             {training.description}
                         </Typography>

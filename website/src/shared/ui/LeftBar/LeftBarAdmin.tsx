@@ -1,67 +1,110 @@
-import { Box, List, ListItemButton, ListItemText } from '@mui/material'
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Box, List, ListItemButton, ListItemText, Divider } from '@mui/material'
+import React, { useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom';
 import { itemsBarAdmin } from '../../data/itemsBarAdmin';
-import Divider from '@mui/material/Divider';
 import { useAuth } from '../../utils/useAuth';
+import { ColorBackground } from '../../styles/colors';
 
+function getIndexBarAdmin(pathname: string, username?: string): number {
+    const exactMatch = itemsBarAdmin.find(item => pathname === item.link);
+    if (exactMatch) return exactMatch.id;
 
+    let matchedId = -1;
+    let maxMatchLength = 0;
 
-function indexBarAdmin() {
-    for (let i = 0; i < itemsBarAdmin.length; i++) {
-        if (itemsBarAdmin[i].link.includes(location.pathname)) {
-            return i;
+    for (const item of itemsBarAdmin) {
+        let basePath = item.link;
+
+        if (item.id === 5 && username) {
+            basePath = `${item.link}/${username}`;
+        }
+
+        const starts = pathname.startsWith(basePath);
+        const validEnd = pathname === basePath || pathname.startsWith(basePath + "/");
+
+        if (starts && validEnd && basePath.length > maxMatchLength) {
+            maxMatchLength = basePath.length;
+            matchedId = item.id;
         }
     }
-    return 0;
+
+    return matchedId;
 }
 
+
+
+
 export default function LeftBarAdmin() {
-    const [selectedIndex, setSelectedIndex] = React.useState(indexBarAdmin);
+    const location = useLocation();
     const { user } = useAuth();
     const navigate = useNavigate();
+
+
+    const [selectedIndex, setSelectedIndex] = React.useState<number>(
+        getIndexBarAdmin(location.pathname, user?.username!)
+    );
+
+    useEffect(() => {
+        const index = getIndexBarAdmin(location.pathname, user?.username!);
+        if (index !== -1) {
+            setSelectedIndex(index);
+        }
+    }, [location.pathname, user?.username]);
+
+
 
     if (!user?.token) {
         navigate("/login");
         return null;
     }
-    const handleListItemClick = (
-        index: number,
-    ) => {
-        setSelectedIndex(index);
-        navigate(itemsBarAdmin[index].id === 5 ? `${itemsBarAdmin[index].link}/${user.username}` : itemsBarAdmin[index].link)
+
+    const handleListItemClick = (id: number) => {
+        setSelectedIndex(id);
+        const item = itemsBarAdmin.find((i) => i.id === id);
+        if (!item) return;
+        const path = item.id === 5 ? `${item.link}/${user.username}` : item.link;
+        navigate(path);
     };
 
-
     return (
-        <Box sx={{ width: '100%', }}>
-            <List component="nav" aria-label="main mailbox folder"
-            >
-                {itemsBarAdmin.map((item) =>
+        <Box sx={{ width: '100%' }}>
+            <List component="nav" aria-label="main mailbox folders" sx={{ m: 0, p: 0 }}>
+                {itemsBarAdmin.map((item) => (
                     <React.Fragment key={item.id}>
                         {item.id === 6 && (
                             <Divider
                                 component="li"
-                                sx={{
-                                    backgroundColor: "#ffffff54",
-                                    margin: "8px 0",
-                                }}
+                                sx={{ backgroundColor: "#ffffff54", margin: "8px 0" }}
                             />
                         )}
                         <ListItemButton
                             selected={selectedIndex === item.id}
                             onClick={() => handleListItemClick(item.id)}
+                            sx={{
+                                '&.Mui-selected': {
+                                    bgcolor: ColorBackground,
+                                    color: 'white',
+                                    '& .MuiListItemText-primary': {
+                                        color: 'white',
+                                        fontWeight: 600,
+                                    },
+                                },
+                                '&.Mui-selected:hover': {
+                                    bgcolor: ColorBackground,
+                                },
+                                '&:hover': {
+                                    bgcolor: '#ffffff10',
+                                },
+                            }}
                         >
-                            <ListItemText sx={{
-                                color: "white"
-                            }} primary={item.title} />
+                            <ListItemText
+                                sx={{ color: "white" }}
+                                primary={item.title}
+                            />
                         </ListItemButton>
-
-
                     </React.Fragment>
-                )}
-
+                ))}
             </List>
         </Box>
-    )
+    );
 }

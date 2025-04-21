@@ -1,54 +1,98 @@
 import { Box, List, ListItemButton, ListItemText } from '@mui/material'
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
-import { itemsBar } from '../../data/itemsBar';
+import React, { useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../utils/useAuth';
+import { ColorBackground } from '../../styles/colors';
+import { itemsBar } from '../../data/itemsBar';
 
+function getIndexBar(pathname: string, username?: string): number {
+    const exactMatch = itemsBar.find(item => pathname === item.link);
+    if (exactMatch) return exactMatch.id;
 
-function indexBar() {
-    for (let i = 0; i < itemsBar.length; i++) {
-        if (itemsBar[i].link.includes(location.pathname)) {
-            return i;
+    let matchedId = -1;
+    let maxMatchLength = 0;
+
+    for (const item of itemsBar) {
+        let basePath = item.link;
+
+        if (item.id === 5 && username) {
+            basePath = `${item.link}/${username}`;
+        }
+
+        const starts = pathname.startsWith(basePath);
+        const validEnd = pathname === basePath || pathname.startsWith(basePath + "/");
+
+        if (starts && validEnd && basePath.length > maxMatchLength) {
+            maxMatchLength = basePath.length;
+            matchedId = item.id;
         }
     }
-    return 0;
+
+    return matchedId;
 }
 
-export default function LeftBar() {
-    const [selectedIndex, setSelectedIndex] = React.useState(indexBar);
+export default function LeftBarAdmin() {
+    const location = useLocation();
     const { user } = useAuth();
     const navigate = useNavigate();
+
+    const [selectedIndex, setSelectedIndex] = React.useState<number>(
+        getIndexBar(location.pathname, user?.username!)
+    );
+
+    useEffect(() => {
+        const index = getIndexBar(location.pathname, user?.username!);
+        if (index !== -1) {
+            setSelectedIndex(index);
+        }
+    }, [location.pathname, user?.username]);
 
     if (!user?.token) {
         navigate("/login");
         return null;
     }
-    const handleListItemClick = (
-        index: number,
-    ) => {
-        setSelectedIndex(index);
-        navigate(itemsBar[index].id === 5 ? `${itemsBar[index].link}/${user.username}` : itemsBar[index].link)
+
+    const handleListItemClick = (id: number) => {
+        setSelectedIndex(id);
+        const item = itemsBar.find((i) => i.id === id);
+        if (!item) return;
+        const path = item.id === 5 ? `${item.link}/${user.username}` : item.link;
+        navigate(path);
     };
 
-
     return (
-        <Box sx={{ width: '100%', }}>
-            <List component="nav" aria-label="main mailbox folder">
-                {itemsBar.map((item) =>
-                    <div key={item.id}>
+        <Box sx={{ width: '100%' }}>
+            <List component="nav" aria-label="main mailbox folders" sx={{ m: 0, p: 0 }}>
+                {itemsBar.map((item) => (
+                    <React.Fragment key={item.id}>
                         <ListItemButton
                             selected={selectedIndex === item.id}
                             onClick={() => handleListItemClick(item.id)}
+                            sx={{
+                                '&.Mui-selected': {
+                                    bgcolor: ColorBackground,
+                                    color: 'white',
+                                    '& .MuiListItemText-primary': {
+                                        color: 'white',
+                                        fontWeight: 600,
+                                    },
+                                },
+                                '&.Mui-selected:hover': {
+                                    bgcolor: ColorBackground,
+                                },
+                                '&:hover': {
+                                    bgcolor: '#ffffff10',
+                                },
+                            }}
                         >
-                            <ListItemText sx={{
-                                color: "white"
-                            }} primary={item.title} />
+                            <ListItemText
+                                sx={{ color: "white" }}
+                                primary={item.title}
+                            />
                         </ListItemButton>
-
-                    </div>
-                )}
-
+                    </React.Fragment>
+                ))}
             </List>
         </Box>
-    )
+    );
 }
