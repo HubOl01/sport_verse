@@ -72,7 +72,7 @@ export default function CommentsDetail() {
 
           <div>
             <h2>Комментарии ({commentsData}): </h2>
-            <Comments idTraining={id!} isAdmin={true} />
+            <Comments idTraining={id!} isAdmin={true} training={trainingData} />
           </div>
 
         </div>

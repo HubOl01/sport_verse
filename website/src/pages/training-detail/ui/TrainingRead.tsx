@@ -278,7 +278,7 @@ export default function TrainingDetail() {
                   comment && !isPreview ?
                   <div>
                     <h2>Комментарии: </h2>
-                    <Comments idTraining={id!} />
+                    <Comments idTraining={id!} training={trainingData} />
                   </div>
                   : <></>
               }

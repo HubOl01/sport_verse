@@ -4,15 +4,17 @@ import { CommentPlanService } from "../../../../shared/api/commentPlan.service";
 import { ICommentModel } from "../../../../shared/model/ICommentModel";
 import CommentAdd from "./CommentAdd";
 import CommentItem from "./CommentItem";
-import { useAuth } from "../../../../shared/utils/useAuth";
+import { useAuthLog } from "../../../../shared/utils/useAuth";
+import { ITraining } from "../../../../shared/model/ITraining";
 
 interface CommentsProps {
-  idTraining: string
+  idTraining: string,
+  training: ITraining,
   isAdmin?: boolean
 }
 
-export default function Comments({ idTraining, isAdmin = false }: CommentsProps) {
-  const { user: USER } = useAuth();
+export default function Comments({ idTraining, training, isAdmin = false }: CommentsProps) {
+  const { user: USER } = useAuthLog();
   const { data, isLoading } = useQuery<ICommentModel[]>(['comments', idTraining], async () => await CommentPlanService.getAllPlanId(idTraining));
   // const {
   //   data: trainingData,
@@ -74,6 +76,7 @@ export default function Comments({ idTraining, isAdmin = false }: CommentsProps)
               idTraining={Number(idTraining)}
               queryClient={queryClient}
               isReply={!isAdmin}
+              training={training}
               isAdmin={isAdmin}
             />
           ))
