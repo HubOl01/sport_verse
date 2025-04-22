@@ -1,7 +1,7 @@
 import axios from "axios";
-import { apiHostServer } from "../config/backend";
+import { apiHost } from "../config";
 
 export const api = axios.create({
-  baseURL: apiHostServer,
+  baseURL: apiHost,
   timeout: 5000,
 });

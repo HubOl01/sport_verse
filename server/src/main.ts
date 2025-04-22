@@ -8,8 +8,7 @@ async function bootstrap() {
     // origin: 'http://localhost:5173',
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, // Если используете куки/авторизацию
+    // allowedHeaders: ['Content-Type', 'Authorization'],
     // credentials: true,
   });
   const config = new DocumentBuilder()
@@ -23,6 +22,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(3000);
 }
 bootstrap();

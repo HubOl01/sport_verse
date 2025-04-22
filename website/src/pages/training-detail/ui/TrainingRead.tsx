@@ -39,10 +39,8 @@ export default function TrainingDetail() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { user: USER } = useAuth();
-  // if (!USER?.token) {
-  //   navigate("/login");
-  //   return null;
-  // }
+  const searchParams = new URLSearchParams(location.search);
+  const isPreview = searchParams.get("preview") === "true";
 
   const { data: trainingData, isLoading, error } = useQuery<ITraining>(
     ['trainingDetail', id],
@@ -93,87 +91,41 @@ export default function TrainingDetail() {
     }
   };
 
-  // const handleCopyPlan = async () => {
-  //   try {
-  //     // id
-  //     // await TrainingService.delete(id!);
-  //     TrainingService.get(id!).then((plan) => {
-  //       setTitle(plan.title);
-  //       setDescription(plan.description);
-  //       setSportTypeId(plan.sportTypeId);
-
-
-  //       PlanExerciseService.getAllPlan(plan.id!.toString()).then((planExercises) => {
-  //         const exercisesPromises = planExercises.map((exercise) =>
-  //           ExerciseSetService.getOnePlanExercises((exercise.id!)).then(async (sets) => {
-  //             const alignment = sets.duration
-  //               ? "time"
-  //               : sets.distance
-  //                 ? "distance"
-  //                 : sets.weight
-  //                   ? "weight"
-  //                   : "count";
-  //             const exerciseDetails = await ExercisesService.get(exercise.exerciseId.toString());
-  //             return {
-  //               titleExercise: exerciseDetails.name,
-  //               countExercise: (sets.repetitions || sets.weight || sets.distance || sets.duration)?.toString() || "",
-  //               alignment: alignment,
-  //               alignmentTime: sets.duration?.toString() || "",
-  //               alignmentDistance: sets.distance?.toString() || "",
-  //             };
-  //           })
-  //         );
-
-  //         Promise.all(exercisesPromises).then((exercises) => setArr(exercises));
-  //       });
-  //     });
-  //     // copyTrainingPlan(
-  //     //   Number(USER.userId!),
-  //     //   title,
-  //     //   description,
-  //     //   arr,
-  //     //   sportTypeId!,
-  //     //   trainingData.userId,
-  //     //   trainingData.id!,
-  //     //   navigate,
-  //     //   queryClient
-  //     // )
-  //     // navigate(-1);
-  //     alert('План успешно скопирован');
-  //     // navigate(-1);
-  //   } catch (error) {
-  //     console.error('Ошибка при удалении тренировочного плана:', error);
-  //     alert('Не удалось удалить тренировочный план.');
-  //   }
-  // };
 
   async function onClickCopy() {
-    try {
-      if (Number(USER.userId!) === trainingData?.userId! && trainingData?.isPrivate === 0) {
-        navigate(`/training/${trainingData?.id}`)
-      } if (Number(USER.userId!) === trainingData?.userId! && trainingData?.isPrivate === 1) {
-        await TrainingService.copy(
-          (trainingData?.id!).toString(),
-          USER.userId!);
+    if (USER?.token) {
+      try {
+        if (Number(USER.userId!) === trainingData?.userId! && trainingData?.isPrivate === 0) {
+          navigate(`/training/${trainingData?.id}`)
+        } if (Number(USER.userId!) === trainingData?.userId! && trainingData?.isPrivate === 1) {
+          await TrainingService.copy(
+            (trainingData?.id!).toString(),
+            USER.userId!);
 
-        const existingPlan = await TrainingService.apiTrainingCheck(
-          (trainingData?.id!).toString(),
-          USER.userId!);
-        navigate(`/training/${existingPlan.id}`)
+          const existingPlan = await TrainingService.apiTrainingCheck(
+            (trainingData?.id!).toString(),
+            USER.userId!);
+          navigate(`/training/${existingPlan.id}`)
 
+        }
+        else {
+          await TrainingService.copyUser(
+            (trainingData?.id!).toString(),
+            USER.userId!);
+
+          const existingPlan = await TrainingService.apiTrainingCheckUser(
+            (trainingData?.id!).toString(),
+            USER.userId!);
+          navigate(`/training/${existingPlan.id}`)
+        }
+      } catch (err) {
+        console.log(err);
       }
-      else {
-        await TrainingService.copyUser(
-          (trainingData?.id!).toString(),
-          USER.userId!);
-
-        const existingPlan = await TrainingService.apiTrainingCheckUser(
-          (trainingData?.id!).toString(),
-          USER.userId!);
-        navigate(`/training/${existingPlan.id}`)
-      }
-    } catch (err) {
-      console.log(err);
+    }
+    else {
+      alert("Необходимо авторизоваться");
+      navigate("/login");
+      return null;
     }
   }
 
@@ -216,7 +168,7 @@ export default function TrainingDetail() {
     }
   };
 
-  if (!USER?.token) {
+  if (!USER?.token && !isPreview) {
     navigate("/login");
     return null;
   }
@@ -323,7 +275,7 @@ export default function TrainingDetail() {
               <p className={styles.date}>Опубликовано: {formattedDateCreated}</p>
               {
                 trainingData.isPrivate === 0 &&
-                  comment ?
+                  comment && !isPreview ?
                   <div>
                     <h2>Комментарии: </h2>
                     <Comments idTraining={id!} />
@@ -333,7 +285,7 @@ export default function TrainingDetail() {
             </div>
           )}
         </Box>
-        {trainingData.isPrivate === 1 || edit ? <></> :
+        {(trainingData.isPrivate === 1 || edit) || isPreview ? <></> :
           <Box
             className="w-full"
             sx={{

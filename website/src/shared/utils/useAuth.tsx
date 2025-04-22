@@ -82,6 +82,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const isAuthenticated = () => !!user.token;
 
+
   return (
     <AuthContext.Provider value={{ user, setUser, logout, isAuthenticated }}>
       {children}

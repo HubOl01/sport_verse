@@ -19,7 +19,17 @@ export interface dialogShareProps {
 
 export function DialogShare(props: dialogShareProps) {
     const { onClose, value: valueProp, open, ...other } = props;
-    const [value, setValue] = useState(valueProp);
+    const [value, setValue] = useState(`${valueProp}?preview=true`);
+
+
+    // useEffect(() => {
+    //     if (open && valueProp) {
+    //         const publicLink = valueProp.includes("?")
+    //             ? `${valueProp}&preview=true`
+    //             : `${valueProp}?preview=true`;
+    //         setValue(publicLink);
+    //     }
+    // }, [open, valueProp]);
 
     if (props.open && !open) {
         setValue(valueProp);
