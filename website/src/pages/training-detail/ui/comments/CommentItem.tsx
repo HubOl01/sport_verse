@@ -40,6 +40,7 @@ const CommentItem: React.FC<CommentProps> = ({ comment, idTraining, training, qu
             <CommentReply
                 idTraining={idTraining}
                 idComment={comment.id!}
+                comment={comment}
                 queryClient={queryClient}
                 isDelete={isAdmin || USER.username === comment.user?.username ? true : false}
                 content={comment.content}

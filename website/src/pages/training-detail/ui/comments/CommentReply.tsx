@@ -6,10 +6,12 @@ import { ColorBackground } from "../../../../shared/styles/colors";
 import { QueryClient } from "react-query";
 import { useAuth } from "../../../../shared/utils/useAuth";
 import { useNavigate } from "react-router-dom";
+import { ICommentModel } from "../../../../shared/model/ICommentModel";
 
 interface CommentReplyProps {
     idTraining: number;
     idComment: number;
+    comment: ICommentModel;
     content: string;
     queryClient: QueryClient;
     isDelete?: boolean;
@@ -90,9 +92,16 @@ export default function CommentReply(props: CommentReplyProps) {
             alert("Не удалось изменить ответ на комментарий.");
         }
     }
+    const formattedDateCreated = new Date(props.comment.createdAt!).toLocaleString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
     return (
         <div className={!isReply && !isEdit ? "flex" : ""}>
-            <div className="flex">
+            <div className="flex w-full items-stretch">
                 {
                     props.isReply && !isReply ? <Button size="small" sx={{
                         padding: "0px",
@@ -129,6 +138,7 @@ export default function CommentReply(props: CommentReplyProps) {
 
                 {props.isDelete ? <Button size="small"
                     sx={{
+                        marginRight: "10px",
                         padding: "0px",
                         color: "red",
                         textTransform: "none",
@@ -141,6 +151,12 @@ export default function CommentReply(props: CommentReplyProps) {
                     </Typography>
 
                 </Button> : <></>}
+                <Typography variant="body2" color="textSecondary" sx={{
+                    textAlign: "right",
+                    marginLeft: 'auto', // Это вытолкнет элемент вправо
+                }}>
+                    {formattedDateCreated}
+                </Typography>
             </div>
             {isReply || isEdit ? <div style={{ marginTop: "10px" }}>
                 <CommentAdd content={contentReply} onChange={(e) => setContentReply(e.target.value)}

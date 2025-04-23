@@ -51,3 +51,4 @@ export var apiAthleteInGroupsUser = "/athlete-in-groups/user";
 export var apiPlanInGroups = "/plan-in-groups";
 export var apiSubscription = "/subscription";
 export var apiJoinRequests = "/join-requests";
+export var apiViewsTraining = "/views-training";

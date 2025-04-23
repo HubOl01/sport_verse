@@ -24,6 +24,7 @@ import { ILikeModel } from "../../../shared/model/ILikeModel";
 import MyButton from "../../../components/MyButton";
 import { GroupedExercises } from "./groupedExercises";
 import { useAuth } from "../../../shared/utils/useAuth";
+import { ViewsTrainingService } from "../../../shared/api/viewsTraining.service";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -65,6 +66,43 @@ export default function TrainingDetail() {
     }
   }, [likeData]);
 
+  // useEffect(() => {
+  //   if (!isPreview && trainingData?.id) {
+  //     ViewsTrainingService.create({
+  //       userId: Number(USER.userId!),
+  //       trainingPlanId: trainingData.id,
+  //     }).catch((err) => {
+  //       console.error("Ошибка при записи просмотра:", err);
+  //     });
+  //   }
+  // }, [!isPreview, trainingData]);
+  useEffect(() => {
+    if (trainingData?.id) {
+      const sendView = async () => {
+        try {
+          if (USER?.userId) {
+            await ViewsTrainingService.create({
+              userId: Number(USER.userId),
+              trainingPlanId: trainingData.id!,
+            });
+          } else {
+            const res = await fetch("https://api.ipify.org?format=json");
+            const data = await res.json();
+            await ViewsTrainingService.create({
+              trainingPlanId: trainingData.id!,
+              ip: data.ip,
+            });
+          }
+        } catch (err) {
+          console.error("Ошибка при записи просмотра:", err);
+        }
+      };
+
+      sendView();
+    }
+  }, [isPreview, trainingData]);
+
+
 
   if (isLoading) return <p className={styles.text}>Загрузка...</p>;
   if (error) return <p className={styles.text}>Произошла ошибка при загрузке данных.</p>;
@@ -76,7 +114,7 @@ export default function TrainingDetail() {
     month: "2-digit",
     year: "numeric",
     hour: "2-digit",
-    minute: "2-digit"
+    minute: "2-digit",
   });
 
   // Удаление плана
@@ -342,99 +380,3 @@ export default function TrainingDetail() {
       </Box>
   );
 }
-
-
-// async function copyTrainingPlan(
-//   currentUserId: number,
-//   title: string,
-//   description: string,
-//   arr: any[],
-//   sportTypeId: number,
-//   parentUserId: number,
-//   parentPlanId: number,
-//   navigate: NavigateFunction,
-//   queryClient: QueryClient) {
-//   try {
-
-//     // Создаем тренировочный план
-//     const trainingPlan = await TrainingService.create({
-//       title: title,
-//       description: description,
-//       userId: currentUserId,
-//       parentUserId: parentUserId,
-//       parentPlanId: parentPlanId,
-//       statusTrainingId: 1,
-//       isPrivate: 1,
-//       sportTypeId: sportTypeId,
-//     });
-
-//     if (!trainingPlan.id) {
-//       throw new Error("Failed to create training plan");
-//     }
-
-//     // Получаем созданный тренировочный план
-//     const plan = await TrainingService.getIdFirst();
-
-//     // Итерация по каждому элементу массива
-//     for (const item of arr) {
-//       try {
-//         // Пытаемся получить упражнение по названию
-//         const exercise = await ExercisesService.getName(item.titleExercise);
-
-//         let exerciseId: number;
-
-//         // Если упражнения нет, создаем его
-//         if (!exercise || !exercise.id) {
-//           const newExercise = await ExercisesService.create({
-//             name: item.titleExercise,
-//             description: "",
-//             ExerciseCategoryId: 40,
-//             userId: currentUserId,
-//             isPrivate: true,
-//           });
-//           exerciseId = newExercise.id!;
-//         } else {
-//           exerciseId = exercise.id;
-//         }
-
-//         // Создаем связь с планом упражнений
-//         const planExercise = await PlanExerciseService.create({
-//           trainingPlanId: plan.id!,
-//           setTotal: 0,
-//           repTotal: 0,
-//           exerciseStatus: 0,
-//           exerciseId: exerciseId,
-//         });
-
-//         // Создаем набор упражнений
-//         await ExerciseSetService.create({
-//           planExerciseId: planExercise.id!,
-//           duration: item.alignment === "time" ? (parseInt(item.countExercise))
-//             : undefined,
-//           distance: item.alignment === "distance" ?
-//             parseFloat(item.countExercise) : undefined,
-//           weight: item.alignment === "weight" ?
-//             parseInt(item.countExercise)
-//             : undefined,
-//           repetitions: item.alignment === "count" ? parseInt(item.countExercise) : undefined,
-//           calories_burned: undefined,
-//           route_gpx: undefined,
-//           stringType: item.alignment,
-//           stringUnit: item.alignment === 'distance' ?
-//             item.alignmentDistance === 'km' ? 'км' : 'м' : item.alignment === 'time' ?
-//               item.alignmentTime === 'hour' ? 'ч.' : item.alignmentTime === 'minute' ? 'мин.' : 'сек.' :
-//               item.alignment === "weight" ?
-//                 "кг." :
-//                 'раз.',
-//         });
-//         console.log("Plan created:", plan);
-//         navigate('/training');
-//         queryClient.invalidateQueries('trainingPlans');
-//       } catch (exerciseError) {
-//         console.error(`Error processing exercise: ${item.titleExercise}`, exerciseError);
-//       }
-//     }
-//   } catch (error) {
-//     console.error("Error creating training plan:", error);
-//   }
-// }

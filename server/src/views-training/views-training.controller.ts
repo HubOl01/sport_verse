@@ -18,10 +18,15 @@ import { ViewsTrainingEntity } from './entities/views-training.entity';
 export class ViewsTrainingController {
   constructor(private readonly viewsTrainingService: ViewsTrainingService) {}
 
+  // @Post()
+  // @ApiCreatedResponse()
+  // create(@Body() createViewsTrainingDto: CreateViewsTrainingDto) {
+  //   return this.viewsTrainingService.create(createViewsTrainingDto);
+  // }
   @Post()
   @ApiCreatedResponse()
-  create(@Body() createViewsTrainingDto: CreateViewsTrainingDto) {
-    return this.viewsTrainingService.create(createViewsTrainingDto);
+  createViewTraining(@Body() createViewsTrainingDto: CreateViewsTrainingDto) {
+    return this.viewsTrainingService.createViewTraining(createViewsTrainingDto);
   }
 
   @Get()

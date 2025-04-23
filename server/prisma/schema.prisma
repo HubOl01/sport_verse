@@ -310,10 +310,12 @@ model CommentTraining {
 
 model ViewsTraining {
   id             Int          @id @default(autoincrement())
-  userId         Int
+  userId         Int?
   trainingPlanId Int
+  ip             String?
+  visitorId      String?
   createdAt      DateTime     @default(now())
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
   trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id], onDelete: Cascade)
 }
 
