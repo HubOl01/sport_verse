@@ -24,9 +24,7 @@ export default function CardNew({ newModel, grid, isClick = true }: NewProps) {
         <div key={newModel.id} className={grid ? '' : 'mr-2 ml-2 w-screen max-w-screen-sm mb-5'}>
             <div>
                 <Card
-                    sx={{
-                        width: "100%",
-                    }}
+                    sx={{ width: "100%", padding: 0, margin: 0 }}
                 >
                     <CardActionArea onClick={isClick ? (() => navigate(grid ? `/news/${newModel.id}` : USER.statusUser === Roles.ADMIN ? `/admin/news/${newModel.id}` : `/news/${newModel.id}`)) : undefined}
                         sx={{

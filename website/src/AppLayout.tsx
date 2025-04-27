@@ -20,7 +20,7 @@ export function AppLayout() {
         showHeader ? <Header /> : null}
       <div className='sm:flex flex-1 sm:overflow-hidden'>
         {location.pathname !== '/login' && location.pathname !== '/register' && isLoggedIn &&
-          <div className='w-full max-sm:max-h-[200px] sm:w-1/6 bg-gray-900 overflow-y-auto' style={{ minWidth: "300px" }}>
+          <div className='w-full max-sm:max-h-[200px] sm:w-[300px] bg-gray-900 overflow-y-auto' style={{ minWidth: "300px" }}>
             {USER.statusUser! === Roles.ADMIN ? <LeftBarAdmin /> : <LeftBar />}
           </div>
         }

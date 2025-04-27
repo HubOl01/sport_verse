@@ -279,10 +279,23 @@ export default function TrainingDetail() {
                 // <Chip label={trainingData.statusPublish!.title} />
               }
               {
+                trainingData.isPrivate === 0 ?
+                  <Typography variant="body2" sx={{
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                    onClick={() => navigate(`/profile/${trainingData.user?.username}`)}
+                  >Автор: {trainingData.user?.profile?.name ?? "Неизвестный"}</Typography>
+                  : <></>
+              }
+              {
                 trainingData.parentUserId !== null ?
                   <Typography variant="body2" sx={{
                     fontWeight: 600,
-                  }}>Автор: @{trainingData.parentUser?.username ?? "Неизвестный"}</Typography>
+                    cursor: 'pointer'
+                  }}
+                    onClick={() => navigate(`/profile/${trainingData.parentUser?.username}`)}
+                  >Автор: @{trainingData.parentUser?.username ?? "Неизвестный"}</Typography>
                   : <></>
               }
               {

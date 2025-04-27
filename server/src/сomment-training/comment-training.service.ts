@@ -51,10 +51,18 @@ export class CommentTrainingService {
         parentCommentId: null,
       },
       include: {
-        user: true,
+        user: {
+          include: {
+            profile: true,
+          },
+        },
         replies: {
           include: {
-            user: true,
+            user: {
+              include: {
+                profile: true,
+              },
+            },
           },
         },
       },

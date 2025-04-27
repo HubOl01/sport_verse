@@ -15,6 +15,7 @@ import CardPlanContent from "./cardPlanContent";
 import { IPlanInGroup } from "../../../shared/model/IPlanInGroup";
 import React from "react";
 import { IAthleteInGroup } from "../../../shared/model/IAthleteInGroup";
+import { useSmallScreen } from "../../../shared/utils/displaySizes";
 
 export default function GroupDetail() {
   const { id } = useParams();
@@ -24,6 +25,7 @@ export default function GroupDetail() {
   const [isEditGroup, setIsEditGroup] = useState(false)
   const [isEditPlanInGroup, setIsEditPlanInGroup] = useState(false)
   const [planInGroupClick, setPlanInGroupClick] = useState<IPlanInGroup | undefined>()
+  const isSmallScreen = useSmallScreen();
 
   return (
     isEditPlanInGroup ? <PlanInGroupEdit onClose={() => { setIsEditPlanInGroup(false) }} trainingGroup={data!} planInGroup={planInGroupClick} /> :
@@ -59,11 +61,11 @@ export default function GroupDetail() {
           </AppBar>
 
           {/* <Box className="flex w-full" sx={{ height: '100%' }} > */}
-          <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden', height: '100%' }}>
+          <Box sx={{ display: isSmallScreen ? null : 'flex', flex: 1, overflow: 'hidden', height: isSmallScreen ? null : '100%' }}>
             <Box
               sx={{
                 // width: { xs: '100%', sm: '28%' },
-                maxWidth: '280px',
+                maxWidth: isSmallScreen ? null : '280px',
                 width: "100%",
                 // padding: 2,
                 boxShadow: { sm: "7px 0 10px -5px rgba(0,0,0,0.1)" },

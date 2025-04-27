@@ -36,8 +36,9 @@ model User {
   subscriptions   Subscription[]  @relation("Subscriber")
 
   // Подписчики (кто подписан на пользователя)
-  subscribers Subscription[] @relation("SubscribedTo")
-  JoinRequest JoinRequest[]
+  subscribers    Subscription[]   @relation("SubscribedTo")
+  JoinRequest    JoinRequest[]
+  TrainingResult TrainingResult[]
 }
 
 // Модель для профиля пользователя
@@ -185,12 +186,18 @@ model ExerciseSet {
 }
 
 model TrainingResult {
-  id             Int          @id @default(autoincrement())
-  trainingPlanId Int
-  date_end       DateTime
-  duration       Int?
-  difficulty     Int?         @default(0) // сложность тренировки от 0-10
-  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
+  id             Int           @id @default(autoincrement())
+  trainingPlanId Int?
+  userId         Int
+  groupInGroupId Int?
+  date_start     DateTime      @default(now())
+  date_end       DateTime?
+  createdAt      DateTime      @default(now())
+  comment        String?
+  difficulty     Int?          @default(0)
+  trainingPlan   TrainingPlan? @relation(fields: [trainingPlanId], references: [id])
+  user           User          @relation(fields: [userId], references: [id])
+  groupInGroup   PlanInGroup?  @relation(fields: [groupInGroupId], references: [id])
 }
 
 // Модель для статуса тренировочного плано (Планирование, выполнение, внесение)
@@ -221,15 +228,16 @@ model TrainingGroup {
 }
 
 model PlanInGroup {
-  id           Int            @id @default(autoincrement())
-  title        String?
-  desc         String?
-  planAt       DateTime       @default(now())
-  planId       Int
-  groupId      Int
-  plan         TrainingPlan   @relation(fields: [planId], references: [id], onDelete: Cascade)
-  group        TrainingGroup  @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  TrainingPlan TrainingPlan[] @relation("parentPlanInGroup")
+  id             Int              @id @default(autoincrement())
+  title          String?
+  desc           String?
+  planAt         DateTime         @default(now())
+  planId         Int
+  groupId        Int
+  plan           TrainingPlan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  group          TrainingGroup    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  TrainingPlan   TrainingPlan[]   @relation("parentPlanInGroup")
+  TrainingResult TrainingResult[]
 }
 
 model AthleteInGroup {

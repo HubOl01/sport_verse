@@ -35,7 +35,7 @@ export default function CardTraining({ training, isPrivateUser, grid, countLikes
                         {isPrivateUser ? <></> : <Typography gutterBottom variant="body2" fontWeight={600}>
                             @{training.user?.username}
                         </Typography>}
-                        {training.parentGroup === null ? <></> : <Typography variant="body2" fontWeight={600}>
+                        {training.parentGroup === null || training.isPrivate === 0 ? <></> : <Typography variant="body2" fontWeight={600}>
                             Группа: {training.parentGroup?.title}
                         </Typography>}
                         {training.parentUser === null ? <></> : <Typography gutterBottom variant="body2" fontWeight={600}>

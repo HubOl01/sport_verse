@@ -91,7 +91,7 @@ export function DialogPlansList(props: dialogListProps) {
                                     sx={{ width: "100%" }}
                                     disablePadding
                                 >
-                                    <CardTrainingInGroup training={plan} onClick={() => handleAddPlan(plan)} />
+                                    <CardTrainingInGroup training={plan} onClick={() => handleAddPlan(plan)} isDialog={true} />
                                 </ListItem>
                             );
                         })

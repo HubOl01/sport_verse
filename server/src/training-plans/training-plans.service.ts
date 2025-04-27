@@ -254,8 +254,7 @@ export class TrainingPlansService {
             email: true,
             username: true,
             profile: {
-              select: {
-                url_avatar: true,
+              include: {
                 status: true,
               },
             },
@@ -267,8 +266,7 @@ export class TrainingPlansService {
             email: true,
             username: true,
             profile: {
-              select: {
-                url_avatar: true,
+              include: {
                 status: true,
               },
             },
