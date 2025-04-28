@@ -9,6 +9,7 @@ export class TrainingResultEntity implements TrainingResult {
   date_end: Date;
   createdAt: Date;
   comment: string;
+  commentTrainer: string;
   difficulty: number;
 
 }

@@ -46,7 +46,7 @@ export default function Routers() {
       <Route path="/training/:id" element={<TrainingDetail />} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/search/groups" element={<Search />} />
-      <Route path="/my-groups" element={<TrainingGroups myGroups/>} />
+      <Route path="/my-groups" element={<TrainingGroups myGroups />} />
       <Route path="/group/:id" element={<GroupDetail />} />
       <Route path="/group/:id/training" element={<GroupDetail />} />
     </Routes>

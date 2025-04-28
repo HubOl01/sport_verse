@@ -7,5 +7,6 @@ export interface ITrainingResult {
   date_end?: Date;
   createdAt?: Date;
   comment: string;
+  commentTrainer?: string;
   difficulty: number;
 }

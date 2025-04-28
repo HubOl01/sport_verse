@@ -57,7 +57,7 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
     isEditGroup ? <GroupEdit onClose={() => setIsEditGroup(false)} /> :
       <>
         {
-          props.search && <div style={{
+          !props.search && <div style={{
             width: "100%",
             // minWidth: "100%",
             display: "flex",

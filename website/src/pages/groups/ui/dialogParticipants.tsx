@@ -22,11 +22,6 @@ export function DialogParticipantList(props: dialogListProps) {
     const { user: USER } = useAuth();
     const navigate = useNavigate();
 
-    if (!USER?.token) {
-        navigate("/login");
-        return null;
-    }
-
     const handleClose = () => {
         onClose();
     };

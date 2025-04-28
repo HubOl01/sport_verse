@@ -3,7 +3,6 @@ import { useQuery } from "react-query";
 import CloseIcon from '@mui/icons-material/Close';
 import { UserService } from "../../../shared/api/User.service";
 import { useAuth } from "../../../shared/utils/useAuth";
-import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { ISubscription } from "../../../shared/model/ISubscription";
 import MyTextField from "../../../components/MyTextField";
@@ -20,18 +19,12 @@ interface dialogListProps {
 export function DialogAthletesList(props: dialogListProps) {
     const { onClose, open, ...other } = props;
     const { user: USER } = useAuth();
-    const navigate = useNavigate();
     const [searchAthlete, setSearchAthlete] = useState('');
     // const queryClient = useQueryClient();
 
     // Загрузка данных текущего пользователя и всех пользователей
-    const { data } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!));
+    const { data } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!), { enabled: !!USER?.username });
     const { data: dataUser } = useQuery('users', () => UserService.getAll());
-
-    if (!USER?.token) {
-        navigate("/login");
-        return null;
-    }
 
     // Фильтрация пользователей по строке поиска
     const filteredUsers = dataUser?.filter((user) =>
@@ -52,7 +45,7 @@ export function DialogAthletesList(props: dialogListProps) {
         setSearchAthlete("");
         props.onClose();
     };
-    const listData = Array.isArray(data) && data.length > 0 ? data!.subscribers
+    const listData = Array.isArray(data!.subscribers) && data!.subscribers.length > 0 ? data!.subscribers
         .filter((subscription: ISubscription) => {
             const subscriber = subscription.subscriber!;
             return (

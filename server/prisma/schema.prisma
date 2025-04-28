@@ -194,6 +194,7 @@ model TrainingResult {
   date_end       DateTime?
   createdAt      DateTime      @default(now())
   comment        String?
+  commentTrainer String?
   difficulty     Int?          @default(0)
   trainingPlan   TrainingPlan? @relation(fields: [trainingPlanId], references: [id])
   user           User          @relation(fields: [userId], references: [id])

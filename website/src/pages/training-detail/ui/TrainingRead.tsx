@@ -32,6 +32,7 @@ import MyDatePicker from "../../../components/MyDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns/AdapterDateFns";
 import ru from "date-fns/locale/ru";
 import { MySwitch } from "../../../components/MySwitch";
+import MyTextField from "../../../components/MyTextField";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -50,6 +51,7 @@ export default function TrainingDetail() {
   const [dateEndTraining, setDateEndTraining] = useState<Date>(new Date());
   const [isEndSportDateTraining, setIsEndSportDateTraining] = useState<boolean>(false);
   const [difficult, setDifficult] = useState<number>(0);
+  const [commentTrainingRes, setCommentTrainingRes] = useState('');
 
   const { user: USER } = useAuth();
   const searchParams = new URLSearchParams(location.search);
@@ -212,7 +214,7 @@ export default function TrainingDetail() {
     setTrainingPlay(false);
   };
   const handleStartTraining = async () => {
-    
+
   };
 
 
@@ -265,7 +267,7 @@ export default function TrainingDetail() {
             {
               trainingPlay &&
               <Typography variant="h6" component="div" fontWeight={600}>
-                Начало тренировки
+                Тренировка
               </Typography>
             }
             <Box sx={{ flexGrow: 1 }}></Box>
@@ -390,6 +392,14 @@ export default function TrainingDetail() {
                         <Typography>Тяжело</Typography>
                       </Stack>
                     </div>
+                  }
+                  {
+                    isEndSportDateTraining &&
+                    <MyTextField label={"Комментарий к тренировке"} onChange={(e) => setCommentTrainingRes(e.target.value)} value={commentTrainingRes} isBorder isLines
+                      styles={{
+                        marginTop: "15px",
+                      }}
+                    />
                   }
                   <Button
                     variant="contained"
