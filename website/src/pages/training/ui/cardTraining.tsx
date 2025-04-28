@@ -10,12 +10,13 @@ interface CardTrainingProps {
     isPrivateUser?: boolean,
     grid?: boolean,
     countLikes?: number,
+    noMargin?: boolean
 }
 
-export default function CardTraining({ training, isPrivateUser, grid, countLikes }: CardTrainingProps) {
+export default function CardTraining({ training, isPrivateUser, grid, countLikes, noMargin = false }: CardTrainingProps) {
     const navigate = useNavigate();
     return (
-        <div className={grid ? 'mr-5 ml-5' : "mr-5 mt-5 ml-5 mb-5"}
+        <div className={noMargin ? 'mr-2 ml-5' : grid ? 'mr-5 ml-5' : "mr-5 mt-5 ml-5 mb-5"}
             style={{
                 display: "flex",
                 justifyContent: "center",

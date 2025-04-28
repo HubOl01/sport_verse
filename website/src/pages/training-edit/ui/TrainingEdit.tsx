@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MyButton from "../../../components/MyButton";
 import { useAuth } from "../../../shared/utils/useAuth";
+import { capitalizeFirstLetter } from "../../../shared/utils/utils";
 
 export interface ArrModel {
     titleExercise: string; countExercise: string, alignment: string, alignmentTime: string, alignmentDistance: string;
@@ -46,6 +47,7 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
     const [openSportType, setOpenSportType] = useState(false);
     const [value, setValue] = useState('Dione');
     const navigate = useNavigate();
+
     // useEffect(() => {
     //     TrainingService.get(trainingPlanId.toString()).then((plan) => {
     //         setTitle(plan.title);
@@ -441,7 +443,7 @@ async function updateTrainingPlan(
                     // Проверяем, существует ли упражнение с таким именем
                     if (!exercise || !exercise.id) {
                         const newExercise = await ExercisesService.create({
-                            name: item.titleExercise,
+                            name: capitalizeFirstLetter(item.titleExercise),
                             description: "",
                             ExerciseCategoryId: 40,
                             userId: isPrivate ? userId : undefined,
@@ -486,8 +488,6 @@ async function updateTrainingPlan(
                                     "кг." :
                                     'раз.',
                     });
-                    console.log("item.alignment: ", item.alignment);
-                    console.log("Plan created:", trainingPlan);
                     // navigate(`/training`); // Используем navigate здесь
                     navigate(`/training/${id}`);
                     onClickExit();

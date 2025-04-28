@@ -84,7 +84,13 @@ export default function GroupDetail() {
                     }} />
                     : <></>
                   }
-                  <Typography variant="subtitle2" fontWeight={600} gutterBottom>
+                  <Typography variant="subtitle2" fontWeight={600} gutterBottom
+                    sx={{
+                      fontWeight: 600,
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => navigate(`/profile/${data?.trainer?.username}`)}
+                  >
                     Автор: {data?.trainer?.profile?.name}
                   </Typography>
                 </div>

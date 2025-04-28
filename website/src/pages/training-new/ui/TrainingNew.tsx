@@ -14,6 +14,7 @@ import { ISportType } from '../../../shared/model/ISportType';
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import MyButton from "../../../components/MyButton";
 import { useAuth } from "../../../shared/utils/useAuth";
+import { capitalizeFirstLetter } from "../../../shared/utils/utils";
 
 
 interface ArrModel {
@@ -340,7 +341,7 @@ async function createTrainingPlan(
         // Если упражнения нет, создаем его
         if (!exercise || !exercise.id) {
           const newExercise = await ExercisesService.create({
-            name: item.titleExercise,
+            name: capitalizeFirstLetter(item.titleExercise),
             description: "",
             ExerciseCategoryId: 40,
             userId: isPrivate ? userId : undefined,

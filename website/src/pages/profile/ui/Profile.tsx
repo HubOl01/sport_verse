@@ -1,4 +1,4 @@
-import { Avatar, Box, Card, Grid2, IconButton, Typography } from '@mui/material'
+import { Avatar, Box, Card, IconButton, Typography } from '@mui/material'
 import styles from './Profile.module.scss'
 import ListTile from './ListTile'
 import { useEffect, useState } from 'react';
@@ -22,6 +22,7 @@ import { LikeTrainingService } from '../../../shared/api/likeTraining.service';
 import CardTraining from '../../training/ui/cardTraining';
 import { ITraining } from '../../../shared/model/ITraining';
 import { TrainingService } from '../../../shared/api/training.service';
+import { Masonry } from '@mui/lab';
 
 export default function Profile() {
   const queryClient = useQueryClient();
@@ -260,7 +261,7 @@ export default function Profile() {
             <ListTile title='Спортивный разряд:' content={data?.profile?.sportCategory ? data?.profile?.sportCategory?.title! : "Нет разряда"} />
           </div>
         </Card>
-        {Number(USER.userId!) !== data?.id && Array.isArray(myPlans) && myPlans.length > 0 ?
+        {/* {Number(USER.userId!) !== data?.id && Array.isArray(myPlans) && myPlans.length > 0 ?
           <div className='mb-5'>
             <Typography variant='h6' fontWeight={600} sx={{
               margin: '0px 20px',
@@ -279,7 +280,39 @@ export default function Profile() {
               }
             </Grid2>
           </div>
-          : <></>}
+          : <></>} */}
+        {Number(USER.userId!) !== data?.id && Array.isArray(myPlans) && myPlans.length > 0 ? (
+          <div className="mb-5">
+            <Typography
+              variant="h6"
+              fontWeight={600}
+              sx={{
+                margin: "0px 20px",
+              }}
+            >
+              Созданные тренировочные планы
+            </Typography>
+
+            <div
+              style={{
+                display: "flex",
+                overflowX: "auto",
+              }}
+            >
+              {myPlans.map((plan) => (
+                <div key={plan.id} style={{ flex: "0 0 auto", width: "500px" }}> {/* Фиксированная ширина элемента */}
+                  <CardTraining
+                    training={plan!}
+                    noMargin
+                    countLikes={plan!._count?.LikeTraining!}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
         {Array.isArray(likePlans) && likePlans.length > 0 ?
           <div className='mb-5'>
             <Typography variant='h6' fontWeight={600} sx={{
@@ -287,17 +320,23 @@ export default function Profile() {
             }}>
               Понравившиеся тренировочные планы
             </Typography>
-            <Grid2
-              container spacing={{ xs: 2, md: 3, sm: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}
-            >
-              {likePlans.map((like) => {
-                return (
-                  <Grid2 key={like.id} size={{ xs: 2, sm: 4, md: 4 }}>
+            <div style={{ margin: '0px 20px', }}>
+
+              <Masonry
+                spacing={{ xs: 1, md: 1, sm: 1 }}
+                columns={{ xs: 2, sm: 3, md: 3 }}
+                sx={{
+                  width: '100%',
+                }}
+              >
+                {likePlans.map((like) => {
+                  return (
                     <CardTraining training={like.trainingPlan!} grid countLikes={like.trainingPlan!._count?.LikeTraining!} />
-                  </Grid2>)
-              })
-              }
-            </Grid2>
+                  )
+                })
+                }
+              </Masonry>
+            </div>
           </div>
           : <></>}
       </div>

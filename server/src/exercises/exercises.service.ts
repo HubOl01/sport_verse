@@ -26,7 +26,7 @@ export class ExercisesService {
     return this.prisma.exercise.findFirst({
       where: {
         name: {
-          equals: name.toLowerCase(),
+          equals: name,
           mode: 'insensitive',
         },
       },

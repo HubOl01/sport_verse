@@ -2,6 +2,7 @@ import { IPlanExercise } from "../../../shared/model/IPlanExercise";
 import { Box, Typography } from "@mui/material";
 import { ExerciseCard } from "./ExerciseCard";
 import { getPluralForm } from "../../../shared/utils/getPluralForm";
+import { capitalizeFirstLetter } from "../../../shared/utils/utils";
 
 interface GroupedExercisesProps {
   planExercises: IPlanExercise[];
@@ -66,7 +67,7 @@ export function GroupedExercises({ planExercises }: GroupedExercisesProps) {
         return (
           <Box key={groupIndex} sx={{ mb: 4 }}>
             <Typography variant="h6" fontWeight={600} sx={{ mb: 1 }}>
-              {globalGroupIndex++}. {name} — {setCount} {setsText} {repsText}
+              {globalGroupIndex++}. {capitalizeFirstLetter(name)} — {setCount} {setsText} {repsText}
             </Typography>
 
             {group.map((pe) => (

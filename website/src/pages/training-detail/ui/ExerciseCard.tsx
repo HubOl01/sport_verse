@@ -1,5 +1,6 @@
 import { IPlanExercise } from "../../../shared/model/IPlanExercise";
 import { Card, Typography, Box } from "@mui/material";
+import { capitalizeFirstLetter } from "../../../shared/utils/utils";
 
 export function ExerciseCard({
     planExercise,
@@ -35,7 +36,7 @@ export function ExerciseCard({
                     <Typography fontSize={16} pr={1}>
                         {index}.
                     </Typography>
-                    <Typography fontSize={16}>{name}</Typography>
+                    <Typography fontSize={16}>{capitalizeFirstLetter(name)}</Typography>
                 </Box>
                 <Typography fontSize={16}>{value}</Typography>
             </Box>

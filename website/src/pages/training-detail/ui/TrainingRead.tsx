@@ -25,6 +25,8 @@ import MyButton from "../../../components/MyButton";
 import { GroupedExercises } from "./groupedExercises";
 import { useAuth } from "../../../shared/utils/useAuth";
 import { ViewsTrainingService } from "../../../shared/api/viewsTraining.service";
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import { Close } from "@mui/icons-material";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -34,6 +36,7 @@ export default function TrainingDetail() {
 
   const [edit, setEdit] = useState(false);
   const [like, setLike] = useState(false);
+  const [trainingPlay, setTrainingPlay] = useState(false);
   const [comment, setComment] = useState(true);
   const [share, setShare] = useState(false);
   const [value, setValue] = useState(() => window.location.href);
@@ -224,37 +227,67 @@ export default function TrainingDetail() {
               aria-label="menu"
               sx={{ mr: 2 }}
               onClick={() => {
-                navigate(-1);
+                if (trainingPlay || edit) {
+                  if (trainingPlay) {
+                    setTrainingPlay(!trainingPlay);
+                  }
+                  if (edit) {
+                    setEdit(!edit);
+                  }
+                } else {
+                  navigate(-1);
+                }
               }}
             >
               <ArrowBackIcon />
             </IconButton>
-            <Box sx={{ flexGrow: 1 }}></Box>
-            <MyButton onClick={onClickCopy} label={"Сделать себе копию"}
-              style={{
-                fontSize: "12px",
-              }}
-            />
-            {Number(USER.userId!) === trainingData.userId ?
-              <>
-                {trainingData.parentGroupId === null ? <IconButton
-                  edge="end"
-                  sx={{ ml: 2 }}
-                  onClick={() => setEdit(!edit)}
-                >
-                  <EditIcon />
-                </IconButton> : null}
-
-                <IconButton
-                  edge="end"
-                  sx={{ ml: 2, color: "red" }}
-                  onClick={handleDelete}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </>
-              : <></>
+            {
+              edit && <Typography variant="h6" component="div" fontWeight={600}>
+                Редактирование тренировочного плана
+              </Typography>
             }
+            {
+              trainingPlay &&
+              <Typography variant="h6" component="div" fontWeight={600}>
+                Начало тренировки
+              </Typography>
+            }
+            <Box sx={{ flexGrow: 1 }}></Box>
+            <IconButton
+              edge="end"
+              sx={{ mr: trainingPlay ? null : 2 }}
+              onClick={() => { setTrainingPlay(!trainingPlay) }}
+            >
+              {trainingPlay ? <Close /> : <FitnessCenterIcon />}
+            </IconButton>
+            {!trainingPlay &&
+              <>
+                <MyButton onClick={onClickCopy} label={"Сделать себе копию"}
+                  style={{
+                    fontSize: "12px",
+                  }}
+                />
+                {Number(USER.userId!) === trainingData.userId ?
+                  <>
+                    {trainingData.parentGroupId === null ? <IconButton
+                      edge="end"
+                      sx={{ ml: 2 }}
+                      onClick={() => setEdit(!edit)}
+                    >
+                      <EditIcon />
+                    </IconButton> : null}
+
+                    <IconButton
+                      edge="end"
+                      sx={{ ml: 2, color: "red" }}
+                      onClick={handleDelete}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </>
+                  : <></>
+                }
+              </>}
           </Toolbar>
         </AppBar>
 
@@ -270,6 +303,12 @@ export default function TrainingDetail() {
             }} />
           ) : (
             <div className="mr-5 ml-5">
+              {
+                trainingPlay &&
+                <>
+
+                </>
+              }
               {trainingData.isPrivate === 1 ?
                 <LockOutlineIcon sx={{
                   marginRight: '0.5rem',
