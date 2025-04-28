@@ -37,9 +37,17 @@ export class TrainingResultsController {
   findAllStartingUser(@Param('userId') userId: string) {
     return this.trainingResultsService.findAllStartingUser(+userId);
   }
+  @Get('is-start-plan/:userId/:planId')
+  @ApiOkResponse({ type: TrainingResultEntity })
+  isStartingGroupsPlan(
+    @Param('userId') userId: string,
+    @Param('planId') planId: string,
+  ) {
+    return this.trainingResultsService.isStartingGroupsPlan(+userId, +planId);
+  }
   @Get('start-plan/:userId/:planId')
   @ApiOkResponse({ type: TrainingResultEntity })
-  findAllStartingUserPlan(
+  f(
     @Param('userId') userId: string,
     @Param('planId') planId: string,
   ) {

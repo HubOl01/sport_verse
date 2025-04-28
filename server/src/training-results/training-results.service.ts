@@ -33,6 +33,20 @@ export class TrainingResultsService {
       },
     });
   }
+  async isStartingGroupsPlan(
+    userId: number,
+    planId: number,
+  ): Promise<boolean> {
+    const result = await this.prisma.trainingResult.findMany({
+      where: {
+        userId: userId,
+        trainingPlanId: planId,
+        date_end: null,
+      },
+    });
+
+    return !!result;
+  }
   findAllStoppingUser(userId: number) {
     return this.prisma.trainingResult.findMany({
       where: { userId: userId, date_end: { not: null } },

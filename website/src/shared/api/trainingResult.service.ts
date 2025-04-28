@@ -4,6 +4,7 @@ import { apiTrainingResults } from "../config";
 import { api } from ".";
 import {
   apiTrainingResultsFinal,
+  apiTrainingResultsIsStartPlan,
   apiTrainingResultsStart,
   apiTrainingResultsStartPlan,
   apiTrainingResultsUser,
@@ -23,7 +24,7 @@ export const TrainingResultService = {
       throw new Error(message);
     }
   },
-  async findAllStartingUser(userId: string): Promise<ITrainingResult[]> {
+  async getAllStartingUser(userId: string): Promise<ITrainingResult[]> {
     try {
       const response = await api.get<ITrainingResult[]>(
         `${apiTrainingResultsStart}/${userId}`
@@ -38,7 +39,7 @@ export const TrainingResultService = {
       throw new Error(message);
     }
   },
-  async findStartingUserPlan(
+  async getStartingUserPlan(
     userId: string,
     planId: string
   ): Promise<ITrainingResult> {
@@ -56,7 +57,25 @@ export const TrainingResultService = {
       throw new Error(message);
     }
   },
-  async findAllStoppingUser(userId: string): Promise<ITrainingResult[]> {
+  async getIsStartingUserPlan(
+    userId: string,
+    planId: string
+  ): Promise<boolean> {
+    try {
+      const response = await api.get<boolean>(
+        `${apiTrainingResultsIsStartPlan}/${userId}/${planId}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке всех планов";
+      throw new Error(message);
+    }
+  },
+  async getAllStoppingUser(userId: string): Promise<ITrainingResult[]> {
     try {
       const response = await api.get<ITrainingResult[]>(
         `${apiTrainingResultsFinal}/${userId}`
@@ -71,7 +90,7 @@ export const TrainingResultService = {
       throw new Error(message);
     }
   },
-  async findAllUser(userId: string): Promise<ITrainingResult> {
+  async getAllUser(userId: string): Promise<ITrainingResult> {
     try {
       const response = await api.get<ITrainingResult>(
         `${apiTrainingResultsUser}/${userId}`

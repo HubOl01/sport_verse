@@ -34,6 +34,7 @@ export var apiTrainingResults = "/training-results";
 export var apiTrainingResultsUser = "/training-results/user";
 export var apiTrainingResultsStart = "/training-results/start";
 export var apiTrainingResultsStartPlan = "/training-results/start-plan";
+export var apiTrainingResultsIsStartPlan = "/training-results/is-start-plan";
 export var apiTrainingResultsFinal = "/training-results/final";
 export var apiPublishStatuses = "/publish-statuses";
 export var apiStatusesTraining = "/statuses-training";

@@ -33,6 +33,9 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns/AdapterDateFn
 import ru from "date-fns/locale/ru";
 import { MySwitch } from "../../../components/MySwitch";
 import MyTextField from "../../../components/MyTextField";
+import { TrainingResultService } from "../../../shared/api/trainingResult.service";
+import { ITrainingResult } from "../../../shared/model/ITrainingResult";
+import TrainingTimer from "./TrainingTimer";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -50,7 +53,7 @@ export default function TrainingDetail() {
   const [dateStartTraining, setDateStartTraining] = useState<Date>(new Date());
   const [dateEndTraining, setDateEndTraining] = useState<Date>(new Date());
   const [isEndSportDateTraining, setIsEndSportDateTraining] = useState<boolean>(false);
-  const [difficult, setDifficult] = useState<number>(0);
+  const [difficulty, setDifficult] = useState<number>(0);
   const [commentTrainingRes, setCommentTrainingRes] = useState('');
 
   const { user: USER } = useAuth();
@@ -70,6 +73,11 @@ export default function TrainingDetail() {
   const { data: likesCountData } = useQuery<number>(
     ['likeCountTraining', id, Number(USER.userId!)],
     () => LikeTrainingService.getCount(id!),
+    { enabled: !!id && !!USER.userId }
+  );
+  const { data: trainingResData } = useQuery<ITrainingResult>(
+    ['trainingResult', id, Number(USER.userId!)],
+    () => TrainingResultService.getStartingUserPlan(USER.userId!, id!),
     { enabled: !!id && !!USER.userId }
   );
   useEffect(() => {
@@ -210,11 +218,38 @@ export default function TrainingDetail() {
     setDialogOpen(true);
   };
   const handleEndTraining = async () => {
-
+    if (trainingResData) {
+      await TrainingResultService.update(
+        trainingResData.id!,
+        {
+          date_end: dateEndTraining,
+          difficulty: difficulty,
+          comment: commentTrainingRes
+        });
+    } else {
+      await TrainingResultService.create({
+        trainingPlanId: Number(id),
+        userId: Number(USER.userId!),
+        groupInGroupId: trainingData.parentGroupId! ?? null,
+        date_start: dateStartTraining,
+        date_end: dateEndTraining,
+        difficulty: difficulty,
+        comment: commentTrainingRes
+      });
+    }
     setTrainingPlay(false);
   };
   const handleStartTraining = async () => {
-
+    if (trainingResData) {
+      alert("Вы уже есть в процессе тренировки. Закончите тренировку, чтобы начать новую");
+    } else {
+      await TrainingResultService.create({
+        trainingPlanId: Number(id),
+        userId: Number(USER.userId!),
+        groupInGroupId: trainingData.parentGroupId! ?? null,
+        date_start: dateStartTraining,
+      });
+    }
   };
 
 
@@ -321,7 +356,18 @@ export default function TrainingDetail() {
             }} />
           ) : (
             <div className="mr-5 ml-5">
-              {
+              <TrainingTimer trainingPlay={trainingPlay}
+                dateStartTraining={dateStartTraining}
+                setDateStartTraining={setDateStartTraining}
+                isEndSportDateTraining={isEndSportDateTraining}
+                setIsEndSportDateTraining={setIsEndSportDateTraining}
+                dateEndTraining={dateEndTraining} setDateEndTraining={setDateEndTraining}
+                difficulty={difficulty} setDifficult={setDifficult}
+                commentTrainingRes={commentTrainingRes}
+                setCommentTrainingRes={setCommentTrainingRes}
+                handleStartTraining={handleStartTraining}
+                handleEndTraining={handleEndTraining} />
+              {/* {
                 trainingPlay &&
                 <>
                   <Divider sx={{
@@ -384,7 +430,7 @@ export default function TrainingDetail() {
                       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                         <Typography>Легко</Typography>
                         <Rating
-                          value={difficult}
+                          value={difficulty}
                           onChange={(event, newValue) => {
                             setDifficult(newValue!);
                           }}
@@ -422,7 +468,7 @@ export default function TrainingDetail() {
                     mb: "15px",
                   }} />
                 </>
-              }
+              } */}
               {trainingData.isPrivate === 1 ?
                 <LockOutlineIcon sx={{
                   marginRight: '0.5rem',
