@@ -12,11 +12,11 @@ import MyDateTimePicker from "../../../components/MyDateTimePicker";
 
 interface TrainingTimerProps {
   trainingPlay: boolean;
-  dateStartTraining: Date | string;
+  dateStartTraining: Date;
   setDateStartTraining: (date: Date) => void;
   isEndSportDateTraining: boolean;
   setIsEndSportDateTraining: (isEnd: boolean) => void;
-  dateEndTraining: Date | string;
+  dateEndTraining: Date;
   setDateEndTraining: (date: Date) => void;
   difficulty: number;
   setDifficult: (value: number) => void;
@@ -58,7 +58,7 @@ export default function TrainingTimer({
       return "00:00:00"; // Если дата начала тренировки не установлена
     }
 
-    const diffMs = currentTime.getTime() - dateStartTraining.getTime();
+    const diffMs = isEndSportDateTraining ? dateEndTraining.getTime() - dateStartTraining.getTime() : currentTime.getTime() - dateStartTraining.getTime();
     if (diffMs < 0) return "00:00:00"; // Если текущее время меньше времени начала
 
     const hours = Math.floor(diffMs / (1000 * 60 * 60))
