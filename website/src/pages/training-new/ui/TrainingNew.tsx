@@ -119,7 +119,7 @@ export default function TrainingEdit() {
           slotProps={{
             input: {
               style: {
-                fontSize: "20px",
+                fontSize: "16px",
               },
               disableUnderline: true,
             },

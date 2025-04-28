@@ -89,6 +89,86 @@ export class TrainingGroupsService {
     });
   }
 
+  findUserAuthor(userId: number) {
+    return this.prisma.trainingGroup.findMany({
+      where: {
+        trainerId: userId,
+      },
+      include: {
+        sportType: true,
+        trainer: {
+          include: {
+            profile: {
+              select: {
+                name: true,
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
+        athletes: {
+          include: {
+            athlete: {
+              select: {
+                id: true,
+                username: true,
+                profile: {
+                  select: {
+                    url_avatar: true,
+                    status: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  findUser(userId: number) {
+    return this.prisma.trainingGroup.findMany({
+      where: {
+        athletes: {
+          some: {
+            athleteId: userId,
+          },
+        },
+      },
+      include: {
+        sportType: true,
+        trainer: {
+          include: {
+            profile: {
+              select: {
+                name: true,
+                url_avatar: true,
+                status: true,
+              },
+            },
+          },
+        },
+        athletes: {
+          include: {
+            athlete: {
+              select: {
+                id: true,
+                username: true,
+                profile: {
+                  select: {
+                    url_avatar: true,
+                    status: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   // findSearch(search: string, limit?: number) {
   //   if (!search.trim()) {
   //     throw new BadRequestException('Search parameter is required');

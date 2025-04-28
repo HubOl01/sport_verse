@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./TrainingRead.module.scss";
 import { ITraining } from '../../../shared/model/ITraining';
-import { AppBar, Box, CardActions, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, CardActions, Divider, IconButton, Rating, Stack, Toolbar, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -27,6 +27,11 @@ import { useAuth } from "../../../shared/utils/useAuth";
 import { ViewsTrainingService } from "../../../shared/api/viewsTraining.service";
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import { Close } from "@mui/icons-material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import MyDatePicker from "../../../components/MyDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns/AdapterDateFns";
+import ru from "date-fns/locale/ru";
+import { MySwitch } from "../../../components/MySwitch";
 
 export default function TrainingDetail() {
   const { id } = useParams();
@@ -36,11 +41,15 @@ export default function TrainingDetail() {
 
   const [edit, setEdit] = useState(false);
   const [like, setLike] = useState(false);
-  const [trainingPlay, setTrainingPlay] = useState(false);
+  const [trainingPlay, setTrainingPlay] = useState(true);
   const [comment, setComment] = useState(true);
   const [share, setShare] = useState(false);
   const [value, setValue] = useState(() => window.location.href);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [dateStartTraining, setDateStartTraining] = useState<Date>(new Date());
+  const [dateEndTraining, setDateEndTraining] = useState<Date>(new Date());
+  const [isEndSportDateTraining, setIsEndSportDateTraining] = useState<boolean>(false);
+  const [difficult, setDifficult] = useState<number>(0);
 
   const { user: USER } = useAuth();
   const searchParams = new URLSearchParams(location.search);
@@ -198,6 +207,13 @@ export default function TrainingDetail() {
     setShare(true);
     setDialogOpen(true);
   };
+  const handleEndTraining = async () => {
+
+    setTrainingPlay(false);
+  };
+  const handleStartTraining = async () => {
+    
+  };
 
 
   const handleCloseShareDialog = (newValue?: string) => {
@@ -306,7 +322,95 @@ export default function TrainingDetail() {
               {
                 trainingPlay &&
                 <>
+                  <Divider sx={{
+                    mb: "15px",
+                  }} />
+                  <div className={`${styles.listTile}`}>
+                    <div className={`${styles.title_about_title}`}>
+                      Дата начала тренировки:
+                    </div>
+                    <div className={`${styles.title_about_content}`}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
+                        <MyDatePicker label={'Укажите дату'} value={dateStartTraining instanceof Date ? dateStartTraining : new Date(dateStartTraining)}
+                          onChange={(newValue) => { setDateStartTraining(newValue!) }} />
+                      </LocalizationProvider>
+                    </div>
+                  </div>
 
+                  <div className={`${styles.listTile}`}>
+                    <div className={`${styles.title_about_title}`}>
+                      Закончили ли вы тренировку?:
+                    </div>
+
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                      <Typography>Нет</Typography>
+                      <MySwitch
+                        checked={isEndSportDateTraining}
+                        onChange={(ev) => setIsEndSportDateTraining(ev.target.checked)}
+                      />
+                      <Typography>Да</Typography>
+                    </Stack>
+                    <div />
+                  </div>
+                  {
+                    isEndSportDateTraining &&
+                    <div className={`${styles.listTile}`}>
+                      <div className={`${styles.title_about_title}`}>
+                        Дата окончания тренировки:
+                      </div>
+                      <div className={`${styles.title_about_content}`}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
+                          <MyDatePicker label={'Укажите дату'} value={dateEndTraining instanceof Date ? dateEndTraining : new Date(dateEndTraining)}
+                            onChange={(newValue) => {
+                              if (newValue! >= dateStartTraining) {
+                                setDateEndTraining(newValue!)
+                              } else {
+                                alert("Дата окончания должна быть позже или равна дате начала.")
+                                setDateEndTraining(new Date())
+                              }
+                            }
+                            }
+                          />
+                        </LocalizationProvider>
+                      </div>
+                    </div>
+                  }
+                  {
+                    isEndSportDateTraining &&
+                    <div className={`${styles.listTile}`}>
+                      <div className={`${styles.title_about_title}`}>Оцените сложность тренировки</div>
+                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                        <Typography>Легко</Typography>
+                        <Rating
+                          value={difficult}
+                          onChange={(event, newValue) => {
+                            setDifficult(newValue!);
+                          }}
+                          defaultValue={0} max={10} />
+                        <Typography>Тяжело</Typography>
+                      </Stack>
+                    </div>
+                  }
+                  <Button
+                    variant="contained"
+                    sx={{
+                      marginTop: "20px",
+                      marginBottom: "10px",
+                      color: "#FFFFFFFF",
+                      background: ColorBackground,
+                      borderRadius: "20px",
+                      width: "100%",
+                      fontWeight: "600",
+                      padding: "8px 15px",
+                    }}
+                    onClick={isEndSportDateTraining ? handleEndTraining : handleStartTraining}
+                  >
+                    {!isEndSportDateTraining ? "Начать тренировку" : "Закончить тренировку"}
+                  </Button>
+                  <Divider sx={{
+                    mt: '15px',
+                    mb: "15px",
+                  }} />
                 </>
               }
               {trainingData.isPrivate === 1 ?
@@ -319,7 +423,7 @@ export default function TrainingDetail() {
               }
               {
                 trainingData.isPrivate === 0 ?
-                  <Typography variant="body2" sx={{
+                  <Typography variant="body2" gutterBottom sx={{
                     fontWeight: 600,
                     cursor: 'pointer'
                   }}
@@ -329,7 +433,7 @@ export default function TrainingDetail() {
               }
               {
                 trainingData.parentUserId !== null ?
-                  <Typography variant="body2" sx={{
+                  <Typography variant="body2" gutterBottom sx={{
                     fontWeight: 600,
                     cursor: 'pointer'
                   }}
@@ -339,7 +443,7 @@ export default function TrainingDetail() {
               }
               {
                 trainingData.parentGroupId !== null ?
-                  <Typography variant="body2" sx={{
+                  <Typography variant="body2" gutterBottom sx={{
                     fontWeight: 600,
                     cursor: 'pointer'
                   }}
@@ -347,9 +451,16 @@ export default function TrainingDetail() {
                   >Группа: {trainingData.parentGroup?.title ?? "Неизвестный"}</Typography>
                   : <></>
               }
-              <h1>{trainingData.title}</h1>
+              <Typography
+                variant="h4"
+                component="h1"
+                fontSize={30}
+                fontWeight={700}
+              >{trainingData.title}</Typography>
               <p>Вид спорта: {trainingData.sportType!.title}</p>
-              <p>Описание: {trainingData.description}</p>
+              <p style={{
+                fontSize: "16px",
+              }}>Описание: {trainingData.description}</p>
               <div className={`${styles.name} mb-5`}>Упражнения</div>
               <div>
                 {Array.isArray(trainingData.PlanExercise) && trainingData.PlanExercise!.length > 0 ? (
@@ -375,60 +486,61 @@ export default function TrainingDetail() {
             </div>
           )}
         </Box>
-        {(trainingData.isPrivate === 1 || edit) || isPreview ? <></> :
-          <Box
-            className="w-full"
-            sx={{
-              position: 'fixed',
-              bottom: 0,
-              right: 0,
-              // maxWidth: `calc(100% - 300px)`,
-              maxWidth: { xs: '100%', sm: 'calc(100% - 300px)' },
-              backgroundColor: '#fff',
-              boxShadow: '0 -1px 5px rgba(0,0,0,0.1)',
-            }}
-          >
-            <CardActions
+        {
+          (trainingData.isPrivate === 1 || edit) || isPreview ? <></> :
+            <Box
+              className="w-full"
               sx={{
-                justifyContent: "space-around",
-                alignItems: "center",
-                padding: '0.5rem'
+                position: 'fixed',
+                bottom: 0,
+                right: 0,
+                // maxWidth: `calc(100% - 300px)`,
+                maxWidth: { xs: '100%', sm: 'calc(100% - 300px)' },
+                backgroundColor: '#fff',
+                boxShadow: '0 -1px 5px rgba(0,0,0,0.1)',
               }}
             >
-              <div className="flex items-center">
-                <IconButton aria-label="like" onClick={handleLikeClick}>
-                  {like ? <ThumbUpOn sx={{
+              <CardActions
+                sx={{
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  padding: '0.5rem'
+                }}
+              >
+                <div className="flex items-center">
+                  <IconButton aria-label="like" onClick={handleLikeClick}>
+                    {like ? <ThumbUpOn sx={{
+                      color: ColorBackground
+                    }} /> : <ThumbUpOff />}
+                  </IconButton>
+                  <Typography variant="body1" sx={{
+                    color: like ? ColorBackground : "#000",
+                    fontWeight: like ? 600 : 400,
+                  }}>
+                    {likesCountData}
+                  </Typography>
+                </div>
+
+                <IconButton aria-label="comment" onClick={handleCommentClick}>
+                  {comment ? <BiSolidCommentDetail size={24} style={{
                     color: ColorBackground
-                  }} /> : <ThumbUpOff />}
+                  }} /> : <BiCommentDetail size={24} />}
                 </IconButton>
-                <Typography variant="body1" sx={{
-                  color: like ? ColorBackground : "#000",
-                  fontWeight: like ? 600 : 400,
-                }}>
-                  {likesCountData}
-                </Typography>
-              </div>
 
-              <IconButton aria-label="comment" onClick={handleCommentClick}>
-                {comment ? <BiSolidCommentDetail size={24} style={{
-                  color: ColorBackground
-                }} /> : <BiCommentDetail size={24} />}
-              </IconButton>
-
-              <IconButton aria-label="share" onClick={handleShareClick}>
-                {share ? <PiShareFatFill size={24} style={{
-                  color: ColorBackground
-                }} /> : <PiShareFat size={24} />}
-              </IconButton>
-              <DialogShare
-                keepMounted
-                value={value}
-                open={dialogOpen}
-                onClose={handleCloseShareDialog}
-              />
-            </CardActions>
-          </Box>
+                <IconButton aria-label="share" onClick={handleShareClick}>
+                  {share ? <PiShareFatFill size={24} style={{
+                    color: ColorBackground
+                  }} /> : <PiShareFat size={24} />}
+                </IconButton>
+                <DialogShare
+                  keepMounted
+                  value={value}
+                  open={dialogOpen}
+                  onClose={handleCloseShareDialog}
+                />
+              </CardActions>
+            </Box>
         }
-      </Box>
+      </Box >
   );
 }

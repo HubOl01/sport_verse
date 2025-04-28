@@ -2,14 +2,13 @@ import { TrainingResult } from '@prisma/client';
 
 export class TrainingResultEntity implements TrainingResult {
   id: number;
-  desc: string;
+  trainingPlanId: number;
   userId: number;
+  groupInGroupId: number;
   date_start: Date;
   date_end: Date;
-  comment: string;
   createdAt: Date;
-  groupInGroupId: number;
-  trainingPlanId: number;
-  duration: number;
+  comment: string;
   difficulty: number;
+
 }

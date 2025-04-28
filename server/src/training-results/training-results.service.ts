@@ -11,9 +11,43 @@ export class TrainingResultsService {
   }
 
   findAll() {
-    return this.prisma.trainingResult.findMany({orderBy: {
-      id: 'desc',
-    },});
+    return this.prisma.trainingResult.findMany({
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+  findAllStartingUser(userId: number) {
+    return this.prisma.trainingResult.findMany({
+      where: { userId: userId, date_end: null },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+  findAllStartingUserPlan(userId: number, planId: number) {
+    return this.prisma.trainingResult.findFirst({
+      where: { userId: userId, trainingPlanId: planId, date_end: null },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+  findAllStoppingUser(userId: number) {
+    return this.prisma.trainingResult.findMany({
+      where: { userId: userId, date_end: { not: null } },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+  findAllUser(userId: number) {
+    return this.prisma.trainingResult.findMany({
+      where: { userId: userId },
+      orderBy: {
+        id: 'desc',
+      },
+    });
   }
 
   findOne(id: number) {

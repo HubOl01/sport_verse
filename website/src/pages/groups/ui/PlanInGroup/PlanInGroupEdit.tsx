@@ -1,24 +1,24 @@
 import { AppBar, Box, Button, IconButton, Toolbar } from "@mui/material";
-import MyButton from "../../../components/MyButton";
+import MyButton from "../../../../components/MyButton";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { ITrainingGroup } from "../../../shared/model/ITrainingGroup";
-import MyTextField from "../../../components/MyTextField";
+import { ITrainingGroup } from "../../../../shared/model/ITrainingGroup";
+import MyTextField from "../../../../components/MyTextField";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TrainingGroupService } from "../../../shared/api/trainingGroups.service";
-import { useAuth } from "../../../shared/utils/useAuth";
+import { TrainingGroupService } from "../../../../shared/api/trainingGroups.service";
+import { useAuth } from "../../../../shared/utils/useAuth";
 import { useQueryClient } from 'react-query';
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
-import MyDatePicker from "../../../components/MyDatePicker";
+import MyDatePicker from "../../../../components/MyDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns/AdapterDateFns";
 import { ru } from "date-fns/locale";
-import styles from './Group.module.scss'
-import { ITraining } from "../../../shared/model/ITraining";
-import { DialogPlansList } from "./dialogPlans";
-import CardTrainingInGroup from "./cardTrainingInGroup";
-import { PlanInGroupService } from "../../../shared/api/planInGroups.service";
-import { IPlanInGroup } from "../../../shared/model/IPlanInGroup";
+import styles from '../Group.module.scss'
+import { ITraining } from "../../../../shared/model/ITraining";
+import { DialogPlansList } from "../dialogPlans";
+import CardTrainingInGroup from "../cardTrainingInGroup";
+import { PlanInGroupService } from "../../../../shared/api/planInGroups.service";
+import { IPlanInGroup } from "../../../../shared/model/IPlanInGroup";
 
 interface GroupEditProps {
     onClose: () => void;

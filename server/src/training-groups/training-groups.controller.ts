@@ -32,9 +32,22 @@ export class TrainingGroupsController {
   }
   @Get('search/:search')
   @ApiOkResponse({ type: TrainingGroupEntity, isArray: true })
-  findAllSearch(@Param('search') search: string, @Query('limit') limit?: number,) {
-     const parsedLimit = limit ? parseInt(limit.toString(), 10) : undefined;
-  return this.trainingGroupsService.findSearch(search, parsedLimit);
+  findAllSearch(
+    @Param('search') search: string,
+    @Query('limit') limit?: number,
+  ) {
+    const parsedLimit = limit ? parseInt(limit.toString(), 10) : undefined;
+    return this.trainingGroupsService.findSearch(search, parsedLimit);
+  }
+  @Get('user/:userId')
+  @ApiOkResponse({ type: TrainingGroupEntity, isArray: true })
+  findUser(@Param('userId') userId: string) {
+    return this.trainingGroupsService.findUser(+userId);
+  }
+  @Get('trainer/:userId')
+  @ApiOkResponse({ type: TrainingGroupEntity, isArray: true })
+  findUserAuthor(@Param('userId') userId: string) {
+    return this.trainingGroupsService.findUserAuthor(+userId);
   }
 
   @Get(':id')

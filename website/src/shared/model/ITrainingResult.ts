@@ -1,7 +1,11 @@
 export interface ITrainingResult {
   id?: number;
   trainingPlanId: number;
+  userId: number;
+  groupInGroupId?: number;
+  date_start?: Date;
   date_end?: Date;
-  duration: bigint;
-  difficulty?: number;
+  createdAt?: Date;
+  comment: string;
+  difficulty: number;
 }

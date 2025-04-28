@@ -1,15 +1,23 @@
-import { Avatar, AvatarGroup, Box, Card, CardActionArea, CardActions, CardContent, Chip, Grid2, Typography } from "@mui/material";
+import { Box, Grid2 } from "@mui/material";
 import MyButton from "../../../components/MyButton";
 import { useQuery } from "react-query";
 import { TrainingGroupService } from "../../../shared/api/trainingGroups.service";
 import { useState } from "react";
 import MyTextField from "../../../components/MyTextField";
-import { useNavigate } from "react-router-dom";
 import GroupEdit from './GroupEdit';
+import { useAuth } from "../../../shared/utils/useAuth";
+import CardGroupGrid from "./cardGroupGrid";
+import ToggleMyGroups from "../../../components/ToggleMyGroups";
 
-export default function TrainingGroups() {
+interface TrainingGroupsProps {
+  myGroups?: boolean,
+  search?: boolean,
+}
+
+export default function TrainingGroups(props: TrainingGroupsProps) {
   const { data } = useQuery('groups', () => TrainingGroupService.getAll())
   const [search, setSearch] = useState("")
+  const { user: USER } = useAuth();
   const { data: TrainingGroupsSearch } = useQuery(
     ['groups', search],
     () => TrainingGroupService.getSearch(search),
@@ -17,8 +25,28 @@ export default function TrainingGroups() {
       enabled: search.trim().length > 0,
     }
   );
+  const { data: TrainingGroupsUser } = useQuery(
+    ['my-groups', USER.userId],
+    () => TrainingGroupService.getUser(USER.userId!),
+    {
+      enabled: !!USER.userId,
+    }
+  );
+  const { data: TrainingGroupsTraining } = useQuery(
+    ['my-groups-training', USER.userId],
+    () => TrainingGroupService.getTrainer(USER.userId!),
+    {
+      enabled: !!USER.userId,
+    }
+  );
+  const [alignment, setAlignment] = useState('');
 
-  const navigate = useNavigate();
+
+
+  const handleAlignmentChange = (newAlignment: string) => {
+    setAlignment(newAlignment);
+  };
+
   const [isEditGroup, setIsEditGroup] = useState(false)
   // const { data } = useQuery<IUser>(
   //   ['user', username],
@@ -28,37 +56,45 @@ export default function TrainingGroups() {
   return (
     isEditGroup ? <GroupEdit onClose={() => setIsEditGroup(false)} /> :
       <>
-        <div style={{
-          width: "100%",
-          // minWidth: "100%",
-          display: "flex",
-          justifyContent: "flex-end",
-          padding: "10px",
-          boxSizing: "border-box",
-        }}>
-          <MyButton label="Добавить группу" onClick={() => setIsEditGroup(true)} />
-        </div>
+        {
+          props.search && <div style={{
+            width: "100%",
+            // minWidth: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "10px",
+            boxSizing: "border-box",
+          }}>
+            <MyButton label="Добавить группу" onClick={() => setIsEditGroup(true)} />
+          </div>
+        }
+
         <Box
           sx={{
             position: 'relative', justifyContent: 'center', justifyItems: 'center',
             width: "100%",
           }}
         >
-          <div className="flex w-screen max-w-screen-sm justify-center items-center">
-            <MyTextField
-              inputStyle={{
-                marginLeft: "15px",
-                marginRight: "15px",
-              }}
-              label={"Поиск по названию группы"}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-              value={search}
-              onClickClear={() => setSearch('')}
-              isSearch />
-          </div>
+          {
+            props.myGroups ?
+              <ToggleMyGroups alignment={alignment} handleAlignmentChange={(newAlignment) => { handleAlignmentChange(newAlignment) }} />
+              :
+              <div className="flex w-screen max-w-screen-sm justify-center items-center">
+                <MyTextField
+                  inputStyle={{
+                    marginLeft: "15px",
+                    marginRight: "15px",
+                  }}
+                  label={"Поиск по названию группы"}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
+                  value={search}
+                  onClickClear={() => setSearch('')}
+                  isSearch />
+              </div>
 
+          }
           <Grid2
             className="flex w-screen max-w-screen-sm justify-center items-center mt-3"
             container spacing={{ xs: 2, sm: 2, md: 2, }} columns={{ xs: 1, sm: 2, md: 2 }}
@@ -71,124 +107,56 @@ export default function TrainingGroups() {
                       sx={{
                         width: "100%",
                       }} >
-                      <Card onClick={() => navigate(`/group/${item.id}`)}
-                        sx={{
-                          width: "100%",
-                          borderRadius: "30px"
-                        }}>
-                        <CardActionArea>
-                          <CardContent sx={{ pb: 0, mb: 0 }}>
-                            <Typography gutterBottom variant="caption" fontWeight={600}>
-                              Автор: {item.trainer?.profile?.name}
-                            </Typography>
-                            <Typography gutterBottom variant="h5" component="div">
-                              {item.title}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {item.desc}
-                            </Typography>
-                            <Chip className="mt-2 mb-1" label={item.sportType?.title} size="small" />
-                          </CardContent>
-                          <CardActions disableSpacing>
-                            <AvatarGroup
-                              total={item.athletes?.length}
-                              sx={{
-                                '& .MuiAvatarGroup-avatar': {
-                                  width: 32,
-                                  height: 32,
-                                  fontSize: 14,
-                                },
-                              }}
-                              renderSurplus={(surplus) => <span
-                              >
-                                +{surplus}
-                              </span>}
-                              max={8}
-                            >
-                              {item.athletes?.map((athlete) => (
-                                <Avatar
-                                  key={athlete.athlete!.id}
-                                  alt={athlete.athlete!.profile?.name}
-                                  src={athlete.athlete!.profile?.url_avatar}
-                                  sx={{
-                                    width: 32,
-                                    height: 32,
-                                    fontSize: 14,
-                                  }}
-                                />
-                              ))}
-                            </AvatarGroup>
-                          </CardActions>
-                        </CardActionArea>
-                      </Card>
+                      <CardGroupGrid item={item} />
                     </Grid2>
                   ))
                 ) : (
                   <p style={{ textAlign: "center", marginTop: "40px" }}>Нет групп</p>
                 )
                 :
-                Array.isArray(data) && data.length > 0 ? (
-                  data.map((item, index) => (
-                    <Grid2 key={index} size={{ xs: 1, sm: 1, md: 1 }}
-                      sx={{
-                        width: "100%",
-                      }} >
-                      <Card onClick={() => navigate(`/group/${item.id}`)}
+                props.myGroups ?
+                  alignment === '/trainer' ?
+                    Array.isArray(TrainingGroupsTraining) && TrainingGroupsTraining.length > 0 ? (
+                      TrainingGroupsTraining.map((item, index) => (
+                        <Grid2 key={index} size={{ xs: 1, sm: 1, md: 1 }}
+                          sx={{
+                            width: "100%",
+                          }} >
+                          <CardGroupGrid item={item} />
+                        </Grid2>
+                      ))
+                    )
+                      : (
+                        <p style={{ textAlign: "center", marginTop: "40px" }}>Нет созданных групп</p>
+                      )
+
+                    :
+                    Array.isArray(TrainingGroupsUser) && TrainingGroupsUser.length > 0 ? (
+                      TrainingGroupsUser.map((item, index) => (
+                        <Grid2 key={index} size={{ xs: 1, sm: 1, md: 1 }}
+                          sx={{
+                            width: "100%",
+                          }} >
+                          <CardGroupGrid item={item} />
+                        </Grid2>
+                      ))
+                    )
+                      : (
+                        <p style={{ textAlign: "center", marginTop: "40px" }}>Нет добавленных групп</p>
+                      ) :
+                  Array.isArray(data) && data.length > 0 ? (
+                    data.map((item, index) => (
+                      <Grid2 key={index} size={{ xs: 1, sm: 1, md: 1 }}
                         sx={{
                           width: "100%",
-                          borderRadius: "30px"
-                        }}>
-                        <CardActionArea>
-                          <CardContent sx={{ pb: 0, mb: 0 }}>
-                            <Typography gutterBottom variant="caption" fontWeight={600}>
-                              Автор: {item.trainer?.profile?.name}
-                            </Typography>
-                            <Typography gutterBottom variant="h5" component="div">
-                              {item.title}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {item.desc}
-                            </Typography>
-                            <Chip className="mt-2 mb-1" label={item.sportType?.title} size="small" />
-                          </CardContent>
-                          <CardActions disableSpacing>
-                            <AvatarGroup
-                              total={item.athletes?.length}
-                              sx={{
-                                '& .MuiAvatarGroup-avatar': {
-                                  width: 32,
-                                  height: 32,
-                                  fontSize: 14,
-                                },
-                              }}
-                              renderSurplus={(surplus) => <span
-                              >
-                                +{surplus}
-                              </span>}
-                              max={8}
-                            >
-                              {item.athletes?.map((athlete) => (
-                                <Avatar
-                                  key={athlete.athlete!.id}
-                                  alt={athlete.athlete!.profile?.name}
-                                  src={athlete.athlete!.profile?.url_avatar}
-                                  sx={{
-                                    width: 32,
-                                    height: 32,
-                                    fontSize: 14,
-                                  }}
-                                />
-                              ))}
-                            </AvatarGroup>
-                          </CardActions>
-                        </CardActionArea>
-                      </Card>
-                    </Grid2>
-                  ))
-                )
-                  : (
-                    <p style={{ textAlign: "center", marginTop: "40px" }}>Нет групп</p>
-                  )}
+                        }} >
+                        <CardGroupGrid item={item} />
+                      </Grid2>
+                    ))
+                  )
+                    : (
+                      <p style={{ textAlign: "center", marginTop: "40px" }}>Нет групп</p>
+                    )}
           </Grid2>
         </Box>
       </>

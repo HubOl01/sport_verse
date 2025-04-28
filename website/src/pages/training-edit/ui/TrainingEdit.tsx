@@ -221,7 +221,7 @@ export default function TrainingEdit({ trainingPlanId, onClickExit }: { training
                 slotProps={{
                     input: {
                         style: {
-                            fontSize: "20px",
+                            fontSize: "16px",
                         },
                         disableUnderline: true,
                     },

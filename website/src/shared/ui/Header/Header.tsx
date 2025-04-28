@@ -7,7 +7,7 @@ import { IUser } from '../../model/IUser';
 import { UserService } from '../../api/User.service';
 import { useQuery } from 'react-query';
 import { useAuth } from '../../utils/useAuth';
-import { ExitToApp, FitnessCenter, Person, Settings } from '@mui/icons-material';
+import { ExitToApp, FitnessCenter, Group, Person, Settings } from '@mui/icons-material';
 import { useSmallScreen } from '../../utils/displaySizes';
 import { isAuthenticated } from '../../api/authService';
 
@@ -33,6 +33,9 @@ export default function Header() {
                 break;
             case "my_training":
                 navigate("/training/private");
+                break;
+            case "my-groups":
+                navigate("/my-groups");
                 break;
             case "settings":
                 navigate("/settings");
@@ -134,6 +137,12 @@ export default function Header() {
                                         <FitnessCenter fontSize="small" />
                                     </ListItemIcon>
                                     <ListItemText>Мои тренировки</ListItemText>
+                                </MenuItem>
+                                <MenuItem onClick={() => handleClose("my-groups")}>
+                                    <ListItemIcon>
+                                        <Group fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>Мои группы</ListItemText>
                                 </MenuItem>
                                 <MenuItem onClick={() => handleClose("settings")}>
                                     <ListItemIcon>

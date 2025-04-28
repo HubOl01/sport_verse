@@ -10,7 +10,7 @@ import { ITrainingGroup } from "../../../shared/model/ITrainingGroup";
 import MyButton from "../../../components/MyButton";
 import { useState } from "react";
 import GroupEdit from "./GroupEdit";
-import PlanInGroupEdit from "./PlanInGroupEdit";
+import PlanInGroupEdit from "./PlanInGroup/PlanInGroupEdit";
 import CardPlanContent from "./cardPlanContent";
 import { IPlanInGroup } from "../../../shared/model/IPlanInGroup";
 import React from "react";
