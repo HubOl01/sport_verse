@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TrainingService } from "../../../shared/api/training.service";
 import styles from "./TrainingRead.module.scss";
 import { ITraining } from '../../../shared/model/ITraining';
-import { AppBar, Box, Button, CardActions, Divider, IconButton, Rating, Stack, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, CardActions, IconButton, Toolbar, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -27,12 +27,6 @@ import { useAuth } from "../../../shared/utils/useAuth";
 import { ViewsTrainingService } from "../../../shared/api/viewsTraining.service";
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import { Close } from "@mui/icons-material";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
-import MyDatePicker from "../../../components/MyDatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns/AdapterDateFns";
-import ru from "date-fns/locale/ru";
-import { MySwitch } from "../../../components/MySwitch";
-import MyTextField from "../../../components/MyTextField";
 import { TrainingResultService } from "../../../shared/api/trainingResult.service";
 import { ITrainingResult } from "../../../shared/model/ITrainingResult";
 import TrainingTimer from "./TrainingTimer";
@@ -45,7 +39,7 @@ export default function TrainingDetail() {
 
   const [edit, setEdit] = useState(false);
   const [like, setLike] = useState(false);
-  const [trainingPlay, setTrainingPlay] = useState(true);
+  const [trainingPlay, setTrainingPlay] = useState(false);
   const [comment, setComment] = useState(true);
   const [share, setShare] = useState(false);
   const [value, setValue] = useState(() => window.location.href);
@@ -80,6 +74,11 @@ export default function TrainingDetail() {
     () => TrainingResultService.getStartingUserPlan(USER.userId!, id!),
     { enabled: !!id && !!USER.userId }
   );
+  const { data: isStartingUserPlanData } = useQuery<boolean>(
+    ['isTrainingResult', id, Number(USER.userId!)],
+    () => TrainingResultService.getIsStartingUserPlan(USER.userId!, id!),
+    { enabled: !!id && !!USER.userId }
+  );
   useEffect(() => {
     if (likeData) {
       setLike(true);
@@ -88,6 +87,19 @@ export default function TrainingDetail() {
     }
   }, [likeData]);
 
+  useEffect(() => {
+    if (isStartingUserPlanData) {
+      setTrainingPlay(true);
+      setIsEndSportDateTraining(true);
+      setDateStartTraining(new Date(trainingResData?.date_start!));
+      // setDateEndTraining(new Date());
+      setInterval(() => {
+        setDateEndTraining(new Date());
+      }, 1000);
+    } else {
+      setTrainingPlay(false);
+    }
+  }, [isStartingUserPlanData])
   // useEffect(() => {
   //   if (!isPreview && trainingData?.id) {
   //     ViewsTrainingService.create({
@@ -218,26 +230,40 @@ export default function TrainingDetail() {
     setDialogOpen(true);
   };
   const handleEndTraining = async () => {
-    if (trainingResData) {
-      await TrainingResultService.update(
-        trainingResData.id!,
-        {
+    if (dateEndTraining! < dateStartTraining) {
+      alert("Дата окончания должна быть позже или равна дате начала.");
+    } else if (difficulty <= 0 || commentTrainingRes.length <= 0) {
+      alert("Вы не заполнили поля");
+    }
+    else {
+      if (trainingResData) {
+        await TrainingResultService.update(
+          trainingResData.id!,
+          {
+            date_end: dateEndTraining,
+            difficulty: difficulty,
+            comment: commentTrainingRes
+          });
+      } else {
+        await TrainingResultService.create({
+          trainingPlanId: Number(id),
+          userId: Number(USER.userId!),
+          groupInGroupId: trainingData.parentGroupId! ?? null,
+          date_start: dateStartTraining,
           date_end: dateEndTraining,
           difficulty: difficulty,
           comment: commentTrainingRes
         });
-    } else {
-      await TrainingResultService.create({
-        trainingPlanId: Number(id),
-        userId: Number(USER.userId!),
-        groupInGroupId: trainingData.parentGroupId! ?? null,
-        date_start: dateStartTraining,
-        date_end: dateEndTraining,
-        difficulty: difficulty,
-        comment: commentTrainingRes
-      });
+      }
+      setTrainingPlay(false);
+      setDateStartTraining(new Date());
+      setDateEndTraining(new Date());
+      setIsEndSportDateTraining(false);
+      setDifficult(0);
+      setCommentTrainingRes('');
+      queryClient.invalidateQueries(['isTrainingResult', id, Number(USER.userId!)]);
+      queryClient.invalidateQueries(['trainingResult', id, Number(USER.userId!)]);
     }
-    setTrainingPlay(false);
   };
   const handleStartTraining = async () => {
     if (trainingResData) {
@@ -249,6 +275,8 @@ export default function TrainingDetail() {
         groupInGroupId: trainingData.parentGroupId! ?? null,
         date_start: dateStartTraining,
       });
+      queryClient.invalidateQueries(['isTrainingResult', id, Number(USER.userId!)]);
+      queryClient.invalidateQueries(['trainingResult', id, Number(USER.userId!)]);
     }
   };
 
@@ -309,7 +337,14 @@ export default function TrainingDetail() {
             <IconButton
               edge="end"
               sx={{ mr: trainingPlay ? null : 2 }}
-              onClick={() => { setTrainingPlay(!trainingPlay) }}
+              onClick={() => {
+                setDateStartTraining(new Date());
+                // setDateEndTraining(new Date());
+                setInterval(() => {
+                  setDateEndTraining(new Date());
+                }, 1000);
+                setTrainingPlay(!trainingPlay)
+              }}
             >
               {trainingPlay ? <Close /> : <FitnessCenterIcon />}
             </IconButton>
@@ -363,6 +398,7 @@ export default function TrainingDetail() {
                 setIsEndSportDateTraining={setIsEndSportDateTraining}
                 dateEndTraining={dateEndTraining} setDateEndTraining={setDateEndTraining}
                 difficulty={difficulty} setDifficult={setDifficult}
+                isStartingUserPlanData={isStartingUserPlanData ?? false}
                 commentTrainingRes={commentTrainingRes}
                 setCommentTrainingRes={setCommentTrainingRes}
                 handleStartTraining={handleStartTraining}

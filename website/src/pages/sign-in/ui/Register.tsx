@@ -53,14 +53,18 @@ export default function Register() {
         }
 
         try {
-            // Вызываем функцию регистрации
-            await registerAuth(email, username, password);
+            if (email.length > 0 && username.length > 0 && password.length > 0 && confirmPassword.length > 0) {
+                // Вызываем функцию регистрации
+                await registerAuth(email, username, password);
 
-            // localStorage.setItem("token", data.access_token);
-            // localStorage.setItem("userId", data.user.id);
-            // localStorage.setItem("username", data.user.username);
-            navigate("/");
-            window.location.reload();
+                // localStorage.setItem("token", data.access_token);
+                // localStorage.setItem("userId", data.user.id);
+                // localStorage.setItem("username", data.user.username);
+                navigate("/");
+                window.location.reload();
+            } else {
+                setError("Заполните все поля!");
+            }
         } catch (err) {
             // Обрабатываем ошибку регистрации
             setError((err as Error).message || "Ошибка регистрации.");
@@ -121,31 +125,24 @@ export default function Register() {
                 <OutlinedInput
                     sx={{
                         width: '300px',
-                        "& .MuiOutlinedInput-root": {
-                            color: "#000",
-                            fontFamily: "Arial",
-                            fontWeight: "bold",
-                            "& .MuiOutlinedInput-notchedOutline": {
-                            },
-                            "&.Mui-focused": {
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    color: ColorBackground,
-                                    borderColor: ColorBackground,
-                                },
-                            },
-                            "&:hover:not(.Mui-focused)": {
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    color: ColorBackground,
-                                    borderColor: ColorBackground,
-                                },
-                            },
+                        color: "#000", // Цвет текста
+                        // fontFamily: "Arial",
+                        // fontWeight: "bold",
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            // borderColor: ColorBackground, // Цвет рамки по умолчанию
                         },
-                        "& .MuiInputLabel-outlined": {
-                            "&.Mui-focused": {
-                                color: ColorBackground,
-                                borderColor: ColorBackground,
-                            },
-                        }
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: ColorBackground, // Цвет рамки при наведении
+                        },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: ColorBackground, // Цвет рамки при фокусе
+                        },
+                        '& .MuiInputLabel-outlined': {
+                            color: "#000", // Цвет лейбла по умолчанию
+                        },
+                        '& .MuiInputLabel-outlined.Mui-focused': {
+                            color: ColorBackground, // Цвет лейбла при фокусе
+                        },
                     }}
                     id="username"
                     label="Имя на латинице"

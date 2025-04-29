@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Divider, Stack, Typography } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import ru from "date-fns/locale/ru";
-import MyDatePicker from "../../../components/MyDatePicker";
 import MyTextField from "../../../components/MyTextField";
 import styles from "./TrainingRead.module.scss";
 import Rating from "@mui/material/Rating";
 import { MySwitch } from "../../../components/MySwitch";
 import MyDateTimePicker from "../../../components/MyDateTimePicker";
+import { ColorBackground } from "../../../shared/styles/colors";
 
 interface TrainingTimerProps {
   trainingPlay: boolean;
@@ -21,6 +21,7 @@ interface TrainingTimerProps {
   difficulty: number;
   setDifficult: (value: number) => void;
   commentTrainingRes: string;
+  isStartingUserPlanData: boolean;
   setCommentTrainingRes: (comment: string) => void;
   handleStartTraining: () => void;
   handleEndTraining: () => void;
@@ -35,6 +36,7 @@ export default function TrainingTimer({
   dateEndTraining,
   setDateEndTraining,
   difficulty,
+  isStartingUserPlanData,
   setDifficult,
   commentTrainingRes,
   setCommentTrainingRes,
@@ -43,13 +45,12 @@ export default function TrainingTimer({
 }: TrainingTimerProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Обновляем текущее время каждую секунду
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
 
-    return () => clearInterval(interval); // Очистка интервала при размонтировании компонента
+    return () => clearInterval(interval);
   }, []);
 
   // Вычисляем разницу между currentTime и dateStartTraining
@@ -117,7 +118,15 @@ export default function TrainingTimer({
               <Typography>Нет</Typography>
               <MySwitch
                 checked={isEndSportDateTraining}
-                onChange={(ev) => setIsEndSportDateTraining(ev.target.checked)}
+                onChange={(ev) => {
+                  if (isStartingUserPlanData) {
+                    alert("Уже есть запущенная тренировка")
+                  } else {
+                    setIsEndSportDateTraining(ev.target.checked)
+                  }
+                }
+
+                }
               />
               <Typography>Да</Typography>
             </Stack>
@@ -134,12 +143,8 @@ export default function TrainingTimer({
                     label={"Укажите дату"}
                     value={dateEndTraining instanceof Date ? dateEndTraining : new Date(dateEndTraining)}
                     onChange={(newValue) => {
-                      if (newValue! >= dateStartTraining) {
-                        setDateEndTraining(newValue!);
-                      } else {
-                        alert("Дата окончания должна быть позже или равна дате начала.");
-                        setDateEndTraining(new Date());
-                      }
+                      setDateEndTraining(newValue!);
+
                     }}
                   />
                 </LocalizationProvider>
@@ -153,7 +158,7 @@ export default function TrainingTimer({
                 <Typography>Легко</Typography>
                 <Rating
                   value={difficulty}
-                  onChange={(event, newValue) => {
+                  onChange={(_, newValue) => {
                     setDifficult(newValue!);
                   }}
                   defaultValue={0}
@@ -181,7 +186,7 @@ export default function TrainingTimer({
               marginTop: "20px",
               marginBottom: "10px",
               color: "#FFFFFFFF",
-              background: "#4758d6", // Пример цвета фона
+              background: ColorBackground,
               borderRadius: "20px",
               width: "100%",
               fontWeight: "600",

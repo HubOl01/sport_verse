@@ -31,7 +31,7 @@ export async function registerAuth(
   email: string,
   username: string,
   password: string,
-  statusUser: string,
+  statusUser?: string
 ) {
   try {
     const response = await fetch(`${apiHost}${apiAuthRegister}`, {

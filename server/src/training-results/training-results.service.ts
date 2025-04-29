@@ -33,11 +33,8 @@ export class TrainingResultsService {
       },
     });
   }
-  async isStartingGroupsPlan(
-    userId: number,
-    planId: number,
-  ): Promise<boolean> {
-    const result = await this.prisma.trainingResult.findMany({
+  async isStartingGroupsPlan(userId: number, planId: number): Promise<boolean> {
+    const result = await this.prisma.trainingResult.findFirst({
       where: {
         userId: userId,
         trainingPlanId: planId,
