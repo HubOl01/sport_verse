@@ -21,6 +21,7 @@ import Search from '../../pages/search/ui/Search';
 import TrainingGroups from '../../pages/groups/ui/TrainingGroups';
 import GroupDetail from '../../pages/groups/ui/GroupDetail';
 import { useAuth } from '../utils/useAuth';
+import AUsers from '../../pages/admin/ui/users/AUsers';
 
 export default function Routers() {
   const { user: USER } = useAuth();
@@ -31,6 +32,7 @@ export default function Routers() {
       <Route path="/login" element={<Sign />} />
       {USER.statusUser === Roles.ADMIN && (<Route path="/admin" element={<Admin />} />)}
       {USER.statusUser === Roles.ADMIN && (<Route path="/admin/news" element={<NewsRead />} />)}
+      {USER.statusUser === Roles.ADMIN && (<Route path="/admin/users" element={<AUsers />} />)}
       {USER.statusUser === Roles.ADMIN && (<Route path="/admin/news/add" element={<NewsAdd />} />)}
       <Route path="/news/:id" element={<NewsDetail />} />
       {USER.statusUser === Roles.ADMIN && (<Route path="/admin/comments" element={<CommentsAdmin />} />)}

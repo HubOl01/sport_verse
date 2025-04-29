@@ -35,22 +35,23 @@ export default function MyButton(props: ButtonProps) {
                 variant={!props.secondary ? "contained" : "outlined"}
                 component="label"
                 onClick={props.onClick}
-                sx={!props.secondary ? {
-                    backgroundColor: "#4758d6",
-                    color: "#FFFFFF",
-                    borderRadius: "10px",
-                    // width: "100%",
-                } : {
-                    color: ColorBackground,
-                    borderColor: ColorBackground,
-                    borderRadius: "10px",
-                    "&.Mui-disabled": {
-                        color: ColorBackground || "black",
-                        borderColor: ColorBackground || "black",
-                        opacity: 1,
-                        textTransform: 'none',
-                    }
-                }}
+                sx={!props.secondary ?
+                    props.styleButton ?? {
+                        backgroundColor: "#4758d6",
+                        color: "#FFFFFF",
+                        borderRadius: "10px",
+                        // width: "100%",
+                    } : props.styleButton ?? {
+                        color: ColorBackground,
+                        borderColor: ColorBackground,
+                        borderRadius: "10px",
+                        "&.Mui-disabled": {
+                            color: ColorBackground || "black",
+                            borderColor: ColorBackground || "black",
+                            opacity: 1,
+                            textTransform: 'none',
+                        }
+                    }}
                 style={props.style}
                 disabled={props.disabled}
             >

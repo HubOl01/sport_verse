@@ -1,6 +1,5 @@
 import { AxiosError } from "axios";
-import { ITrainingResult } from "../model/ITrainingResult";
-import { apiTrainingResults, apiUsers, apiUsersUserName } from "../config";
+import { apiUsers, apiUsersUserName } from "../config";
 import { api } from ".";
 import { IUser } from "../model/IUser";
 
@@ -31,9 +30,9 @@ export const UserService = {
       throw new Error(message);
     }
   },
-  async create(item: ITrainingResult): Promise<IUser> {
+  async create(item: IUser): Promise<IUser> {
     try {
-      const response = await api.post<IUser>(apiTrainingResults, item);
+      const response = await api.post<IUser>(apiUsers, item);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -46,10 +45,7 @@ export const UserService = {
   },
   async update(id: number, item: IUser): Promise<IUser> {
     try {
-      const response = await api.patch<IUser>(
-        `${apiTrainingResults}/${id}`,
-        item
-      );
+      const response = await api.patch<IUser>(`${apiUsers}/${id}`, item);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
@@ -62,14 +58,14 @@ export const UserService = {
   },
   async delete(id: string): Promise<IUser> {
     try {
-      const response = await api.delete<IUser>(`${apiTrainingResults}/${id}`);
+      const response = await api.delete<IUser>(`${apiUsers}/${id}`);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
       const message =
         typeof err.response?.data === "string"
           ? err.response.data
-          : "Произошла ошибка при удалении упражнения из плана";
+          : "Произошла ошибка при удалении пользователя";
       throw new Error(message);
     }
   },

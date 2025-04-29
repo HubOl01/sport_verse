@@ -56,7 +56,7 @@ model Profile {
   sportCategoryId  Int?
   sportTypeId      Int?
   userId           Int                @unique
-  user             User               @relation(fields: [userId], references: [id])
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   role             Role               @relation(fields: [roleId], references: [id])
   status           StatusProfile?     @relation(fields: [statusId], references: [id])
   sportCategory    SportCategory?     @relation(fields: [sportCategoryId], references: [id])

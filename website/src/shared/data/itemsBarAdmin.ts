@@ -10,4 +10,5 @@ export var itemsBarAdmin: ItemModelBar[] = [
   { id: 6, title: "Hовости", link: "/admin/news" },
   { id: 7, title: "Комментарии", link: "/admin/comments" },
   { id: 8, title: "Все тренировки", link: "/admin/training" },
+  { id: 9, title: "Все пользователи", link: "/admin/users" },
 ];

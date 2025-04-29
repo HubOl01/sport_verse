@@ -302,6 +302,7 @@ export default function Profile() {
               {myPlans.map((plan) => (
                 <div key={plan.id} style={{ flex: "0 0 auto", width: "500px" }}> {/* Фиксированная ширина элемента */}
                   <CardTraining
+
                     training={plan!}
                     minMargin
                     countLikes={plan!._count?.LikeTraining!}
@@ -313,6 +314,7 @@ export default function Profile() {
         ) : (
           <></>
         )}
+
         {Array.isArray(likePlans) && likePlans.length > 0 ?
           <div className='mb-5'>
             <Typography variant='h6' fontWeight={600} sx={{
@@ -331,7 +333,9 @@ export default function Profile() {
               >
                 {likePlans.map((like) => {
                   return (
-                    <CardTraining training={like.trainingPlan!} grid countLikes={like.trainingPlan!._count?.LikeTraining!} />
+                    <CardTraining
+                      key={like.trainingPlan!.id}
+                      training={like.trainingPlan!} grid countLikes={like.trainingPlan!._count?.LikeTraining!} />
                   )
                 })
                 }
