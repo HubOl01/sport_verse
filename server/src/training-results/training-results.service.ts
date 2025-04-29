@@ -25,6 +25,58 @@ export class TrainingResultsService {
       },
     });
   }
+  findStartingUser(userId: number) {
+    return this.prisma.trainingResult.findFirst({
+      where: { userId: userId, date_end: null },
+      include: {
+        trainingPlan: {
+          include: {
+            user: {
+              select: {
+                email: true,
+                username: true,
+                profile: {
+                  select: {
+                    url_avatar: true,
+                    status: true,
+                  },
+                },
+              },
+            },
+            statusPublish: true,
+            sportType: true,
+            parentUser: {
+              select: {
+                email: true,
+                username: true,
+                profile: {
+                  select: {
+                    url_avatar: true,
+                    status: true,
+                  },
+                },
+              },
+            },
+            parentGroup: true,
+            PlanExercise: {
+              include: {
+                exercise: true,
+              },
+            },
+            StatusTraining: true,
+            _count: {
+              select: {
+                LikeTraining: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
   findAllStartingUserPlan(userId: number, planId: number) {
     return this.prisma.trainingResult.findFirst({
       where: { userId: userId, trainingPlanId: planId, date_end: null },

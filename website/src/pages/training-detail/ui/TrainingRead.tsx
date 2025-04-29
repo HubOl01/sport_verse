@@ -403,108 +403,7 @@ export default function TrainingDetail() {
                 setCommentTrainingRes={setCommentTrainingRes}
                 handleStartTraining={handleStartTraining}
                 handleEndTraining={handleEndTraining} />
-              {/* {
-                trainingPlay &&
-                <>
-                  <Divider sx={{
-                    mb: "15px",
-                  }} />
-                  <div className={`${styles.listTile}`}>
-                    <div className={`${styles.title_about_title}`}>
-                      Дата начала тренировки:
-                    </div>
-                    <div className={`${styles.title_about_content}`}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
-                        <MyDatePicker label={'Укажите дату'} value={dateStartTraining instanceof Date ? dateStartTraining : new Date(dateStartTraining)}
-                          onChange={(newValue) => { setDateStartTraining(newValue!) }} />
-                      </LocalizationProvider>
-                    </div>
-                  </div>
 
-                  <div className={`${styles.listTile}`}>
-                    <div className={`${styles.title_about_title}`}>
-                      Закончили ли вы тренировку?:
-                    </div>
-
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                      <Typography>Нет</Typography>
-                      <MySwitch
-                        checked={isEndSportDateTraining}
-                        onChange={(ev) => setIsEndSportDateTraining(ev.target.checked)}
-                      />
-                      <Typography>Да</Typography>
-                    </Stack>
-                    <div />
-                  </div>
-                  {
-                    isEndSportDateTraining &&
-                    <div className={`${styles.listTile}`}>
-                      <div className={`${styles.title_about_title}`}>
-                        Дата окончания тренировки:
-                      </div>
-                      <div className={`${styles.title_about_content}`}>
-                        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
-                          <MyDatePicker label={'Укажите дату'} value={dateEndTraining instanceof Date ? dateEndTraining : new Date(dateEndTraining)}
-                            onChange={(newValue) => {
-                              if (newValue! >= dateStartTraining) {
-                                setDateEndTraining(newValue!)
-                              } else {
-                                alert("Дата окончания должна быть позже или равна дате начала.")
-                                setDateEndTraining(new Date())
-                              }
-                            }
-                            }
-                          />
-                        </LocalizationProvider>
-                      </div>
-                    </div>
-                  }
-                  {
-                    isEndSportDateTraining &&
-                    <div className={`${styles.listTile}`}>
-                      <div className={`${styles.title_about_title}`}>Оцените сложность тренировки</div>
-                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                        <Typography>Легко</Typography>
-                        <Rating
-                          value={difficulty}
-                          onChange={(event, newValue) => {
-                            setDifficult(newValue!);
-                          }}
-                          defaultValue={0} max={10} />
-                        <Typography>Тяжело</Typography>
-                      </Stack>
-                    </div>
-                  }
-                  {
-                    isEndSportDateTraining &&
-                    <MyTextField label={"Комментарий к тренировке"} onChange={(e) => setCommentTrainingRes(e.target.value)} value={commentTrainingRes} isBorder isLines
-                      styles={{
-                        marginTop: "15px",
-                      }}
-                    />
-                  }
-                  <Button
-                    variant="contained"
-                    sx={{
-                      marginTop: "20px",
-                      marginBottom: "10px",
-                      color: "#FFFFFFFF",
-                      background: ColorBackground,
-                      borderRadius: "20px",
-                      width: "100%",
-                      fontWeight: "600",
-                      padding: "8px 15px",
-                    }}
-                    onClick={isEndSportDateTraining ? handleEndTraining : handleStartTraining}
-                  >
-                    {!isEndSportDateTraining ? "Начать тренировку" : "Закончить тренировку"}
-                  </Button>
-                  <Divider sx={{
-                    mt: '15px',
-                    mb: "15px",
-                  }} />
-                </>
-              } */}
               {trainingData.isPrivate === 1 ?
                 <LockOutlineIcon sx={{
                   marginRight: '0.5rem',
@@ -530,7 +429,7 @@ export default function TrainingDetail() {
                     cursor: 'pointer'
                   }}
                     onClick={() => navigate(`/profile/${trainingData.parentUser?.username}`)}
-                  >Автор: @{trainingData.parentUser?.username ?? "Неизвестный"}</Typography>
+                  >Оригинальный автор: @{trainingData.parentUser?.username ?? "Неизвестный"}</Typography>
                   : <></>
               }
               {

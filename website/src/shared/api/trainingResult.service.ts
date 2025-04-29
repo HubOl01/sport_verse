@@ -24,9 +24,9 @@ export const TrainingResultService = {
       throw new Error(message);
     }
   },
-  async getAllStartingUser(userId: string): Promise<ITrainingResult[]> {
+  async getStartingUser(userId: string): Promise<ITrainingResult> {
     try {
-      const response = await api.get<ITrainingResult[]>(
+      const response = await api.get<ITrainingResult>(
         `${apiTrainingResultsStart}/${userId}`
       );
       return response.data;

@@ -1,3 +1,5 @@
+import { ITraining } from "./ITraining";
+
 export interface ITrainingResult {
   id?: number;
   trainingPlanId?: number;
@@ -9,4 +11,6 @@ export interface ITrainingResult {
   comment?: string;
   commentTrainer?: string;
   difficulty?: number;
+
+  trainingPlan?: ITraining
 }

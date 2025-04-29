@@ -303,7 +303,7 @@ export default function Profile() {
                 <div key={plan.id} style={{ flex: "0 0 auto", width: "500px" }}> {/* Фиксированная ширина элемента */}
                   <CardTraining
                     training={plan!}
-                    noMargin
+                    minMargin
                     countLikes={plan!._count?.LikeTraining!}
                   />
                 </div>

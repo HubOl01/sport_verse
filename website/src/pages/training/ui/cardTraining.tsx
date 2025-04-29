@@ -10,13 +10,14 @@ interface CardTrainingProps {
     isPrivateUser?: boolean,
     grid?: boolean,
     countLikes?: number,
-    noMargin?: boolean
+    minMargin?: boolean,
+    noMargin?: boolean,
 }
 
-export default function CardTraining({ training, isPrivateUser, grid, countLikes, noMargin = false }: CardTrainingProps) {
+export default function CardTraining({ training, isPrivateUser, grid, countLikes, minMargin = false, noMargin = false }: CardTrainingProps) {
     const navigate = useNavigate();
     return (
-        <div className={noMargin ? 'mr-2 ml-5' : grid ? 'mr-5 ml-5' : "mr-5 mt-5 ml-5 mb-5"}
+        <div className={noMargin ? '' : minMargin ? 'mr-2 ml-5' : grid ? 'mr-5 ml-5' : "mr-5 mt-5 ml-5 mb-5"}
             style={{
                 display: "flex",
                 justifyContent: "center",
@@ -40,7 +41,7 @@ export default function CardTraining({ training, isPrivateUser, grid, countLikes
                             Группа: {training.parentGroup?.title}
                         </Typography>}
                         {training.parentUser === null ? <></> : <Typography gutterBottom variant="body2" fontWeight={600}>
-                            Автор: @{training.parentUser?.username}
+                            Оригинальный автор: @{training.parentUser?.username}
                         </Typography>}
                         <Typography className="flex items-center" gutterBottom variant="h5" component="div">
                             {training.isPrivate === 1 ? <LockOutlineIcon sx={{

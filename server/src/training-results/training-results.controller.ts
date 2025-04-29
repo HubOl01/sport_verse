@@ -32,10 +32,15 @@ export class TrainingResultsController {
     return this.trainingResultsService.findAll();
   }
 
-  @Get('start/:userId')
+  @Get('startAll/:userId')
   @ApiOkResponse({ type: TrainingResultEntity, isArray: true })
   findAllStartingUser(@Param('userId') userId: string) {
     return this.trainingResultsService.findAllStartingUser(+userId);
+  }
+  @Get('start/:userId')
+  @ApiOkResponse({ type: TrainingResultEntity, isArray: false })
+  findStartingUser(@Param('userId') userId: string) {
+    return this.trainingResultsService.findStartingUser(+userId);
   }
   @Get('is-start-plan/:userId/:planId')
   @ApiOkResponse({ type: TrainingResultEntity })
