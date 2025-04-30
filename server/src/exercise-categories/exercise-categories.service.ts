@@ -9,4 +9,7 @@ export class ExerciseCategoriesService {
   findAll() {
     return this.prisma.exerciseCategory.findMany();
   }
+  findOne(id: number) {
+    return this.prisma.exerciseCategory.findUnique({ where: { id } });
+  }
 }

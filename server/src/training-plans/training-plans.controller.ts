@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { TrainingPlansService } from './training-plans.service';
 import { CreateTrainingPlanDto } from './dto/create-training-plan.dto';
@@ -54,9 +55,12 @@ export class TrainingPlansController {
 
   @Get(':id')
   @ApiOkResponse({ type: TrainingPlanEntity, isArray: false })
-  @ApiOkResponse()
-  findOne(@Param('id') id: string) {
-    return this.trainingPlansService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const plan = await this.trainingPlansService.findOne(+id);
+    if (!plan) {
+      throw new NotFoundException(`Training plan with ID ${id} not found`);
+    }
+    return plan;
   }
 
   @Patch(':id')

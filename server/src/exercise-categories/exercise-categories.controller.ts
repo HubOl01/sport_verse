@@ -24,4 +24,9 @@ export class ExerciseCategoriesController {
   findAll() {
     return this.exerciseCategoriesService.findAll();
   }
+  @ApiOkResponse({ type: ExerciseCategoryEntity, isArray: false })
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.exerciseCategoriesService.findOne(+id);
+  }
 }
