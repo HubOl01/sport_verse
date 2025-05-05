@@ -1,5 +1,5 @@
 export {
-  apiHost,
+  apiHostServer,
   apiTraining,
   apiTrainingPrivate,
   apiTrainingPublic,
