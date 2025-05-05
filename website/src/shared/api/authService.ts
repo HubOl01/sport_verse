@@ -1,8 +1,8 @@
-import { apiAuthLogin, apiAuthRegister, apiHost } from "../config";
+import { apiAuthLogin, apiAuthRegister, apiHostServer } from "../config";
 
 export async function loginAuth(email: string, password: string) {
   try {
-    const response = await fetch(`${apiHost}${apiAuthLogin}`, {
+    const response = await fetch(`${apiHostServer}${apiAuthLogin}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -34,7 +34,7 @@ export async function registerAuth(
   statusUser?: string
 ) {
   try {
-    const response = await fetch(`${apiHost}${apiAuthRegister}`, {
+    const response = await fetch(`${apiHostServer}${apiAuthRegister}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, username, password, statusUser }),
