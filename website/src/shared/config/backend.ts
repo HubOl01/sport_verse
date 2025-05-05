@@ -1,5 +1,5 @@
 // export var apiHost = "http://localhost:3000";
-export var apiHostServer = "http://94.154.11.154:3000";
+export var apiHostServer = "https://sport-verse.onrender.com";
 export var apiTraining = "/training-plans";
 export var apiTrainingCopyGroup = "/training-plans/copyGroup";
 export var apiTrainingCheckGroup = "/training-plans/checkGroup";
