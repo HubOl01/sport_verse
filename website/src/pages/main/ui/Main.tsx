@@ -10,19 +10,22 @@ import { ITrainingResult } from "../../../shared/model/ITrainingResult";
 import { TrainingResultService } from "../../../shared/api/trainingResult.service";
 import { useAuth } from "../../../shared/utils/useAuth";
 import CardTraining from "../../training/ui/cardTraining";
+import { useSmallScreen } from "../../../shared/utils/displaySizes";
 export default function Main() {
   const { data } = useQuery(['news'], () => NewsService.getAll()
   )
+  const isSmallScreen = useSmallScreen();
   const { user: USER } = useAuth();
+
   const { data: trainingResStartData } = useQuery<ITrainingResult>(
     ['trainingStartResults', Number(USER.userId!)],
     () => TrainingResultService.getStartingUser(USER.userId!),
     { enabled: !!USER.userId }
   );
   return (
-    <div className="flex justify-center items-center w-full" style={{ maxWidth: "1300px", margin: "0 auto" }}>
-      <div className="flex flex-col items-center w-full mr-5 ml-5 mt-5">
-        <div className="flex justify-between w-full">
+    <div className="flex justify-center items-center w-full" style={{ maxWidth: "1300px" }}>
+      <div className={`flex flex-col items-center w-full mr-5 ml-5 mt-5`}>
+        <div className={` ${isSmallScreen ? '' : 'flex justify-between'} w-full`}>
           <CardMain />
           <CardEvent />
         </div>

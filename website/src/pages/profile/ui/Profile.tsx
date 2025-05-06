@@ -115,8 +115,8 @@ export default function Profile() {
               onClick={handleEditClick}
               sx={{
                 position: 'absolute',
-                top: "70px",
-                right: "20px",
+                top: isSmallScreen ? "280px" : "70px",
+                right: isSmallScreen ? "5px" : "20px",
               }}
             >
               <EditIcon

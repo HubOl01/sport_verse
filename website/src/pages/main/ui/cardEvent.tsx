@@ -1,8 +1,10 @@
 import { Card, CardContent, Typography } from "@mui/material";
+import { useSmallScreen } from "../../../shared/utils/displaySizes";
 
 export default function CardEvent() {
+  const isSmallScreen = useSmallScreen();
   return (
-    <div className='ml-2 w-1/2'>
+    <div className={`${isSmallScreen ? '' : 'ml-2 w-1/2'}`}>
       <div>
         <Card
           sx={{

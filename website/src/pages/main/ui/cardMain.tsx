@@ -1,10 +1,12 @@
 import { Card, CardContent, Typography } from "@mui/material";
 import { quotes } from "../../../shared/data/quotes";
+import { useSmallScreen } from "../../../shared/utils/displaySizes";
 
 export default function CardMain() {
   const index = 0 + Math.round(Math.random() * (quotes.length - 0));
+  const isSmallScreen = useSmallScreen();
   return (
-    <div className='mr-2 w-1/2'>
+    <div className={`${isSmallScreen ? 'mb-4' : 'mr-2 w-1/2'}`}>
       <div>
         <Card
           sx={{

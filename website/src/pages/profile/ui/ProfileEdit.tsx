@@ -24,6 +24,7 @@ import { ProfileService } from '../../../shared/api/Profile.service';
 import { MySwitch } from '../../../components/MySwitch';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage } from '../../../shared/config/firebaseConfig';
+import { useSmallScreen } from '../../../shared/utils/displaySizes';
 
 interface ProfileEditProps {
   onExit: () => void;
@@ -43,6 +44,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
   const [isEndSportDate, setIsEndSportDate] = useState<boolean>(props.profile?.endSportDate ? true : false);
   const [image, setImage] = useState<string | null>(props.profile?.url_avatar ?? null);
   const [file, setFile] = useState<File | null>(null);
+  const isSmallScreen = useSmallScreen();
   const [openDialog, setOpenDialog] = useState<{
     sportType: boolean;
     role: boolean;
@@ -166,8 +168,8 @@ export default function ProfileEdit(props: ProfileEditProps) {
           onClick={handleEditClick}
           sx={{
             position: 'absolute',
-            top: "70px",
-            right: "20px",
+            top: isSmallScreen ? "280px" : "70px",
+            right: isSmallScreen ? "5px" : "20px",
           }}
         >
           <EditIcon
