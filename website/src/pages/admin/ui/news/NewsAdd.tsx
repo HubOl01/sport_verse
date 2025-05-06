@@ -44,7 +44,7 @@ export default function NewsAdd() {
         title: title,
         description: description,
         image: imageUrl,
-        date: createdAt! ?? Date.now(),
+        date: createdAt!,
       });
 
       // Очищаем состояние

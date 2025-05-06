@@ -41,7 +41,7 @@ export default function Profile() {
 
 
   const { data } = useQuery<IUser>(
-    ['user', username],
+    ['profile', username],
     () => UserService.getUsername(username!),
     { enabled: !!username }
   );
