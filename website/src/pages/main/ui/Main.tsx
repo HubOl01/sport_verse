@@ -38,21 +38,22 @@ export default function Main() {
 
         <div>
           <div className={styles.text_head}>Новости</div>
-          <Masonry
-            columns={{ xs: 1, sm: 1, md: 2 }}
-            sx={{ width: '100%' }}
-            spacing={{ xs: 2, sm: 2, md: 3 }}
-          >
-            {Array.isArray(data) && data.length > 0 ? (
-              data.map((item, index) => (
-                <div key={index} className="w-full">
-                  <CardNew newModel={item} grid={true} />
-                </div>
-              ))
-            ) : (
-              <p>Нет новостей</p>
-            )}
-          </Masonry>
+          {Array.isArray(data) && data.length > 0 ? (
+            <Masonry
+              columns={{ xs: 1, sm: 1, md: 2 }}
+              sx={{ width: '100%' }}
+              spacing={{ xs: 2, sm: 2, md: 3 }}
+            >{
+                data.map((item, index) => (
+                  <div key={index} className="w-full">
+                    <CardNew newModel={item} grid={true} />
+                  </div>
+                ))
+              }
+            </Masonry>
+          ) : (
+            <p>Нет новостей</p>
+          )}
         </div>
       </div>
     </div>

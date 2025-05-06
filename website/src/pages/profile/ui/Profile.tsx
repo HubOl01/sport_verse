@@ -33,6 +33,11 @@ export default function Profile() {
   const [value, setValue] = useState('Dione');
   const [isEdit, setIsEdit] = useState(false);
   const isSmallScreen = useSmallScreen();
+  // useEffect(() => {
+  //   if (username) {
+  //     console.log('username: ', username)
+  //   }
+  // })
 
 
   const { data } = useQuery<IUser>(
@@ -148,7 +153,7 @@ export default function Profile() {
         <div className={styles.backgroundText}>
           <div className='flex'>
             <div className={`${styles.title_profile}`}>
-              {data?.profile?.name}
+              {data?.profile?.name ?? "Неизвестный"}
             </div>
             <div className={`${styles.title_emoji}`} onClick={handleClick}>
               {data?.profile?.status?.svg_image!}
