@@ -1,6 +1,6 @@
 import { Box, Grid2 } from "@mui/material";
 import MyButton from "../../../components/MyButton";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { TrainingGroupService } from "../../../shared/api/trainingGroups.service";
 import { useEffect, useState } from "react";
 import MyTextField from "../../../components/MyTextField";
@@ -18,11 +18,10 @@ interface TrainingGroupsProps {
 
 export default function TrainingGroups(props: TrainingGroupsProps) {
   const { data } = useQuery('groups', () => TrainingGroupService.getAll())
-  const queryClient = useQueryClient();
   const [search, setSearch] = useState("")
   const { user: USER } = useAuth();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { data: dataUser, isLoading: isLoadingDataUser } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!), { enabled: !!USER?.username });
+  const [__, setIsDialogOpen] = useState(false);
+  const { data: _, isLoading: isLoadingDataUser } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!), { enabled: !!USER?.username });
   const { data: TrainingGroupsSearch } = useQuery(
     ['groups', search],
     () => TrainingGroupService.getSearch(search),

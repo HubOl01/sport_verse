@@ -45,7 +45,7 @@ export default function GroupEdit(props: GroupEditProps) {
         }
     }, [props.trainingGroup]);
     const { user: USER } = useAuth();
-    const { data } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!), { enabled: !!USER?.username });
+    const { data: _ } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!), { enabled: !!USER?.username });
     const navigate = useNavigate();
 
 
