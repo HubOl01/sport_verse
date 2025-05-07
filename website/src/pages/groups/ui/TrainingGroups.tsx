@@ -1,13 +1,15 @@
 import { Box, Grid2 } from "@mui/material";
 import MyButton from "../../../components/MyButton";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { TrainingGroupService } from "../../../shared/api/trainingGroups.service";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MyTextField from "../../../components/MyTextField";
 import GroupEdit from './GroupEdit';
 import { useAuth } from "../../../shared/utils/useAuth";
 import CardGroupGrid from "./cardGroupGrid";
 import ToggleMyGroups from "../../../components/ToggleMyGroups";
+import { UserService } from "../../../shared/api/User.service";
+import LoadingDialog from "../../../components/LoadingDialog";
 
 interface TrainingGroupsProps {
   myGroups?: boolean,
@@ -16,8 +18,11 @@ interface TrainingGroupsProps {
 
 export default function TrainingGroups(props: TrainingGroupsProps) {
   const { data } = useQuery('groups', () => TrainingGroupService.getAll())
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("")
   const { user: USER } = useAuth();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { data: dataUser, isLoading: isLoadingDataUser } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!), { enabled: !!USER?.username });
   const { data: TrainingGroupsSearch } = useQuery(
     ['groups', search],
     () => TrainingGroupService.getSearch(search),
@@ -41,7 +46,13 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
   );
   const [alignment, setAlignment] = useState('');
 
-
+  useEffect(() => {
+    if (isLoadingDataUser) {
+      setIsDialogOpen(true);
+    } else {
+      setIsDialogOpen(false);
+    }
+  }, [isLoadingDataUser]);
 
   const handleAlignmentChange = (newAlignment: string) => {
     setAlignment(newAlignment);
@@ -65,10 +76,14 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
             padding: "10px",
             boxSizing: "border-box",
           }}>
-            <MyButton label="Добавить группу" onClick={() => setIsEditGroup(true)} />
+            <MyButton label="Добавить группу" onClick={async () => {
+              // await queryClient.invalidateQueries(['user', USER.username]);
+              setIsEditGroup(true)
+            }} />
           </div>
         }
 
+        <LoadingDialog open={isLoadingDataUser} />
         <Box
           sx={{
             position: 'relative', justifyContent: 'center', justifyItems: 'center',

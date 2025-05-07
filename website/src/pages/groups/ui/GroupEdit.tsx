@@ -15,8 +15,9 @@ import { useAuth } from "../../../shared/utils/useAuth";
 import { DialogSportType } from "../../training-new/ui/dialogTypeSport";
 import { ISportType } from "../../../shared/model/ISportType";
 import { AthleteInGroupService } from "../../../shared/api/athleteInGroup.service";
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { IAthleteInGroup } from "../../../shared/model/IAthleteInGroup";
+import { UserService } from "../../../shared/api/User.service";
 
 interface GroupEditProps {
     onClose: () => void;
@@ -33,6 +34,7 @@ export default function GroupEdit(props: GroupEditProps) {
     // const [value, setValue] = useState<string>('');
     const [valueSportType, setValueSportType] = useState<ISportType>(props.trainingGroup?.sportType ?? { id: 0, title: '', image: null });
     const [athletes, setAthletes] = useState<IUser[]>([])
+
     useEffect(() => {
         if (props.trainingGroup?.athletes) {
             const userList: IUser[] = props.trainingGroup.athletes
@@ -43,6 +45,7 @@ export default function GroupEdit(props: GroupEditProps) {
         }
     }, [props.trainingGroup]);
     const { user: USER } = useAuth();
+    const { data } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!), { enabled: !!USER?.username });
     const navigate = useNavigate();
 
 

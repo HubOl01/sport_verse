@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 import { Avatar, Button, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 import React from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
 import { IUser } from '../../model/IUser';
 import { UserService } from '../../api/User.service';
@@ -11,7 +12,11 @@ import { ExitToApp, FitnessCenter, Group, Person, Settings } from '@mui/icons-ma
 import { useSmallScreen } from '../../utils/displaySizes';
 import { isAuthenticated } from '../../api/authService';
 
-export default function Header() {
+interface HeaderSmallProps {
+    open: boolean
+    onOpen: () => void;
+}
+export default function Header(props: HeaderSmallProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const { user, logout } = useAuth();
@@ -57,7 +62,25 @@ export default function Header() {
     }
 
     return (
-        <div className={`${styles.header} flex items-center justify-between`}>
+        <div className={`${isSmallScreen ? styles.headerSmall : styles.header} flex items-center justify-between`}>
+            {
+                isSmallScreen &&
+                <IconButton
+
+                    aria-label="open drawer"
+                    onClick={props.onOpen}
+                    edge="start"
+                    sx={[
+                        {
+                            mr: 2,
+                            color: "white"
+                        },
+                        props.open && { display: 'none' },
+                    ]}
+                >
+                    <MenuIcon />
+                </IconButton>
+            }
             <Link to="/">
                 <svg className='w-full' style={
                     {

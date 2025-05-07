@@ -135,21 +135,22 @@ export default function ProfileEdit(props: ProfileEditProps) {
 
         await ProfileService.update(props.profile.id!,
           {
-            name: name,
-            dateOfBirth: birthDate,
-            startSportDate: startSportDate,
-            endSportDate: isEndSportDate ? endSportDate : undefined,
+            name: name!,
+            dateOfBirth: birthDate!,
+            startSportDate: startSportDate!,
+            endSportDate: isEndSportDate ? endSportDate! : undefined,
             url_avatar: imageUrl!,
-            about: about,
-            statusId: props.profile.statusId,
+            about: about!,
+            statusId: props.profile.statusId!,
             sportTypeId: selectedValues.sportType.id!,
             roleId: selectedValues.role.id!,
             sportCategoryId: selectedValues.sportCategory ? selectedValues.sportCategory!.id! : null,
-            isVerified: props.profile.isVerified,
-            userId: props.profile.userId,
+            isVerified: props.profile.isVerified!,
+            userId: props.profile.userId!,
           }
         )
-        queryClient.invalidateQueries('user');
+        await queryClient.invalidateQueries('user');
+        await queryClient.invalidateQueries(['user', username]);
         // Очищаем состояние
         setFile(null);
 
@@ -168,7 +169,7 @@ export default function ProfileEdit(props: ProfileEditProps) {
           onClick={handleEditClick}
           sx={{
             position: 'absolute',
-            top: isSmallScreen ? "280px" : "70px",
+            top: isSmallScreen ? "85px" : "70px",
             right: isSmallScreen ? "5px" : "20px",
           }}
         >
@@ -179,15 +180,15 @@ export default function ProfileEdit(props: ProfileEditProps) {
         </IconButton>
         <Box
           sx={{
-            width: "110px",
-            height: "110px",
+            width: isSmallScreen ? "90px" : "110px",
+            height: isSmallScreen ? "90px" : "110px",
+            top: "45px",
+            left: isSmallScreen ? "20px" : "45px",
             borderRadius: "50%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             position: "relative",
-            top: "45px",
-            left: "45px",
             backgroundColor: "rgba(255, 255, 255)",
             overflow: "hidden",
             "&:hover .upload-icon": {
@@ -198,8 +199,8 @@ export default function ProfileEdit(props: ProfileEditProps) {
           <Avatar
             src={image || undefined}
             sx={{
-              width: "100px",
-              height: "100px",
+              width: isSmallScreen ? 80 : 100,
+              height: isSmallScreen ? 80 : 100,
             }}
           >
             {!image && <AddAPhotoIcon />}
@@ -238,9 +239,16 @@ export default function ProfileEdit(props: ProfileEditProps) {
 
 
 
-      <div className={styles.backgroundText}>
+      <div style={{
+        transform: isSmallScreen ? 'translate(-0px, -55.5px)' : 'translate(-0px, -60.5px)',
+      }}>
         <div className='flex'>
-          <div className={`${styles.title_profile}`}>
+          <div style={{
+            color: '#fff',
+            marginLeft: isSmallScreen ? '120px' : '180px',
+            fontSize: isSmallScreen ? '34px' : '40px',
+            fontWeight: 600
+          }}>
             {/* {data?.profile?.name} */}
             <MyTextField label={"Имя профиля"} onChange={(e) => setName(e.target.value)} value={name}
               isAutocomplete={false}
@@ -253,7 +261,10 @@ export default function ProfileEdit(props: ProfileEditProps) {
           </div>
         </div>
 
-        <div className={`${styles.title_content}`}>
+        <div style={{
+          marginLeft: isSmallScreen ? '120px' : '180px',
+          fontSize: '20px'
+        }}>
           {/* {data?.profile?.role?.title} */}
           <MyButton
             textButton={true}
@@ -270,7 +281,11 @@ export default function ProfileEdit(props: ProfileEditProps) {
           <DialogRoleList keepMounted open={openDialog.role} onClose={() => handleCloseDialog("role")} onSelect={(newValue) => handleSelectValue('role', newValue)} value={selectedValues.role!} />
         </div>
 
-        <div className={`${styles.about}`}>
+        <div style={{
+          marginLeft: isSmallScreen ? '120px' : '180px',
+          fontSize: '14px',
+          maxWidth: '500px',
+        }}>
           {/* {data?.profile?.about} */}
           <MyTextField label={"О себе кратко"} onChange={(e) => setAbout(e.target.value)} value={about}
             isAutocomplete={false}

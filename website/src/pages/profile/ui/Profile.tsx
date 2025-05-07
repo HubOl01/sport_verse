@@ -23,6 +23,8 @@ import CardTraining from '../../training/ui/cardTraining';
 import { ITraining } from '../../../shared/model/ITraining';
 import { TrainingService } from '../../../shared/api/training.service';
 import { Masonry } from '@mui/lab';
+import LoadingDialog from '../../../components/LoadingDialog';
+
 
 export default function Profile() {
   const queryClient = useQueryClient();
@@ -40,11 +42,22 @@ export default function Profile() {
   // })
 
 
-  const { data } = useQuery<IUser>(
+  const { data, isLoading } = useQuery<IUser>(
     ['profile', username],
     () => UserService.getUsername(username!),
     { enabled: !!username }
   );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Эффект для управления состоянием диалога
+  useEffect(() => {
+    if (isLoading) {
+      setIsDialogOpen(true);
+    } else {
+      setIsDialogOpen(false);
+    }
+  }, [isLoading]);
+
   const { data: likePlans } = useQuery<ILikeModel[]>(
     ['likePlans', data?.id!],
     () => LikeTrainingService.getUser((data?.id!).toString()),
@@ -108,6 +121,7 @@ export default function Profile() {
       :
 
       <div>
+        <LoadingDialog open={isDialogOpen} />
         <div className={styles.background}>
           {USER?.username === username ?
             <IconButton
@@ -115,7 +129,7 @@ export default function Profile() {
               onClick={handleEditClick}
               sx={{
                 position: 'absolute',
-                top: isSmallScreen ? "280px" : "70px",
+                top: isSmallScreen ? "85px" : "70px",
                 right: isSmallScreen ? "5px" : "20px",
               }}
             >
@@ -128,59 +142,77 @@ export default function Profile() {
           }
           <Box
             sx={{
-              width: "110px",
-              height: "110px",
+              width: isSmallScreen ? "90px" : "110px",
+              height: isSmallScreen ? "90px" : "110px",
+              top: "45px",
+              left: isSmallScreen ? "20px" : "45px",
               borderRadius: "50%",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               position: "relative",
-              top: "45px",
-              left: "45px",
               backgroundColor: "rgba(255, 255, 255)",
             }}
           >
             <Avatar
               src={data?.profile?.url_avatar || undefined}
               sx={{
-                width: 100,
-                height: 100,
+                width: isSmallScreen ? 80 : 100,
+                height: isSmallScreen ? 80 : 100,
               }}>
             </Avatar>
           </Box>
         </div>
 
-        <div className={styles.backgroundText}>
-          <div className='flex'>
-            <div className={`${styles.title_profile}`}>
-              {data?.profile?.name ?? "Неизвестный"}
+        <div style={{
+          transform: isSmallScreen ? 'translate(-0px, -50.5px)' : 'translate(-0px, -60.5px)',
+        }}>
+          <div>
+            <div className='flex'>
+              <div style={{
+                color: '#fff',
+                marginLeft: isSmallScreen ? '120px' : '180px',
+                fontSize: isSmallScreen ? '34px' : '40px',
+                fontWeight: 600
+              }}>
+                {data?.profile?.name ?? "Неизвестный"}
+              </div>
+              <div className={`${styles.title_emoji}`} onClick={handleClick}>
+                {data?.profile?.status?.svg_image!}
+              </div>
+              <DialogStatus
+                keepMounted
+                status={data?.profile?.status!}
+                open={open}
+                onClose={handleClose}
+                value={value}
+                profile={data?.profile!}
+                username={data?.username!}
+              />
             </div>
-            <div className={`${styles.title_emoji}`} onClick={handleClick}>
-              {data?.profile?.status?.svg_image!}
+            <div style={{
+              marginLeft: isSmallScreen ? '120px' : '180px',
+              fontSize: '20px'
+            }}>
+              {data?.profile?.role?.title ?? "Спортсмен"}
             </div>
-            <DialogStatus
-              keepMounted
-              status={data?.profile?.status!}
-              open={open}
-              onClose={handleClose}
-              value={value}
-              profile={data?.profile!}
-              username={data?.username!}
-            />
+            <div style={{
+              marginLeft: isSmallScreen ? '120px' : '180px',
+              fontSize: '14px',
+              maxWidth: '500px',
+            }}>
+              {data?.profile?.about}
+            </div>
           </div>
-          <div className={`${styles.title_content}`}>
-            {data?.profile?.role?.title}
-          </div>
-          <div className={`${styles.about}`}>
-            {data?.profile?.about}
-          </div>
+
           {
-            USER.username === data?.username ? <></> :
+            !!data && USER.username === data?.username ? <></> :
               isSmallScreen ?
                 <div className={`mt-6`} style={
                   {
                     marginLeft: "20px",
                     marginRight: "20px",
+                    marginBottom: '20px'
                   }
                 }>
                   <MyButton onClick={handleClickSubscription}

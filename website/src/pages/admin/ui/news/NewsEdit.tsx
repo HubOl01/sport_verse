@@ -84,7 +84,7 @@ export default function NewsEdit() {
         title,
         description,
         image: imageUrl,
-        date: createdAt ?? new Date(),
+        date: createdAt!,
       });
 
       // Очищаем состояние

@@ -5,18 +5,18 @@ import { IStatusProfile } from "./IStatusProfile";
 
 export interface IProfile {
   id?: number;
-  name: string;
+  name?: string;
   dateOfBirth?: Date;
   startSportDate?: Date;
   endSportDate?: Date;
-  url_avatar: string;
-  about: string;
-  statusId: number;
+  url_avatar?: string;
+  about?: string;
+  statusId?: number;
   roleId?: number;
   sportCategoryId?: number | null;
   sportTypeId?: number | null;
   isVerified?: boolean;
-  userId: number;
+  userId?: number;
   status?: IStatusProfile;
   role?: IRoleProfile;
   sportType?: ISportType;

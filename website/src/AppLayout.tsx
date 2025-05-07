@@ -8,7 +8,6 @@ import { useShowHeader } from "./shared/utils/showHeader";
 import { useSmallScreen } from "./shared/utils/displaySizes";
 import { Drawer } from "@mui/material";
 import { useState } from "react";
-import HeaderSmall from "./shared/ui/Header/HeaderSmall";
 
 export function AppLayout() {
   const { user: USER } = useAuth();
@@ -27,14 +26,13 @@ export function AppLayout() {
     <div className='flex flex-col h-full'>
 
       {
-        showHeader ? <Header /> : null}
+        showHeader ? <Header open={open} onOpen={toggleDrawer(true)} /> : null}
       <div className='sm:flex flex-1 sm:overflow-hidden'>
         {location.pathname !== '/login' && location.pathname !== '/register' && isLoggedIn &&
           <div className='w-full max-sm:max-h-[200px] sm:w-[300px] bg-gray-900 overflow-y-auto' style={{ minWidth: "300px" }}>
             {isSmallScreen ? null : USER.statusUser! === Roles.ADMIN ? <LeftBarAdmin /> : <LeftBar />}
           </div>
         }
-        {isSmallScreen ? <HeaderSmall open={open} onOpen={toggleDrawer(true)} /> : null}
         {
           isSmallScreen ?
             <Drawer

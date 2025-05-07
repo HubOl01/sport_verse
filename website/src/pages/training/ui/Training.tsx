@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import ToggleTraining from "../../../components/ToggleTraining";
 import { useAuth } from "../../../shared/utils/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 interface TrainingProps {
   isPrivate?: boolean
@@ -16,9 +16,9 @@ export default function Training(props: TrainingProps) {
   const { user: USER } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { data: trainingPlansPublicData } = useQuery(['trainingPlansPublic'], () => TrainingService.getAllPublic()
+  const { data: trainingPlansPublicData, isLoading: isLoadingPublic } = useQuery(['trainingPlansPublic'], () => TrainingService.getAllPublic()
   )
-  const { data: trainingPlansPrivateData } = useQuery(['trainingPlansPrivate'], () => TrainingService.getAllUser(Number(USER.userId!)),
+  const { data: trainingPlansPrivateData, isLoading: isLoadingPrivate } = useQuery(['trainingPlansPrivate'], () => TrainingService.getAllUser(Number(USER.userId!)),
     { enabled: !!USER.token }
   )
   const [alignment, setAlignment] = useState(props.isPrivate ? '/private' : '');
@@ -47,19 +47,36 @@ export default function Training(props: TrainingProps) {
       width: "100%",
     }}>
       <ToggleTraining alignment={alignment} handleAlignmentChange={(newAlignment) => { handleAlignmentChange(newAlignment) }} />
-      {alignment === "" ? Array.isArray(trainingPlansPublicData) && trainingPlansPublicData.length > 0 ? (
-        trainingPlansPublicData.map((plan: ITraining) => (
-          <CardTraining key={plan.id} training={plan} countLikes={plan._count?.LikeTraining} />
-        ))
-      ) : (
-        <p className={styles.text}>Нет опубликованных планов</p>
-      ) : (Array.isArray(trainingPlansPrivateData) && trainingPlansPrivateData.length > 0 ? (
-        trainingPlansPrivateData.map((plan: ITraining) => (
-          <CardTraining key={plan.id} training={plan} isPrivateUser={alignment !== ''} />
-        ))
-      ) : (
-        <p className={styles.text}>Нет планов</p>
-      ))}
+      {alignment === "" ? isLoadingPublic ? (
+        // Если данные загружаются
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
+          <CircularProgress size={30} thickness={4} sx={{ color: "#4758d6" }} />
+          <Typography variant="body1" sx={{ marginLeft: "10px" }}>
+            Загрузка...
+          </Typography>
+        </div>
+      ) :
+        Array.isArray(trainingPlansPublicData) && trainingPlansPublicData.length > 0 ? (
+          trainingPlansPublicData.map((plan: ITraining) => (
+            <CardTraining key={plan.id} training={plan} countLikes={plan._count?.LikeTraining} />
+          ))
+        ) : (
+          <p className={styles.text}>Нет опубликованных планов</p>
+        ) : isLoadingPrivate ? (
+          // Если данные загружаются
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
+            <CircularProgress size={30} thickness={4} sx={{ color: "#4758d6" }} />
+            <Typography variant="body1" sx={{ marginLeft: "10px" }}>
+              Загрузка...
+            </Typography>
+          </div>
+        ) : (Array.isArray(trainingPlansPrivateData) && trainingPlansPrivateData.length > 0 ? (
+          trainingPlansPrivateData.map((plan: ITraining) => (
+            <CardTraining key={plan.id} training={plan} isPrivateUser={alignment !== ''} />
+          ))
+        ) : (
+          <p className={styles.text}>Нет планов</p>
+        ))}
     </Box>
   )
 }
