@@ -20,7 +20,7 @@ const VKLoginButton: React.FC = () => {
 
         VKID.Config.init({
             app: 53565862,
-            redirectUrl: 'http://localhost:5173/`',
+            redirectUrl: 'https://sport-verse.vercel.app`',
             responseMode: VKID.ConfigResponseMode.Callback,
             source: VKID.ConfigSource.LOWCODE,
             scope: 'openid email',
