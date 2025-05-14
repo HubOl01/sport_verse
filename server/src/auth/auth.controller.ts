@@ -2,23 +2,6 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 
-// @Controller('auth')
-// @ApiTags('auth')
-// export class AuthController {
-//   constructor(private authService: AuthService) {}
-
-//   @Post('register')
-//   async register(
-//     @Body() body: { email: string; username: string; password: string },
-//   ) {
-//     return this.authService.register(body.email, body.username, body.password);
-//   }
-
-//   @Post('login')
-//   async login(@Body() body: { email: string; password: string }) {
-//     return this.authService.validateUser(body.email, body.password);
-//   }
-// }
 import { ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
 
 class RegisterDto {
@@ -32,10 +15,47 @@ class LoginDto {
   password: string;
 }
 
+export class VkAuthDto {
+  email: string;
+  vkid: string;
+  username?: string;
+}
+
 @ApiTags('auth') // Добавляем тег для Swagger
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Post('vk')
+  @ApiOperation({ summary: 'Авторизация через VK' })
+  @ApiBody({
+    description: 'Данные для авторизации через VK',
+    schema: {
+      example: {
+        email: 'string',
+        vkid: 'string',
+        username: 'string',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешная авторизация через VK, возвращает access token',
+  })
+  @ApiResponse({ status: 401, description: 'Ошибка авторизации через VK' })
+  async vkLogin(
+    @Body() body: { email: string; vkid: string; username: string },
+  ) {
+    // Логика проверки/создания пользователя на основе VK данных
+    const user = await this.authService.findOrCreateVKUser(
+      body.email,
+      body.vkid,
+      body.username,
+    );
+
+    // Возвращаем токен
+    return this.authService.login(user);
+  }
 
   @Post('register')
   @ApiOperation({ summary: 'Регистрация пользователя' })

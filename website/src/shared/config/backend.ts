@@ -41,6 +41,7 @@ export var apiPublishStatuses = "/publish-statuses";
 export var apiStatusesTraining = "/statuses-training";
 export var apiAuthLogin = "/auth/login";
 export var apiAuthRegister = "/auth/register";
+export const apiAuthVk = "/auth/vk";
 export var apiNews = "/news";
 export var apiComment = "/comment-training";
 export var apiCommentTraining = "/comment-training/training";

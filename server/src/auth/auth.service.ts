@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { VkAuthDto } from './auth.controller';
 
 @Injectable()
 export class AuthService {
@@ -68,5 +69,44 @@ export class AuthService {
       },
     });
     return newUser;
+  }
+
+  async findOrCreateVKUser(email: string, vkid: string, username: string) {
+    let user = await this.prisma.user.findFirst({
+      where: {
+        OR: [{ VKID: vkid }, { email: email }],
+      },
+    });
+
+    if (!user) {
+      user = await this.prisma.user.findUnique({
+        where: { email: email },
+      });
+    }
+
+    // Если пользователь найден, возвращаем его
+    if (user) {
+      return user;
+    }
+
+    return this.prisma.user.create({
+      data: {
+        email,
+        VKID: vkid,
+        username,
+        password: 'VK_AUTH_NO_PASSWORD',
+        statusUser: 'USER',
+        profile: {
+          create: {
+            name: username,
+            statusId: 1,
+            roleId: 1,
+          },
+        },
+      },
+      include: {
+        profile: true,
+      },
+    });
   }
 }

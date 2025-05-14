@@ -56,10 +56,6 @@ export default function Register() {
             if (email.length > 0 && username.length > 0 && password.length > 0 && confirmPassword.length > 0) {
                 // Вызываем функцию регистрации
                 await registerAuth(email, username, password);
-
-                // localStorage.setItem("token", data.access_token);
-                // localStorage.setItem("userId", data.user.id);
-                // localStorage.setItem("username", data.user.username);
                 navigate("/");
                 window.location.reload();
             } else {
