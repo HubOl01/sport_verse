@@ -100,7 +100,9 @@ export default function GroupDetail() {
                   gutterBottom>
                   {data?.title}
                 </Typography>
-                <Typography variant="h6" color="text.secondary" gutterBottom>
+                <Typography variant="h6" color="text.secondary" gutterBottom sx={{
+                  lineHeight: "1.2"
+                }}>
                   {data?.desc}
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary" gutterBottom>

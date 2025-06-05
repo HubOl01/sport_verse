@@ -22,6 +22,7 @@ import TrainingGroups from '../../pages/groups/ui/TrainingGroups';
 import GroupDetail from '../../pages/groups/ui/GroupDetail';
 import { useAuth } from '../utils/useAuth';
 import AUsers from '../../pages/admin/ui/users/AUsers';
+import TrainingDetailAdmin from '../../pages/admin/ui/trainingPlans/TrainingRead';
 
 export default function Routers() {
   const { user: USER } = useAuth();
@@ -37,6 +38,8 @@ export default function Routers() {
       <Route path="/news/:id" element={<NewsDetail />} />
       {USER.statusUser === Roles.ADMIN && (<Route path="/admin/comments" element={<CommentsAdmin />} />)}
       {USER.statusUser === Roles.ADMIN && (<Route path="/admin/training" element={<TrainingAdmin />} />)}
+      {USER.statusUser === Roles.ADMIN && (<Route path="/admin/training/all" element={<TrainingAdmin isAll/>} />)}
+      {USER.statusUser === Roles.ADMIN && (<Route path="/admin/training/:id" element={<TrainingDetailAdmin />} />)}
       {USER.statusUser === Roles.ADMIN && (<Route path="/admin/comments/:id" element={<CommentsDetail />} />)}
       {USER.statusUser === Roles.ADMIN && (<Route path="/admin/news/:id" element={<NewsEdit />} />)}
       <Route path="/register" element={<Register />} />

@@ -246,6 +246,21 @@ export const TrainingService = {
       throw new Error(message);
     }
   },
+  async updateTogglePrivate(trainingPlanId: number): Promise<ITraining> {
+    try {
+      const response = await api.patch<ITraining>(
+        `/training-plans/togglePrivate/${trainingPlanId}`
+      );
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : `Произошла ошибка при изменении тренировочного плана`;
+      throw new Error(message);
+    }
+  },
   async delete(id: string): Promise<ITraining> {
     try {
       await PlanExerciseService.deleteAll(id);

@@ -46,6 +46,7 @@ export default function TrainingDetail() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dateStartTraining, setDateStartTraining] = useState<Date>(new Date());
   const [dateEndTraining, setDateEndTraining] = useState<Date>(new Date());
+  const [isStartSportDateTraining, setIsStartSportDateTraining] = useState<boolean>(false);
   const [isEndSportDateTraining, setIsEndSportDateTraining] = useState<boolean>(false);
   const [difficulty, setDifficult] = useState<number>(0);
   const [commentTrainingRes, setCommentTrainingRes] = useState('');
@@ -100,16 +101,7 @@ export default function TrainingDetail() {
       setTrainingPlay(false);
     }
   }, [isStartingUserPlanData])
-  // useEffect(() => {
-  //   if (!isPreview && trainingData?.id) {
-  //     ViewsTrainingService.create({
-  //       userId: Number(USER.userId!),
-  //       trainingPlanId: trainingData.id,
-  //     }).catch((err) => {
-  //       console.error("Ошибка при записи просмотра:", err);
-  //     });
-  //   }
-  // }, [!isPreview, trainingData]);
+
   useEffect(() => {
     if (trainingData?.id) {
       const sendView = async () => {
@@ -275,6 +267,9 @@ export default function TrainingDetail() {
         groupInGroupId: trainingData.parentGroupId! ?? null,
         date_start: dateStartTraining,
       });
+      setIsStartSportDateTraining(true);
+      setDateStartTraining(new Date());
+      setDateEndTraining(new Date());
       queryClient.invalidateQueries(['isTrainingResult', id, Number(USER.userId!)]);
       queryClient.invalidateQueries(['trainingResult', id, Number(USER.userId!)]);
     }
@@ -394,6 +389,8 @@ export default function TrainingDetail() {
               <TrainingTimer trainingPlay={trainingPlay}
                 dateStartTraining={dateStartTraining}
                 setDateStartTraining={setDateStartTraining}
+                isStartSportDateTraining={isStartSportDateTraining}
+                setIsStartSportDateTraining={setIsStartSportDateTraining}
                 isEndSportDateTraining={isEndSportDateTraining}
                 setIsEndSportDateTraining={setIsEndSportDateTraining}
                 dateEndTraining={dateEndTraining} setDateEndTraining={setDateEndTraining}

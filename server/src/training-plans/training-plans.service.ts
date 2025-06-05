@@ -404,6 +404,29 @@ export class TrainingPlansService {
       where: { id: id },
     });
   }
+  updateTogglePrivate(id: number) {
+    // return this.prisma.trainingPlan.update({
+    //   data: updateTrainingPlanDto,
+    //   where: { id: id, isPrivate: 1 },
+    // });
+    return this.prisma.trainingPlan
+      .update({
+        where: { id },
+        data: {
+          isPrivate: {
+            increment: 1,
+          },
+        },
+      })
+      .then((updatedPlan) => {
+        return this.prisma.trainingPlan.update({
+          where: { id },
+          data: {
+            isPrivate: updatedPlan.isPrivate % 2,
+          },
+        });
+      });
+  }
 
   async remove(id: number) {
     const planExercises = await this.prisma.planExercise.findMany({
@@ -422,10 +445,7 @@ export class TrainingPlansService {
     });
   }
 
-  async checkExistingPlanUser(
-    originalPlanId: number,
-    targetUserId: number,
-  ) {
+  async checkExistingPlanUser(originalPlanId: number, targetUserId: number) {
     // Поиск по originalPlanId, targetUserId, parentGroupId и parentPlanInGroupId
     const existingCopy = await this.prisma.trainingPlan.findFirst({
       where: {
@@ -437,10 +457,7 @@ export class TrainingPlansService {
     return existingCopy; // Вернёт найденный план или null, если не найден
   }
 
-  async copyPlanToUser(
-    originalPlanId: number,
-    targetUserId: number,
-  ) {
+  async copyPlanToUser(originalPlanId: number, targetUserId: number) {
     const originalPlan = await this.prisma.trainingPlan.findUnique({
       where: { id: originalPlanId },
       include: {
@@ -520,101 +537,94 @@ export class TrainingPlansService {
     return copiedPlan;
   }
 
-
-async checkExistingPlan(
-  originalPlanId: number,
-  targetUserId: number,
-) {
-  // Поиск по originalPlanId, targetUserId, parentGroupId и parentPlanInGroupId
-  const existingCopy = await this.prisma.trainingPlan.findFirst({
-    where: {
-      userId: targetUserId,
-      parentPlanId: originalPlanId,
-    },
-  });
-
-  return existingCopy; // Вернёт найденный план или null, если не найден
-}
-
-async copyPlan(
-  originalPlanId: number,
-  targetUserId: number,
-) {
-  const originalPlan = await this.prisma.trainingPlan.findUnique({
-    where: { id: originalPlanId },
-    include: {
-      PlanExercise: {
-        include: {
-          ExerciseSet: true,
-        },
-      },
-    },
-  });
-
-  if (!originalPlan) {
-    throw new Error('Original training plan not found');
-  }
-
-  // 🔍 Проверка: не существует ли уже такой план
-  const existingCopy = await this.prisma.trainingPlan.findFirst({
-    where: {
-      userId: targetUserId,
-      parentPlanId: originalPlanId,
-    },
-  });
-
-  if (existingCopy) {
-    // Если уже существует — возвращаем его, не создавая новую копию
-    return existingCopy;
-  }
-
-  // 🆕 Шаг 1: создать копию плана
-  const copiedPlan = await this.prisma.trainingPlan.create({
-    data: {
-      title: originalPlan.title,
-      description: originalPlan.description,
-      isPrivate: 1,
-      date_created: new Date(),
-      date_start: originalPlan.date_start,
-      date_end: originalPlan.date_end,
-      statusPublishId: originalPlan.statusPublishId,
-      statusTrainingId: originalPlan.statusTrainingId,
-      sportTypeId: originalPlan.sportTypeId,
-      userId: targetUserId,
-      parentPlanId: originalPlan.id,
-    },
-  });
-
-  // 🔁 Шаг 2: скопировать PlanExercise и ExerciseSet
-  for (const originalExercise of originalPlan.PlanExercise) {
-    const copiedPlanExercise = await this.prisma.planExercise.create({
-      data: {
-        trainingPlanId: copiedPlan.id,
-        setTotal: originalExercise.setTotal,
-        repTotal: originalExercise.repTotal,
-        exerciseStatus: originalExercise.exerciseStatus,
-        exerciseId: originalExercise.exerciseId,
+  async checkExistingPlan(originalPlanId: number, targetUserId: number) {
+    // Поиск по originalPlanId, targetUserId, parentGroupId и parentPlanInGroupId
+    const existingCopy = await this.prisma.trainingPlan.findFirst({
+      where: {
+        userId: targetUserId,
+        parentPlanId: originalPlanId,
       },
     });
 
-    for (const set of originalExercise.ExerciseSet) {
-      await this.prisma.exerciseSet.create({
-        data: {
-          planExerciseId: copiedPlanExercise.id,
-          date: set.date,
-          duration: set.duration,
-          distance: set.distance,
-          weight: set.weight,
-          repetitions: set.repetitions,
-          calories_burned: set.calories_burned,
-          route_gpx: set.route_gpx,
-          stringType: set.stringType,
-          stringUnit: set.stringUnit,
-        },
-      });
-    }
+    return existingCopy; // Вернёт найденный план или null, если не найден
   }
 
-  return copiedPlan;
-}
+  async copyPlan(originalPlanId: number, targetUserId: number) {
+    const originalPlan = await this.prisma.trainingPlan.findUnique({
+      where: { id: originalPlanId },
+      include: {
+        PlanExercise: {
+          include: {
+            ExerciseSet: true,
+          },
+        },
+      },
+    });
+
+    if (!originalPlan) {
+      throw new Error('Original training plan not found');
+    }
+
+    // 🔍 Проверка: не существует ли уже такой план
+    const existingCopy = await this.prisma.trainingPlan.findFirst({
+      where: {
+        userId: targetUserId,
+        parentPlanId: originalPlanId,
+      },
+    });
+
+    if (existingCopy) {
+      // Если уже существует — возвращаем его, не создавая новую копию
+      return existingCopy;
+    }
+
+    // 🆕 Шаг 1: создать копию плана
+    const copiedPlan = await this.prisma.trainingPlan.create({
+      data: {
+        title: originalPlan.title,
+        description: originalPlan.description,
+        isPrivate: 1,
+        date_created: new Date(),
+        date_start: originalPlan.date_start,
+        date_end: originalPlan.date_end,
+        statusPublishId: originalPlan.statusPublishId,
+        statusTrainingId: originalPlan.statusTrainingId,
+        sportTypeId: originalPlan.sportTypeId,
+        userId: targetUserId,
+        parentPlanId: originalPlan.id,
+      },
+    });
+
+    // 🔁 Шаг 2: скопировать PlanExercise и ExerciseSet
+    for (const originalExercise of originalPlan.PlanExercise) {
+      const copiedPlanExercise = await this.prisma.planExercise.create({
+        data: {
+          trainingPlanId: copiedPlan.id,
+          setTotal: originalExercise.setTotal,
+          repTotal: originalExercise.repTotal,
+          exerciseStatus: originalExercise.exerciseStatus,
+          exerciseId: originalExercise.exerciseId,
+        },
+      });
+
+      for (const set of originalExercise.ExerciseSet) {
+        await this.prisma.exerciseSet.create({
+          data: {
+            planExerciseId: copiedPlanExercise.id,
+            date: set.date,
+            duration: set.duration,
+            distance: set.distance,
+            weight: set.weight,
+            repetitions: set.repetitions,
+            calories_burned: set.calories_burned,
+            route_gpx: set.route_gpx,
+            stringType: set.stringType,
+            stringUnit: set.stringUnit,
+          },
+        });
+      }
+    }
+
+    return copiedPlan;
+  }
 }

@@ -10,9 +10,10 @@ import LockOutlineIcon from '@mui/icons-material/LockOutlined';
 interface CardTrainingProps {
     training: ITraining,
     isLikes?: boolean,
+    isDelete?: boolean,
 }
 
-export default function CardTrainingAdmin({ training, isLikes = false }: CardTrainingProps) {
+export default function CardTrainingAdmin({ training, isLikes = false, isDelete = false }: CardTrainingProps) {
     const navigate = useNavigate();
     const { data: commentsCount } = useQuery(["commentsCount", training.id], () => CommentPlanService.getAllPlanIdCount(training.id!.toString()))
     const { data: likesCount } = useQuery(["likesCount", training.id], () => LikeTrainingService.getCount(training.id!.toString()))
@@ -34,7 +35,7 @@ export default function CardTrainingAdmin({ training, isLikes = false }: CardTra
                 justifyContent: "center",
                 alignItems: "center",
             }}>
-            <Card onClick={() => navigate(`/admin/comments/${training.id}`)}
+            <Card onClick={() => isDelete ? navigate(`/admin/training/${training.id}`) : navigate(`/admin/comments/${training.id}`)}
                 sx={{
                     width: "100%",
                     maxWidth: "600px",
@@ -50,6 +51,20 @@ export default function CardTrainingAdmin({ training, isLikes = false }: CardTra
                                 height: "15px",
                             }} /> : <></>}
                         </div>
+                        {training.parentGroup === null || training.isPrivate === 0 ? <></> : <Typography variant="body2" fontWeight={600}>
+                            Группа: {training.parentGroup?.title}
+                        </Typography>}
+                        {training.parentUser === null ? <></> : <Typography gutterBottom variant="body2" fontWeight={600}>
+                            Оригинальный автор: @{training.parentUser?.username}
+                        </Typography>}
+                        {/* <div className="flex items-center" style={{ marginBottom: "10px" }}>
+                            <Typography variant="body2" fontWeight={600}>
+                                @{training.user?.username}
+                            </Typography>
+                            {training.isPrivate === 1 ? <LockOutlineIcon sx={{
+                                height: "15px",
+                            }} /> : <></>}
+                        </div> */}
                         <Typography gutterBottom variant="h5" component="div">
                             {training.title}
                         </Typography>

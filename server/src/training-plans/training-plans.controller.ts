@@ -71,6 +71,11 @@ export class TrainingPlansController {
   ) {
     return this.trainingPlansService.update(+id, updateTrainingPlanDto);
   }
+  @Patch('togglePrivate/:id')
+  @ApiCreatedResponse()
+  updateTogglePrivate(@Param('id') id: string) {
+    return this.trainingPlansService.updateTogglePrivate(+id);
+  }
 
   @Post(
     'copyGroup/:parentGroupId/:parentPlanInGroupId/:originalPlanId/:targetUserId',
