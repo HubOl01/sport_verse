@@ -260,8 +260,8 @@ export default function TrainingTimer({
   // const [isTimerRunning, setIsTimerRunning] = useState(false); // Флаг для управления таймером
 
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null; // Инициализируем как null
-
+    // let interval: NodeJS.Timeout | null = null; // Инициализируем как null
+    setCurrentTime(new Date());
     // if (isStartSportDateTraining && !isEndSportDateTraining) {
     //   // Запускаем таймер, если тренировка начата и не завершена
     //   interval = setInterval(() => {
@@ -277,11 +277,11 @@ export default function TrainingTimer({
     // }
 
     // Очищаем интервал при размонтировании компонента
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
+    // return () => {
+    //   if (interval) {
+    //     clearInterval(interval);
+    //   }
+    // };
   }, [isStartSportDateTraining, isEndSportDateTraining]);
 
   const getFormattedTimeDifference = (): string => {
