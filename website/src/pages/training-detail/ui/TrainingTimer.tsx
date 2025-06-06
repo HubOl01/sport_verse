@@ -257,24 +257,24 @@ export default function TrainingTimer({
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isStopTime, setIsStopTime] = useState(false);
   const [stopTime, setStopTime] = useState(new Date());
-  const [isTimerRunning, setIsTimerRunning] = useState(false); // Флаг для управления таймером
+  // const [isTimerRunning, setIsTimerRunning] = useState(false); // Флаг для управления таймером
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null; // Инициализируем как null
 
-    if (isStartSportDateTraining && !isEndSportDateTraining) {
-      // Запускаем таймер, если тренировка начата и не завершена
-      interval = setInterval(() => {
-        setCurrentTime(new Date());
-      }, 1000);
-      setIsTimerRunning(true);
-    } else {
-      // Останавливаем таймер, если тренировка завершена
-      if (interval) {
-        clearInterval(interval);
-      }
-      setIsTimerRunning(false);
-    }
+    // if (isStartSportDateTraining && !isEndSportDateTraining) {
+    //   // Запускаем таймер, если тренировка начата и не завершена
+    //   interval = setInterval(() => {
+    //     setCurrentTime(new Date());
+    //   }, 1000);
+    //   setIsTimerRunning(true);
+    // } else {
+    //   // Останавливаем таймер, если тренировка завершена
+    //   if (interval) {
+    //     clearInterval(interval);
+    //   }
+    //   setIsTimerRunning(false);
+    // }
 
     // Очищаем интервал при размонтировании компонента
     return () => {
