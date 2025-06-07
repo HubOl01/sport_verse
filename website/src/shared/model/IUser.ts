@@ -8,7 +8,7 @@ export interface IUser {
   email?: string;
   password?: string;
   VKID?: string;
-  username?: string;
+  username: string;
   createdAt?: Date;
   statusUser?: string;
   profile?: IProfile;
