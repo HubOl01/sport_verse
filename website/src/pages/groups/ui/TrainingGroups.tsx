@@ -2,14 +2,14 @@ import { Box, Grid2 } from "@mui/material";
 import MyButton from "../../../components/MyButton";
 import { useQuery } from "react-query";
 import { TrainingGroupService } from "../../../shared/api/trainingGroups.service";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import MyTextField from "../../../components/MyTextField";
 import GroupEdit from './GroupEdit';
 import { useAuth } from "../../../shared/utils/useAuth";
 import CardGroupGrid from "./cardGroupGrid";
 import ToggleMyGroups from "../../../components/ToggleMyGroups";
-import { UserService } from "../../../shared/api/User.service";
-import LoadingDialog from "../../../components/LoadingDialog";
+// import { UserService } from "../../../shared/api/User.service";
+// import LoadingDialog from "../../../components/LoadingDialog";
 
 interface TrainingGroupsProps {
   myGroups?: boolean,
