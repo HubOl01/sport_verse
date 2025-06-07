@@ -44,7 +44,22 @@ export default function Profile() {
 
   const { data, isLoading } = useQuery<IUser>(
     ['profile', username],
-    () => UserService.getUsername(username!),
+    () => UserService.getUsernameProfile(username!),
+    { enabled: !!username }
+  );
+  const { data: dataPlans } = useQuery<IUser>(
+    ['profilePlan', username],
+    () => UserService.getUsernamePlan(username!),
+    { enabled: !!username }
+  );
+  // const { data: dataPlans } = useQuery<IUser>(
+  //   ['profile', username],
+  //   () => UserService.getUsernameProfile(username!),
+  //   { enabled: !!username }
+  // );
+  const { data: dataSub } = useQuery<IUser>(
+    ['profileSub', username],
+    () => UserService.getUsernameSub(username!),
     { enabled: !!username }
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -93,21 +108,21 @@ export default function Profile() {
     setIsEdit(true);
   };
   const isSubscribed =
-    Array.isArray(data?.subscribers) &&
-    data.subscribers.some(
+    Array.isArray(dataSub?.subscribers) &&
+    dataSub.subscribers.some(
       (subscriber) => subscriber.subscriberId === Number(USER.userId)
     );
   const handleClickSubscription = async () => {
     if (isSubscribed) {
       await SubscriptionService.delete(
         USER.userId!,
-        data?.id!.toString()!
+        dataSub?.id!.toString()!
       );
     }
     else {
       await SubscriptionService.create({
         subscriberId: Number(USER.userId)!,
-        subscribedToId: data?.id!,
+        subscribedToId: dataSub?.id!,
       });
     }
     await queryClient.invalidateQueries(['user', username]);
@@ -243,10 +258,11 @@ export default function Profile() {
           gap: '10px',
         }}>
           <InformCount
-            count={data?.subscriptions?.length!}
-            title={getPluralForm(data?.subscriptions?.length!, ["Подписка", "Подписки", "Подписок"])}
+            count={dataSub?.subscriptions?.length ?? 0}
+            isLoading={dataSub?.subscriptions?.length === undefined}
+            title={getPluralForm(dataSub?.subscriptions?.length ?? 0, ["Подписка", "Подписки", "Подписок"])}
             onClick={
-              data?.subscriptions?.length! < 1 ? undefined :
+              dataSub?.subscriptions?.length! < 1 ? undefined :
                 () => {
                   setIsSub(false),
                     setOpenUsers(true)
@@ -254,21 +270,24 @@ export default function Profile() {
           />
 
           <InformCount
-            count={data?.subscribers?.length!}
-            title={getPluralForm(data?.subscribers?.length!, ["Подписчик", "Подписчика", "Подписчиков"])}
+            count={dataSub?.subscribers?.length ?? 0}
+            isLoading={dataSub?.subscribers?.length === undefined}
+            title={getPluralForm(dataSub?.subscribers?.length ?? 0, ["Подписчик", "Подписчика", "Подписчиков"])}
             onClick={
-              data?.subscribers?.length! < 1 ? undefined : () => {
+              dataSub?.subscribers?.length! < 1 ? undefined : () => {
                 setIsSub(true),
                   setOpenUsers(true)
               }}
           />
           <InformCount
-            count={data?.TrainingPlan?.length!}
-            title={getPluralForm(data?.TrainingPlan?.length!, ["Созданная тренировка", "Созданные тренировки", "Созданных тренировок"])}
+            count={dataPlans?.TrainingPlan?.length ?? 0}
+            isLoading={dataPlans?.TrainingPlan?.length === undefined}
+            title={getPluralForm(dataPlans?.TrainingPlan?.length ?? 0, ["Созданная тренировка", "Созданные тренировки", "Созданных тренировок"])}
           />
           <InformCount
-            count={likeCount!}
-            title={getPluralForm(likeCount!, ["лайк", "лайка", "лайков"])}
+            count={likeCount ?? 0}
+            isLoading={likeCount === undefined}
+            title={getPluralForm(likeCount ?? 0, ["лайк", "лайка", "лайков"])}
           />
         </div>
         <DialogSubscriptionList keepMounted={false} open={openUsers} userId={data?.id!}
@@ -363,7 +382,7 @@ export default function Profile() {
 
               <Masonry
                 spacing={{ xs: 1, md: 1, sm: 1 }}
-                columns={{ xs: 2, sm: 3, md: 3 }}
+                columns={{ xs: 1, sm: 3, md: 3 }}
                 sx={{
                   width: '100%',
                 }}

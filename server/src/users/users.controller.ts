@@ -45,6 +45,26 @@ export class UsersController {
   findByUsername(@Param('username') username: string) {
     return this.usersService.findByUsername(username);
   }
+  @Get('/username-profile/:username')
+  @ApiOkResponse({ type: UserEntity })
+  findByUsernameProfile(@Param('username') username: string) {
+    return this.usersService.findByUsernameProfile(username);
+  }
+  @Get('/username-plan/:username')
+  @ApiOkResponse({ type: UserEntity })
+  findByUsernamePlan(@Param('username') username: string) {
+    return this.usersService.findByUsernamePlan(username);
+  }
+  @Get('/username-group/:username')
+  @ApiOkResponse({ type: UserEntity })
+  findByUsernameGroup(@Param('username') username: string) {
+    return this.usersService.findByUsernameGroup(username);
+  }
+  @Get('/username-sub/:username')
+  @ApiOkResponse({ type: UserEntity })
+  findByUsernameSub(@Param('username') username: string) {
+    return this.usersService.findByUsernameSub(username);
+  }
   @Patch(':id')
   @ApiCreatedResponse({ type: UserEntity })
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {

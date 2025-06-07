@@ -1,8 +1,8 @@
-import { Box, Grid2 } from "@mui/material";
+import { Box, CircularProgress, Grid2, Typography } from "@mui/material";
 import MyButton from "../../../components/MyButton";
 import { useQuery } from "react-query";
 import { TrainingGroupService } from "../../../shared/api/trainingGroups.service";
-import {  useState } from "react";
+import { useState } from "react";
 import MyTextField from "../../../components/MyTextField";
 import GroupEdit from './GroupEdit';
 import { useAuth } from "../../../shared/utils/useAuth";
@@ -22,21 +22,21 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
   const { user: USER } = useAuth();
   // const [__, setIsDialogOpen] = useState(false);
   // const { data: _, isLoading: isLoadingDataUser } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!), { enabled: !!USER?.username });
-  const { data: TrainingGroupsSearch } = useQuery(
+  const { data: TrainingGroupsSearch, isLoading: isLoadingSearch } = useQuery(
     ['groups', search],
     () => TrainingGroupService.getSearch(search),
     {
       enabled: search.trim().length > 0,
     }
   );
-  const { data: TrainingGroupsUser } = useQuery(
+  const { data: TrainingGroupsUser, isLoading: isLoadingGroup } = useQuery(
     ['my-groups', USER.userId],
     () => TrainingGroupService.getUser(USER.userId!),
     {
       enabled: !!USER.userId,
     }
   );
-  const { data: TrainingGroupsTraining } = useQuery(
+  const { data: TrainingGroupsTraining, isLoading: isLoadingDataUserTraining } = useQuery(
     ['my-groups-training', USER.userId],
     () => TrainingGroupService.getTrainer(USER.userId!),
     {
@@ -56,6 +56,7 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
   const handleAlignmentChange = (newAlignment: string) => {
     setAlignment(newAlignment);
   };
+
 
   const [isEditGroup, setIsEditGroup] = useState(false)
   // const { data } = useQuery<IUser>(
@@ -114,19 +115,29 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
             container spacing={{ xs: 2, sm: 2, md: 2, }} columns={{ xs: 1, sm: 2, md: 2 }}
           >
             {
+
               search.length > 0 ?
-                Array.isArray(TrainingGroupsSearch) && TrainingGroupsSearch.length > 0 ? (
-                  TrainingGroupsSearch.map((item, index) => (
-                    <Grid2 key={index} size={{ xs: 1, sm: 1, md: 1 }}
-                      sx={{
-                        width: "100%",
-                      }} >
-                      <CardGroupGrid item={item} />
-                    </Grid2>
-                  ))
-                ) : (
-                  <p style={{ textAlign: "center", marginTop: "40px" }}>Нет групп</p>
-                )
+                isLoadingSearch ?
+                  (
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
+                      <CircularProgress size={30} thickness={4} sx={{ color: "#4758d6" }} />
+                      <Typography variant="body1" sx={{ marginLeft: "10px" }}>
+                        Загрузка...
+                      </Typography>
+                    </div>
+                  ) :
+                  Array.isArray(TrainingGroupsSearch) && TrainingGroupsSearch.length > 0 ? (
+                    TrainingGroupsSearch.map((item, index) => (
+                      <Grid2 key={index} size={{ xs: 1, sm: 1, md: 1 }}
+                        sx={{
+                          width: "100%",
+                        }} >
+                        <CardGroupGrid item={item} />
+                      </Grid2>
+                    ))
+                  ) : (
+                    <p style={{ textAlign: "center", marginTop: "40px" }}>Нет групп</p>
+                  )
                 :
                 props.myGroups ?
                   alignment === '/trainer' ?
@@ -144,9 +155,38 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
                         <p style={{ textAlign: "center", marginTop: "40px" }}>Нет созданных групп</p>
                       )
 
-                    :
-                    Array.isArray(TrainingGroupsUser) && TrainingGroupsUser.length > 0 ? (
-                      TrainingGroupsUser.map((item, index) => (
+                    : isLoadingDataUserTraining ?
+                      (
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
+                          <CircularProgress size={30} thickness={4} sx={{ color: "#4758d6" }} />
+                          <Typography variant="body1" sx={{ marginLeft: "10px" }}>
+                            Загрузка...
+                          </Typography>
+                        </div>
+                      ) :
+                      Array.isArray(TrainingGroupsUser) && TrainingGroupsUser.length > 0 ? (
+                        TrainingGroupsUser.map((item, index) => (
+                          <Grid2 key={index} size={{ xs: 1, sm: 1, md: 1 }}
+                            sx={{
+                              width: "100%",
+                            }} >
+                            <CardGroupGrid item={item} />
+                          </Grid2>
+                        ))
+                      )
+                        : (
+                          <p style={{ textAlign: "center", marginTop: "40px" }}>Нет добавленных групп</p>
+                        ) : isLoadingGroup ?
+                    (
+                      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
+                        <CircularProgress size={30} thickness={4} sx={{ color: "#4758d6" }} />
+                        <Typography variant="body1" sx={{ marginLeft: "10px" }}>
+                          Загрузка...
+                        </Typography>
+                      </div>
+                    ) :
+                    Array.isArray(data) && data.length > 0 ? (
+                      data.map((item, index) => (
                         <Grid2 key={index} size={{ xs: 1, sm: 1, md: 1 }}
                           sx={{
                             width: "100%",
@@ -156,21 +196,8 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
                       ))
                     )
                       : (
-                        <p style={{ textAlign: "center", marginTop: "40px" }}>Нет добавленных групп</p>
-                      ) :
-                  Array.isArray(data) && data.length > 0 ? (
-                    data.map((item, index) => (
-                      <Grid2 key={index} size={{ xs: 1, sm: 1, md: 1 }}
-                        sx={{
-                          width: "100%",
-                        }} >
-                        <CardGroupGrid item={item} />
-                      </Grid2>
-                    ))
-                  )
-                    : (
-                      <p style={{ textAlign: "center", marginTop: "40px" }}>Нет групп</p>
-                    )}
+                        <p style={{ textAlign: "center", marginTop: "40px" }}>Нет групп</p>
+                      )}
           </Grid2>
         </Box>
       </>

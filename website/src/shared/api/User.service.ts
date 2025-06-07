@@ -2,6 +2,12 @@ import { AxiosError } from "axios";
 import { apiUsers, apiUsersUserName } from "../config";
 import { api } from ".";
 import { IUser } from "../model/IUser";
+import {
+  apiUsersUserNameGroup,
+  apiUsersUserNamePlan,
+  apiUsersUserNameProfile,
+  apiUsersUserNameSub,
+} from "../config/backend";
 
 export const UserService = {
   async getAll(): Promise<IUser[]> {
@@ -20,9 +26,79 @@ export const UserService = {
   async getUsername(username: string): Promise<IUser> {
     try {
       const response = await api.get<IUser>(`${apiUsersUserName}/${username}`);
+      // console.log(response);
       return response.data;
     } catch (error) {
       const err = error as AxiosError;
+      console.log(err.response);
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке юзернейма";
+      throw new Error(message);
+    }
+  },
+  async getUsernameProfile(username: string): Promise<IUser> {
+    try {
+      const response = await api.get<IUser>(
+        `${apiUsersUserNameProfile}/${username}`
+      );
+      // console.log(response);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      console.log(err.response);
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке юзернейма";
+      throw new Error(message);
+    }
+  },
+  async getUsernameGroup(username: string): Promise<IUser> {
+    try {
+      const response = await api.get<IUser>(
+        `${apiUsersUserNameGroup}/${username}`
+      );
+      // console.log(response);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      console.log(err.response);
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке юзернейма";
+      throw new Error(message);
+    }
+  },
+  async getUsernamePlan(username: string): Promise<IUser> {
+    try {
+      const response = await api.get<IUser>(
+        `${apiUsersUserNamePlan}/${username}`
+      );
+      // console.log(response);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      console.log(err.response);
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке юзернейма";
+      throw new Error(message);
+    }
+  },
+  async getUsernameSub(username: string): Promise<IUser> {
+    try {
+      const response = await api.get<IUser>(
+        `${apiUsersUserNameSub}/${username}`
+      );
+      // console.log(response);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      console.log(err.response);
       const message =
         typeof err.response?.data === "string"
           ? err.response.data

@@ -16,11 +16,12 @@ import { IPlanInGroup } from "../../../shared/model/IPlanInGroup";
 import React from "react";
 import { IAthleteInGroup } from "../../../shared/model/IAthleteInGroup";
 import { useSmallScreen } from "../../../shared/utils/displaySizes";
+import LoadingDialog from "../../../components/LoadingDialog";
 
 export default function GroupDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data } = useQuery<ITrainingGroup>(["group", id], async () => await TrainingGroupService.get(id!), { enabled: !!id })
+  const { data, isLoading } = useQuery<ITrainingGroup>(["group", id], async () => await TrainingGroupService.get(id!), { enabled: !!id })
   const { user: USER } = useAuthLog();
   const [isEditGroup, setIsEditGroup] = useState(false)
   const [isEditPlanInGroup, setIsEditPlanInGroup] = useState(false)
@@ -223,6 +224,7 @@ export default function GroupDetail() {
 
             </Box>
           </Box>
+          <LoadingDialog open={isLoading} />
         </Box>
   )
 }

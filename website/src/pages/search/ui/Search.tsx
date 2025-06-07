@@ -19,7 +19,7 @@ export default function Search() {
 
 
     const filteredUsers = data?.filter((user) =>
-        user.username.toLowerCase().includes(searchStr.toLowerCase()) ||
+        user.username?.toLowerCase().includes(searchStr.toLowerCase()) ||
         (user.profile?.name || "").toLowerCase().includes(searchStr.toLowerCase())
     );
 

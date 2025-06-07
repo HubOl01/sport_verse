@@ -5,16 +5,16 @@ import { ISubscription } from "./ISubscription";
 
 export interface IUser {
   id?: number;
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
   VKID?: string;
-  username: string;
+  username?: string;
   createdAt?: Date;
   statusUser?: string;
   profile?: IProfile;
-  TrainingPlan: ITraining[];
-  athleteInGroups: IAthleteInGroup[];
-  trainerInGroups: IAthleteInGroup[];
-  subscriptions: ISubscription[];
-  subscribers: ISubscription[];
+  TrainingPlan?: ITraining[];
+  athleteInGroups?: IAthleteInGroup[];
+  trainerInGroups?: IAthleteInGroup[];
+  subscriptions?: ISubscription[];
+  subscribers?: ISubscription[];
 }
