@@ -20,8 +20,8 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
   const { data } = useQuery('groups', () => TrainingGroupService.getAll())
   const [search, setSearch] = useState("")
   const { user: USER } = useAuth();
-  const [__, setIsDialogOpen] = useState(false);
-  const { data: _, isLoading: isLoadingDataUser } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!), { enabled: !!USER?.username });
+  // const [__, setIsDialogOpen] = useState(false);
+  // const { data: _, isLoading: isLoadingDataUser } = useQuery(['user', USER.username], () => UserService.getUsername(USER.username!), { enabled: !!USER?.username });
   const { data: TrainingGroupsSearch } = useQuery(
     ['groups', search],
     () => TrainingGroupService.getSearch(search),
@@ -45,13 +45,13 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
   );
   const [alignment, setAlignment] = useState('');
 
-  useEffect(() => {
-    if (isLoadingDataUser) {
-      setIsDialogOpen(true);
-    } else {
-      setIsDialogOpen(false);
-    }
-  }, [isLoadingDataUser]);
+  // useEffect(() => {
+  //   if (isLoadingDataUser) {
+  //     setIsDialogOpen(true);
+  //   } else {
+  //     setIsDialogOpen(false);
+  //   }
+  // }, [isLoadingDataUser]);
 
   const handleAlignmentChange = (newAlignment: string) => {
     setAlignment(newAlignment);
@@ -82,7 +82,7 @@ export default function TrainingGroups(props: TrainingGroupsProps) {
           </div>
         }
 
-        <LoadingDialog open={isLoadingDataUser} />
+        {/* <LoadingDialog open={isLoadingDataUser} /> */}
         <Box
           sx={{
             position: 'relative', justifyContent: 'center', justifyItems: 'center',

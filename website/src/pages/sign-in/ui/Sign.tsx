@@ -10,8 +10,8 @@ import VKLoginButton from '../../../components/VKLoginButton';
 export default function Sign() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [login, setLogin] = useState('');
-  const [pass, setPass] = useState('');
+  const [login, setLogin] = useState('string@mail.ru');
+  const [pass, setPass] = useState('1234');
   const [error, setError] = useState<string | null>(null);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);

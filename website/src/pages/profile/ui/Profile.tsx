@@ -243,10 +243,10 @@ export default function Profile() {
           gap: '10px',
         }}>
           <InformCount
-            count={data?.subscriptions.length!}
-            title={getPluralForm(data?.subscriptions.length!, ["Подписка", "Подписки", "Подписок"])}
+            count={data?.subscriptions?.length!}
+            title={getPluralForm(data?.subscriptions?.length!, ["Подписка", "Подписки", "Подписок"])}
             onClick={
-              data?.subscriptions.length! < 1 ? undefined :
+              data?.subscriptions?.length! < 1 ? undefined :
                 () => {
                   setIsSub(false),
                     setOpenUsers(true)
@@ -254,17 +254,17 @@ export default function Profile() {
           />
 
           <InformCount
-            count={data?.subscribers.length!}
-            title={getPluralForm(data?.subscribers.length!, ["Подписчик", "Подписчика", "Подписчиков"])}
+            count={data?.subscribers?.length!}
+            title={getPluralForm(data?.subscribers?.length!, ["Подписчик", "Подписчика", "Подписчиков"])}
             onClick={
-              data?.subscribers.length! < 1 ? undefined : () => {
+              data?.subscribers?.length! < 1 ? undefined : () => {
                 setIsSub(true),
                   setOpenUsers(true)
               }}
           />
           <InformCount
-            count={data?.TrainingPlan.length!}
-            title={getPluralForm(data?.TrainingPlan.length!, ["Созданная тренировка", "Созданные тренировки", "Созданных тренировок"])}
+            count={data?.TrainingPlan?.length!}
+            title={getPluralForm(data?.TrainingPlan?.length!, ["Созданная тренировка", "Созданные тренировки", "Созданных тренировок"])}
           />
           <InformCount
             count={likeCount!}

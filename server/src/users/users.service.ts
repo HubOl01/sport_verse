@@ -42,14 +42,153 @@ export class UsersService {
     });
   }
   findOne(id: number) {
-    return this.prisma.user.findUnique({ where: { id: id } });
+    return this.prisma.user.findUnique({
+      where: { id: id },
+      include: {
+        profile: {
+          select: {
+            id: true,
+            name: true,
+            dateOfBirth: true,
+            url_avatar: true,
+            about: true,
+            statusId: true,
+            roleId: true,
+            startSportDate: true,
+            endSportDate: true,
+            isVerified: true,
+            userId: true,
+            status: true,
+            role: true,
+            sportType: true,
+            sportCategory: true,
+            ProfileSportType: true,
+          },
+        },
+        TrainingPlan: true,
+        athleteInGroups: true,
+        trainerInGroups: true,
+        subscriptions: {
+          include: {
+            subscriber: {
+              include: {
+                subscribers: true,
+                subscriptions: true,
+                profile: {
+                  select: {
+                    id: true,
+                    name: true,
+                    dateOfBirth: true,
+                    url_avatar: true,
+                    about: true,
+                    statusId: true,
+                    roleId: true,
+                    startSportDate: true,
+                    endSportDate: true,
+                    isVerified: true,
+                    userId: true,
+                    status: true,
+                    role: true,
+                    sportType: true,
+                    sportCategory: true,
+                    ProfileSportType: true,
+                  },
+                },
+              },
+            },
+            subscribedTo: {
+              include: {
+                subscribers: true,
+                subscriptions: true,
+                profile: {
+                  select: {
+                    id: true,
+                    name: true,
+                    dateOfBirth: true,
+                    url_avatar: true,
+                    about: true,
+                    statusId: true,
+                    roleId: true,
+                    startSportDate: true,
+                    endSportDate: true,
+                    isVerified: true,
+                    userId: true,
+                    status: true,
+                    role: true,
+                    sportType: true,
+                    sportCategory: true,
+                    ProfileSportType: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        subscribers: {
+          include: {
+            subscriber: {
+              include: {
+                subscribers: true,
+                subscriptions: true,
+                profile: {
+                  select: {
+                    id: true,
+                    name: true,
+                    dateOfBirth: true,
+                    url_avatar: true,
+                    about: true,
+                    statusId: true,
+                    roleId: true,
+                    startSportDate: true,
+                    endSportDate: true,
+                    isVerified: true,
+                    userId: true,
+                    status: true,
+                    role: true,
+                    sportType: true,
+                    sportCategory: true,
+                    ProfileSportType: true,
+                  },
+                },
+              },
+            },
+            subscribedTo: {
+              include: {
+                subscribers: true,
+                subscriptions: true,
+                profile: {
+                  select: {
+                    id: true,
+                    name: true,
+                    dateOfBirth: true,
+                    url_avatar: true,
+                    about: true,
+                    statusId: true,
+                    roleId: true,
+                    startSportDate: true,
+                    endSportDate: true,
+                    isVerified: true,
+                    userId: true,
+                    status: true,
+                    role: true,
+                    sportType: true,
+                    sportCategory: true,
+                    ProfileSportType: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
   }
   findByEmail(email: string) {
     return this.prisma.user.findUnique({ where: { email } });
   }
   findByUsername(username: string) {
     return this.prisma.user.findUnique({
-      where: { username },
+      where: { username: username },
       include: {
         profile: {
           select: {

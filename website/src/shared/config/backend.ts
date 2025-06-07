@@ -1,6 +1,7 @@
 // export var apiHostServer = "http://localhost:3000";
 // export var apiHostServer = "http://94.154.11.154:3000";
-export var apiHostServer = "https://sport-verse.onrender.com";
+// export var apiHostServer = "https://sport-verse.onrender.com";
+export var apiHostServer = "https://hubol01-sportverse-server-8985.twc1.net";
 export var apiTraining = "/training-plans";
 export var apiTrainingCopyGroup = "/training-plans/copyGroup";
 export var apiTrainingCheckGroup = "/training-plans/checkGroup";

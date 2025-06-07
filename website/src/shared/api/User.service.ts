@@ -30,6 +30,19 @@ export const UserService = {
       throw new Error(message);
     }
   },
+  async get(id: string): Promise<IUser> {
+    try {
+      const response = await api.get<IUser>(`${apiUsers}/${id}`);
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message =
+        typeof err.response?.data === "string"
+          ? err.response.data
+          : "Произошла ошибка при загрузке пользователя";
+      throw new Error(message);
+    }
+  },
   async create(item: IUser): Promise<IUser> {
     try {
       const response = await api.post<IUser>(apiUsers, item);
