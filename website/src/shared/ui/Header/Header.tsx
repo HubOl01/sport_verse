@@ -42,9 +42,9 @@ export default function Header(props: HeaderSmallProps) {
             case "my-groups":
                 navigate("/my-groups");
                 break;
-            case "settings":
-                navigate("/settings");
-                break;
+            // case "settings":
+            //     navigate("/settings");
+            //     break;
             case "logout":
                 {
                     logout();
@@ -167,12 +167,12 @@ export default function Header(props: HeaderSmallProps) {
                                     </ListItemIcon>
                                     <ListItemText>Мои группы</ListItemText>
                                 </MenuItem>
-                                <MenuItem onClick={() => handleClose("settings")}>
+                                {/* <MenuItem onClick={() => handleClose("settings")}>
                                     <ListItemIcon>
                                         <Settings fontSize="small" />
                                     </ListItemIcon>
                                     <ListItemText>Настройки</ListItemText>
-                                </MenuItem>
+                                </MenuItem> */}
                                 <MenuItem onClick={() => handleClose("logout")} sx={{ color: 'red' }}>
                                     <ListItemIcon>
                                         <ExitToApp fontSize="small" sx={{ color: 'red' }} />
