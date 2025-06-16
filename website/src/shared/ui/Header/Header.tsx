@@ -8,7 +8,7 @@ import { IUser } from '../../model/IUser';
 import { UserService } from '../../api/User.service';
 import { useQuery } from 'react-query';
 import { useAuth } from '../../utils/useAuth';
-import { ExitToApp, FitnessCenter, Group, Person, Settings } from '@mui/icons-material';
+import { ExitToApp, FitnessCenter, Group, Person } from '@mui/icons-material';
 import { useSmallScreen } from '../../utils/displaySizes';
 import { isAuthenticated } from '../../api/authService';
 
